@@ -83,7 +83,7 @@ namespace annadb
         friend std::ostream & operator<<(std::ostream &os, const Meta& meta)
         {
             std::string repr = "{s|count|:n|" + meta.count_ + "|";
-            return os << ":" << meta.metaType << repr;
+            return os << "s|meta|:" << meta.metaType << repr;
         }
 
     public:
@@ -145,6 +145,15 @@ namespace annadb
             meta_ = response.substr(pos_meta_begin, pos_response_end - pos_meta_begin);
         }
 
+        friend std::ostream & operator<<(std::ostream &os, const Journal& journal)
+        {
+            std::string result = journal.ok() ? "ok" : "err";
+            auto meta = journal.meta();
+
+            std::string repr = "result:" + result + "[response{" + journal.data();
+            return os << repr << meta << ",},];";
+        }
+
     public:
         explicit Journal(std::string_view response)
         {
@@ -156,13 +165,13 @@ namespace annadb
             return result_;
         }
 
-        Meta meta()
+        Meta meta() const
         {
             Meta meta{meta_};
             return meta;
         }
 
-        std::string data()
+        [[nodiscard]] std::string data() const
         {
             return data_;
         }
