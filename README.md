@@ -13,4 +13,8 @@ AnnaDB uses a custom query language dubbed [TySON](https://github.com/roman-righ
 
 
 ## Test library
+
 - googletest
+
+## local development
+- create a AnnaDB instance via `docker-compose up` access the DB via port `10001` on `localhost`
