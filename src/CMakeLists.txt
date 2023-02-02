@@ -28,7 +28,7 @@ if ("$ENV{TESTING}")
     FetchContent_MakeAvailable(googletest)
     include_directories(${GTEST_INCLUDE_DIRS})
 
-    add_executable(annadb_driver tests/testmain.cpp connection.hpp TySON.hpp)
+    add_executable(annadb_driver tests/testmain.cpp connection.hpp TySON.hpp tests/test_tyson_parsing.cpp)
     target_link_libraries(annadb_driver gtest_main)
 
     include(GoogleTest)
