@@ -27,7 +27,7 @@ namespace tyson
         TySonType type_;
         std::string value_;
         std::vector<TySonObject> vector_ {};
-        std::map<std::string, TySonObject> map_ {};
+        std::map<TySonObject, TySonObject> map_ {};
         std::pair<std::string, std::string> link_ {};
 
         void parse_vector_elements(std::string_view object)
@@ -51,6 +51,43 @@ namespace tyson
             }
         }
 
+        std::vector<TySonObject> parse_map_element(std::string_view object)
+        {
+            std::vector<TySonObject> result;
+            result.reserve(2);
+
+            for (const auto map_pair: object | std::ranges::views::split(':'))
+            {
+                std::string tmp;
+                for (auto &chr : map_pair)
+                {
+                    tmp += chr;
+                }
+                result.emplace_back(tmp);
+            }
+
+            return result;
+        }
+
+        void parse_map_elements(std::string_view object)
+        {
+            auto end_type_sep = object.find_first_of('{') + 1;
+            auto end_value_sep = (object.size() - 1) - end_type_sep;
+
+            auto map_data = object.substr(end_type_sep, end_value_sep);
+            for (const auto map_pair: map_data | std::ranges::views::split(','))
+            {
+                std::string tmp;
+                for (auto &chr : map_pair)
+                {
+                    tmp += chr;
+                }
+
+                auto key_val = parse_map_element(tmp);
+                map_.try_emplace(key_val[0], key_val[1]);
+            }
+        }
+
     public:
         explicit TySonObject(std::string_view object)
         {
@@ -62,6 +99,7 @@ namespace tyson
             {
                 type_ = TySonType::Null;
                 value_ = {};
+                return;
             }
 
             if (object.starts_with("uts"))
@@ -75,6 +113,11 @@ namespace tyson
 
                 parse_vector_elements(object);
             }
+            else if (object.starts_with('m'))
+            {
+                type_ = TySonType::Map;
+                parse_map_elements(object);
+            }
             else if (type.size() > 1)
             {
                 type_ = TySonType::Link;
@@ -86,6 +129,23 @@ namespace tyson
                 type_ = static_cast<TySonType>(type.at(0));
                 value_ = object.substr(end_type_sep + 1, end_value_sep);
             }
+        }
+
+        TySonObject(const TySonObject& rhs) : type_(rhs.type_),
+                                              value_(rhs.value_),
+                                              vector_(rhs.vector_),
+                                              map_(rhs.map_),
+                                              link_(rhs.link_){}
+
+        bool operator==(const TySonObject &rhs) const
+        {
+            return std::tie(this->type_, this->value_, this->vector_, this->map_, this->link_) ==
+            std::tie(rhs.type_, rhs.value_, rhs.vector_, rhs.map_, rhs.link_);
+        }
+
+        bool operator<(const TySonObject &rhs) const
+        {
+            return std::tie(this->type_, this->value_, this->vector_) < std::tie(rhs.type_, rhs.value_, rhs.vector_);
         }
 
         [[nodiscard]] TySonType type() const
@@ -122,7 +182,7 @@ namespace tyson
 
         template<TySonType T>
         requires (T == TySonType::Map)
-        [[nodiscard]] std::map<std::string, TySonObject> value() const
+        [[nodiscard]] std::map<TySonObject, TySonObject> value() const
         {
             return map_;
         }
