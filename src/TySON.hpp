@@ -5,6 +5,9 @@
 #ifndef ANNADB_DRIVER_TYSON_HPP
 #define ANNADB_DRIVER_TYSON_HPP
 
+#include <ranges>
+#include <string_view>
+
 namespace tyson
 {
     enum class TySonType
@@ -25,6 +28,7 @@ namespace tyson
         std::string value_;
         std::vector<TySonObject> vector_ {};
         std::map<std::string, TySonObject> map_ {};
+        std::pair<std::string, std::string> link_ {};
 
         void parse_vector_elements(std::string_view object)
         {
@@ -33,17 +37,16 @@ namespace tyson
 
             auto vector_data = object.substr(end_type_sep, end_value_sep);
 
-            while (true)
+            for (const auto elem : vector_data | std::views::split(','))
             {
-                auto next_comma = vector_data.find_first_of(',');
+                std::string tmp;
 
-                if (next_comma == std::string::npos)
+                for (auto &chr : elem)
                 {
-                    break;
+                    tmp += chr;
                 }
-                auto element = vector_data.substr(0, next_comma);
-                vector_data = vector_data.substr(next_comma + 1, vector_data.size() - next_comma);
-                auto obj = TySonObject(element);
+
+                auto obj = TySonObject(tmp);
                 vector_.emplace_back(obj);
             }
         }
@@ -75,7 +78,8 @@ namespace tyson
             else if (type.size() > 1)
             {
                 type_ = TySonType::Link;
-                value_ = object.substr(end_type_sep + 1, end_value_sep);
+                auto val = object.substr(end_type_sep + 1, end_value_sep);
+                link_ = std::make_pair(type, val);
             }
             else
             {
@@ -89,9 +93,24 @@ namespace tyson
             return type_;
         }
 
+        template<TySonType T>
         [[nodiscard]] std::string value() const
         {
             return value_;
+        }
+
+        template<TySonType T>
+        requires (T == TySonType::Bool)
+        [[nodiscard]] bool value() const
+        {
+            return value_ == "true";
+        }
+
+        template<TySonType T>
+        requires (T == TySonType::Link)
+        [[nodiscard]] std::pair<std::string, std::string> value() const
+        {
+            return link_;
         }
 
         template<TySonType T>
@@ -153,7 +172,6 @@ namespace tyson
                 throw std::invalid_argument("Invalid TySonType");
             }
         }
-
     };
 
 
