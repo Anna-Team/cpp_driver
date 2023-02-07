@@ -6,12 +6,30 @@
 #define ANNADB_DRIVER_CONNECTION_HPP
 
 #include <map>
+#include <regex>
 #include <valarray>
 #include <zmq.hpp>
+#include "TySON.hpp"
 
 
 namespace annadb
 {
+    const std::regex pattern ("(,)\\b[\\w-]{2,}+\\b\\|");
+    struct KeyVal
+    {
+        KeyVal(std::string data)
+        {
+            auto separation = data.find_first_of(':');
+            auto start = data[0] == ',' ? 1 : 0;
+            auto end = data[data.size() - 1] == ',' ? 1 : 0;
+            link = data.substr(start, separation - start);
+            value = data.substr(separation + 1, data.size() - 1 - separation - end);
+        }
+
+        std::string link;
+        std::string value;
+    };
+
     enum class MetaType: unsigned char
     {
         none = 'n',
@@ -53,6 +71,101 @@ namespace annadb
                                                            std::make_pair(":find_meta", MetaType::find_meta),
                                                            std::make_pair(":update_meta", MetaType::update_meta),};
 
+    class Data
+    {
+        std::string data_;
+
+        std::vector<KeyVal> split_data(std::string_view str_data)
+        {
+            auto new_data = std::regex_replace(str_data.data(), pattern, "^$&");
+            std::ranges::split_view split_view{ new_data, '^' };
+            std::vector<KeyVal> parts {};
+
+            parts.reserve(std::distance(split_view.begin(), split_view.end()));
+
+            for (auto split: split_view)
+            {
+                std::string tmp;
+                for (const auto &item: split)
+                {
+                    if (item)
+                    {
+                        tmp += item;
+                    }
+                }
+                parts.emplace_back(tmp);
+                tmp.clear();
+            }
+
+            return parts;
+        }
+
+        std::vector<std::string_view> split_data_ids(std::string_view object)
+        {
+            std::ranges::split_view split_view{ object, ',' };
+            std::vector<std::string_view> parts {};
+
+            parts.reserve(std::distance(split_view.begin(), split_view.end()));
+
+            for (auto split: split_view)
+            {
+                std::string tmp;
+                for (const auto &item: split)
+                {
+                    tmp += item;
+                }
+                parts.emplace_back(tmp);
+                tmp.clear();
+            }
+
+            return parts;
+        }
+
+    public:
+        explicit Data(std::string_view data) : data_(data) {}
+
+        template<tyson::TySonType T>
+        requires (T == tyson::TySonType::Objects || T == tyson::TySonType::IDs)
+        std::optional<tyson::TySonCollectionObject> get()
+        {
+            if (data_.starts_with(std::string("s|data|:objects")) && T == tyson::TySonType::Objects)
+            {
+                tyson::TySonCollectionObject object {};
+                auto start_val = data_.find_first_of('{') + 1;
+                auto end_val = data_.find_last_of('}');
+
+                auto tyson_str_data = split_data(data_.substr(start_val, end_val - start_val));
+                for (auto &key_val: tyson_str_data)
+                {
+                    object.add(std::make_pair(key_val.link, key_val.value));
+                }
+
+                tyson_str_data.clear();
+                tyson_str_data.shrink_to_fit();
+
+                return object;
+            }
+            else if (data_.starts_with(std::string("s|data|:ids"))  && T == tyson::TySonType::IDs)
+            {
+                tyson::TySonCollectionObject object {};
+                auto start_val = data_.find_first_of('[');
+                auto end_val = data_.find_last_of(']');
+
+                auto tyson_str_data = split_data_ids(data_.substr(start_val, end_val - start_val));
+                for (auto &link_data: tyson_str_data)
+                {
+                    object.add(link_data);
+                }
+
+                tyson_str_data.clear();
+                tyson_str_data.shrink_to_fit();
+
+                return object;
+            }
+            return {};
+        }
+    };
+
     class Meta
     {
         /*
@@ -63,13 +176,13 @@ namespace annadb
 
         std::string count_;
         MetaType metaType = MetaType::none;
+        tyson::TySonObject data_;
 
-        void parse_count()
+        void parse_data()
         {
-            std::string count_str = "s|count|:n|";
-            auto pos_count = meta_txt_.rfind(count_str) + count_str.size();
-            auto pos_num_end = meta_txt_.rfind('|');
-            count_ = meta_txt_.substr(pos_count, pos_num_end - pos_count);
+            auto pos_map_start = meta_txt_.find('{');
+            auto map_str = "m" + meta_txt_.substr(pos_map_start, meta_txt_.size() - pos_map_start);
+            data_ = tyson::TySonObject {map_str};
         }
 
         void parse_type()
@@ -82,8 +195,16 @@ namespace annadb
 
         friend std::ostream & operator<<(std::ostream &os, const Meta& meta)
         {
-            std::string repr = "{s|count|:n|" + meta.count_ + "|";
-            return os << "s|meta|:" << meta.metaType << repr;
+            std::string count_val = "0";
+
+            auto count = meta.data_["count"];
+            if (count)
+            {
+                count_val = count.value().value<tyson::TySonType::String>();
+            }
+
+            std::string repr = "{s|count|:n|" + count_val + "|";
+            return os << "s|meta|:" << meta.metaType << repr << "}";
         }
 
     public:
@@ -91,20 +212,13 @@ namespace annadb
         explicit Meta(std::string_view meta_txt)
         {
             meta_txt_ = meta_txt;
-            parse_count();
+            parse_data();
             parse_type();
         }
 
-        template<typename T>
-        T count()
+        tyson::TySonObject data()
         {
-            std::stringstream sstream;
-            T outputval;
-
-            sstream << count_;
-            sstream >> outputval;
-
-            return outputval;
+            return data_;
         }
 
         MetaType type()
@@ -149,9 +263,10 @@ namespace annadb
         {
             std::string result = journal.ok() ? "ok" : "err";
             auto meta = journal.meta();
+            auto data = "journal.data()"; // journal.data();
 
-            std::string repr = "result:" + result + "[response{" + journal.data();
-            return os << repr << meta << ",},];";
+            std::string repr = "result:" + result + "[response{";
+            return os << repr << data << meta << ",},];";
         }
 
     public:
@@ -165,15 +280,16 @@ namespace annadb
             return result_;
         }
 
-        Meta meta() const
+        [[nodiscard]] Meta meta() const
         {
             Meta meta{meta_};
             return meta;
         }
 
-        [[nodiscard]] std::string data() const
+        [[nodiscard]] Data data() const
         {
-            return data_;
+            Data data{data_};
+            return data;
         }
     };
 

@@ -20,6 +20,10 @@ namespace tyson
         Link = 'l',
         Vector = 'v',
         Map = 'm',
+        Object = 'o',
+        ID = 'i',
+        Objects = 'y',
+        IDs = 'z'
     };
 
     class TySonObject
@@ -80,7 +84,10 @@ namespace tyson
                 std::string tmp;
                 for (auto &chr : map_pair)
                 {
-                    tmp += chr;
+                    if (chr)
+                    {
+                        tmp += chr;
+                    }
                 }
 
                 auto key_val = parse_map_element(tmp);
@@ -89,6 +96,9 @@ namespace tyson
         }
 
     public:
+
+        TySonObject() = default;
+
         explicit TySonObject(std::string_view object)
         {
             auto end_type_sep = object.find_first_of('|');
@@ -131,11 +141,21 @@ namespace tyson
             }
         }
 
+        ~TySonObject()
+        {
+            value_.clear();
+            vector_.clear();
+            map_.clear();
+            link_ = {};
+        }
+
         TySonObject(const TySonObject& rhs) : type_(rhs.type_),
                                               value_(rhs.value_),
                                               vector_(rhs.vector_),
                                               map_(rhs.map_),
                                               link_(rhs.link_){}
+
+        TySonObject& operator=(const TySonObject &rhs) = default;
 
         bool operator==(const TySonObject &rhs) const
         {
@@ -146,6 +166,28 @@ namespace tyson
         bool operator<(const TySonObject &rhs) const
         {
             return std::tie(this->type_, this->value_, this->vector_) < std::tie(rhs.type_, rhs.value_, rhs.vector_);
+        }
+
+        std::optional<TySonObject> operator[](const std::string_view key) const
+        {
+            if (type_ == TySonType::Map)
+            {
+                TySonObject result;
+                std::for_each(map_.begin(),
+                              map_.end(),
+                              [&result, &key](const std::pair<TySonObject, TySonObject> &obj)
+                              {
+                                    if (obj.first.value_ == key)
+                                    {
+                                        result = obj.second;
+                                    }
+                              });
+                return result;
+            }
+            else
+            {
+                return {};
+            }
         }
 
         [[nodiscard]] TySonType type() const
@@ -237,42 +279,116 @@ namespace tyson
 
     class TySonCollectionObject
     {
-        std::vector<TySonObject> collection_objects_ {};
+        std::vector<TySonObject> collection_ids_ {};
+        std::vector<std::pair<TySonObject, TySonObject>> collection_objects_ {};
 
     public:
         TySonCollectionObject() = default;
 
-        void add(TySonObject &object)
+        void add(const std::string_view &object)
         {
-            collection_objects_.emplace_back(object);
+            collection_ids_.emplace_back(object);
         };
-    };
 
-
-    class TySonData
-    {
-        std::string data_;
-
-    public:
-        explicit TySonData(std::string_view data) : data_(data) {}
-
-        template<const char* key>
-        static std::optional<TySonCollectionObject> get(const TySonData &tysonData)
+        void add(const std::pair<std::string_view, std::string_view> &object)
         {
-            if (strcmp(key, "objects") == 0 || strcmp(key, "ids") == 0)
+            collection_objects_.emplace_back(TySonObject(object.first), TySonObject(object.second));
+        };
+
+        template<TySonType T>
+        requires (T == TySonType::Object)
+        std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view obj_id)
+        {
+            for (const auto &val: collection_objects_)
             {
-                auto begin = std::string("s|data|:") + key;
-                if (tysonData.data_.starts_with(begin))
+                if (val.first.value<TySonType::Link>().second == obj_id)
                 {
-                    TySonCollectionObject object {};
-                    // object.add();
-                    return object;
+                    return val;
                 }
             }
             return {};
         }
-    };
 
+        template<TySonType T>
+        requires (T == TySonType::Objects)
+        std::vector<std::pair<TySonObject, TySonObject>> get(std::string_view collection)
+        {
+            std::vector<std::pair<TySonObject, TySonObject>> result {};
+            std::copy_if(collection_objects_.begin(), collection_objects_.end(),
+                         std::back_inserter(result),
+                         [&collection](const std::pair<TySonObject, TySonObject> &val)
+                         {
+                             if (val.first.value<TySonType::Link>().first == collection)
+                             {
+                                 return val;
+                             }
+                         });
+            return result;
+        }
+
+        template<TySonType T>
+        requires (T == TySonType::Object)
+        std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view collection, std::string_view obj_id)
+        {
+            for (const std::pair<TySonObject, TySonObject> &val: collection_objects_)
+            {
+                auto tysonLink = val.first.value<TySonType::Link>();
+                if (std::tie(tysonLink.first, tysonLink.second) == std::tie(collection, obj_id))
+                {
+                    return val;
+                }
+            }
+
+            return {};
+        }
+
+        template<TySonType T>
+        requires (T == TySonType::ID)
+        std::optional<TySonObject> get(std::string_view obj_id)
+        {
+            for (const TySonObject &val: collection_ids_)
+            {
+                if (val.value<TySonType::Link>().second == obj_id)
+                {
+                    return val;
+                }
+            }
+            return {};
+        }
+
+        template<TySonType T>
+        requires (T == TySonType::ID)
+        std::vector<TySonObject> get(std::string_view collection)
+        {
+            std::vector<TySonObject> result {};
+            std::copy_if(collection_ids_.begin(), collection_ids_.end(),
+                         std::back_inserter(result),
+                         [&collection](const TySonObject &val)
+                         {
+                             if (val.value<TySonType::Link>().first == collection)
+                             {
+                                 return val;
+                             }
+                         });
+            return result;
+        }
+
+        template<TySonType T>
+        requires (T == TySonType::ID)
+        std::optional<TySonObject> get(std::pair<std::string_view, std::string_view> collection_id)
+        {
+            for (const TySonObject &val: collection_ids_)
+            {
+                auto tysonLink = val.value<TySonType::Link>();
+                if (std::tie(tysonLink.first, tysonLink.second) == std::tie(collection_id.first, collection_id.second))
+                {
+                    return val;
+                }
+            }
+
+            return {};
+        }
+    };
 }
 
 #endif //ANNADB_DRIVER_TYSON_HPP
