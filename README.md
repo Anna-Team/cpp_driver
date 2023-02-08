@@ -25,12 +25,12 @@ AnnaDB uses a custom query language dubbed [TySON](https://github.com/roman-righ
 ```c++
 #include "connection.hpp"
 
-    annadb::AnnaDB con {"jondoe", "passwd1234", "localhost", 10001};
-    con.connect();
-    
-    // do something
-    
-    con.close();
+annadb::AnnaDB con {"jondoe", "passwd1234", "localhost", 10001};
+con.connect();
+
+// do something
+
+con.close();
 ``` 
 ### 2. Make a query to AnnaDB
 - [AnnaDB Query Documentation](https://annadb.dev/documentation/insert/)
@@ -41,13 +41,28 @@ std::optional<annadb::Journal>
 ```c++
 #include "connection.hpp"
         
-    // ...
-    auto answer = con.send("collection|test_journal|:insert[s|foo|,"
-                           "n|100|,"
-                           "b|true|,"
-                           "v[n|1|,n|2|,n|3|,],"
-                           "m{s|bar|:s|baz|,},"
-                           "];");
-    // ...
+// ...
+auto answer = con.send("collection|test_journal|:insert[s|foo|,"
+                       "n|100|,"
+                       "b|true|,"
+                       "v[n|1|,n|2|,n|3|,],"
+                       "m{s|bar|:s|baz|,},"
+                       "];");
+// ...
+```
+### 3. Inspect the AnnaDB result
+- the `annadb::Journal` class
+```c++
+// ...
+
+// you need to check, cause Journal is an optional
+if (answer) 
+{
+    // annadb::Journal contains two members to get information from the query
+    // the data and the meta information
+    const auto data_information = answer.value().data();
+    const auto meta_information = answer.value().meta();
+}
+// ...
 ```
 
