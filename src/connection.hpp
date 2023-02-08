@@ -78,45 +78,11 @@ namespace annadb
         std::vector<KeyVal> split_data(std::string_view str_data)
         {
             auto new_data = std::regex_replace(str_data.data(), pattern, "^$&");
-            std::ranges::split_view split_view{ new_data, '^' };
+            auto data = utils::split(new_data, '^');
+
             std::vector<KeyVal> parts {};
-
-            parts.reserve(std::distance(split_view.begin(), split_view.end()));
-
-            for (auto split: split_view)
-            {
-                std::string tmp;
-                for (const auto &item: split)
-                {
-                    if (item)
-                    {
-                        tmp += item;
-                    }
-                }
-                parts.emplace_back(tmp);
-                tmp.clear();
-            }
-
-            return parts;
-        }
-
-        std::vector<std::string_view> split_data_ids(std::string_view object)
-        {
-            std::ranges::split_view split_view{ object, ',' };
-            std::vector<std::string_view> parts {};
-
-            parts.reserve(std::distance(split_view.begin(), split_view.end()));
-
-            for (auto split: split_view)
-            {
-                std::string tmp;
-                for (const auto &item: split)
-                {
-                    tmp += item;
-                }
-                parts.emplace_back(tmp);
-                tmp.clear();
-            }
+            parts.reserve(data.size());
+            std::transform(data.begin(), data.end(), std::back_inserter(parts), [](auto &val){return KeyVal(val);});
 
             return parts;
         }
@@ -151,7 +117,7 @@ namespace annadb
                 auto start_val = data_.find_first_of('[');
                 auto end_val = data_.find_last_of(']');
 
-                auto tyson_str_data = split_data_ids(data_.substr(start_val, end_val - start_val));
+                auto tyson_str_data = utils::split(data_.substr(start_val, end_val - start_val), ',');
                 for (auto &link_data: tyson_str_data)
                 {
                     object.add(link_data);

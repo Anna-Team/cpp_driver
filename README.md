@@ -21,3 +21,33 @@ AnnaDB uses a custom query language dubbed [TySON](https://github.com/roman-righ
 
 ## How to use
 
+### 1. Create a connection to AnnaDB
+```c++
+#include "connection.hpp"
+
+    annadb::AnnaDB con {"jondoe", "passwd1234", "localhost", 10001};
+    con.connect();
+    
+    // do something
+    
+    con.close();
+``` 
+### 2. Make a query to AnnaDB
+- [AnnaDB Query Documentation](https://annadb.dev/documentation/insert/)
+- the result of a query request is a 
+```c++
+std::optional<annadb::Journal>
+```
+```c++
+#include "connection.hpp"
+        
+    // ...
+    auto answer = con.send("collection|test_journal|:insert[s|foo|,"
+                           "n|100|,"
+                           "b|true|,"
+                           "v[n|1|,n|2|,n|3|,],"
+                           "m{s|bar|:s|baz|,},"
+                           "];");
+    // ...
+```
+

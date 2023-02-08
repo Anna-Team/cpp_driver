@@ -19,11 +19,11 @@ std::string only_map_data = "s|data|:objects{"
                             "s|name|:s|test_2|,"
                             "s|num|:n|2|,"
                             "},"
-                            "test|510eb502-a645-44f4-9ea1-537682fd4049|:m{"
+                            "test_data|510eb502-a645-44f4-9ea1-537682fd4049|:m{"
                             "s|name|:s|test_3|,"
                             "s|num|:n|3|,"
                             "},"
-                            "test|12b519bd-c7b8-4124-9ba2-8647ef851900|:m{"
+                            "test_data|d261580c-1c7f-4cf0-a231-be4a25486146|:m{"
                             "s|num|:n|4|,"
                             "s|name|:s|test_4|,"
                             "},"
@@ -36,13 +36,13 @@ std::string id_response = "s|data|:ids["
                           "test|7bdd7c8f-e9da-42f6-b473-5a6fd9a1c90f|,"
                           "]";
 
-TEST(tyson_parsing, create_tyson_object)
+TEST(tyson_parsing_connection_data, create_tyson_object)
 {
     ASSERT_NO_THROW(annadb::Data data {only_map_data});
     ASSERT_NO_THROW(annadb::Data data {id_response});
 }
 
-TEST(tyson_parsing, get_object_by_id)
+TEST(tyson_parsing_connection_data, get_object_by_id)
 {
     annadb::Data data {only_map_data};
     std::string uuid = "2b908538-2ec5-4970-8a65-30f7e3f6302c";
@@ -57,4 +57,35 @@ TEST(tyson_parsing, get_object_by_id)
     ASSERT_TRUE(obj_link.has_value());
     ASSERT_EQ(obj_link.value().first.value<tyson::TySonType::Link>().second, uuid);
     ASSERT_EQ(obj_link.value().second.value<tyson::TySonType::Map>(), expected_result.value<tyson::TySonType::Map>());
+}
+
+TEST(tyson_parsing_connection_data, get_object_by_id_and_collection_name)
+{
+    annadb::Data data {only_map_data};
+    std::string uuid = "d261580c-1c7f-4cf0-a231-be4a25486146";
+    tyson::TySonObject expected_result {"m{s|num|:n|4|,s|name|:s|test_4|,}"};
+
+    auto obj = data.get<tyson::TySonType::Objects>();
+    ASSERT_TRUE(obj.has_value());
+
+    auto tyson_collection = obj.value();
+    auto obj_link = tyson_collection.get<tyson::TySonType::Object>("test_data", uuid);
+
+    ASSERT_TRUE(obj_link.has_value());
+    ASSERT_EQ(obj_link.value().first.value<tyson::TySonType::Link>().second, uuid);
+    ASSERT_EQ(obj_link.value().second.value<tyson::TySonType::Map>(), expected_result.value<tyson::TySonType::Map>());
+}
+
+TEST(tyson_parsing_connection_data, get_objects_by_collection_name)
+{
+    annadb::Data data {only_map_data};
+    tyson::TySonObject expected_result {"m{s|name|:s|test_2|,s|num|:n|2|,}"};
+
+    auto obj = data.get<tyson::TySonType::Objects>();
+    ASSERT_TRUE(obj.has_value());
+
+    auto tyson_collection = obj.value();
+    auto obj_links = tyson_collection.get<tyson::TySonType::Objects>("test");
+
+    ASSERT_EQ(obj_links.size(), 3);
 }

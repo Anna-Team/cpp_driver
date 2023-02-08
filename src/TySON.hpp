@@ -5,8 +5,10 @@
 #ifndef ANNADB_DRIVER_TYSON_HPP
 #define ANNADB_DRIVER_TYSON_HPP
 
+#include <algorithm>
 #include <ranges>
 #include <string_view>
+#include "utils.hpp"
 
 namespace tyson
 {
@@ -36,40 +38,31 @@ namespace tyson
 
         void parse_vector_elements(std::string_view object)
         {
+            const auto to_tyson_object = [](std::string &val) -> TySonObject {
+                return TySonObject{val};
+            };
+
             auto end_type_sep = object.find_first_of('[') + 1;
             auto end_value_sep = (object.size() - 1) - end_type_sep;
 
             auto vector_data = object.substr(end_type_sep, end_value_sep);
 
-            for (const auto elem : vector_data | std::views::split(','))
-            {
-                std::string tmp;
-
-                for (auto &chr : elem)
-                {
-                    tmp += chr;
-                }
-
-                auto obj = TySonObject(tmp);
-                vector_.emplace_back(obj);
-            }
+            auto vec_data = utils::split(vector_data, ',');
+            std::transform(vec_data.begin(), vec_data.end(), std::back_inserter(vector_), to_tyson_object);
         }
 
         std::vector<TySonObject> parse_map_element(std::string_view object)
         {
+            const auto to_tyson_object = [](std::string &val) -> TySonObject {
+                return TySonObject{val};
+            };
+
+            auto vec_data = utils::split(object, ':');
+
             std::vector<TySonObject> result;
-            result.reserve(2);
+            result.reserve(vec_data.size());
 
-            for (const auto map_pair: object | std::ranges::views::split(':'))
-            {
-                std::string tmp;
-                for (auto &chr : map_pair)
-                {
-                    tmp += chr;
-                }
-                result.emplace_back(tmp);
-            }
-
+            std::transform(vec_data.begin(), vec_data.end(), std::back_inserter(result), to_tyson_object);
             return result;
         }
 
@@ -77,22 +70,17 @@ namespace tyson
         {
             auto end_type_sep = object.find_first_of('{') + 1;
             auto end_value_sep = (object.size() - 1) - end_type_sep;
-
             auto map_data = object.substr(end_type_sep, end_value_sep);
-            for (const auto map_pair: map_data | std::ranges::views::split(','))
-            {
-                std::string tmp;
-                for (auto &chr : map_pair)
-                {
-                    if (chr)
-                    {
-                        tmp += chr;
-                    }
-                }
 
-                auto key_val = parse_map_element(tmp);
-                map_.try_emplace(key_val[0], key_val[1]);
-            }
+            auto vec_data = utils::split(map_data, ',');
+
+            auto to_map_element = [this](auto &val) -> std::vector<TySonObject> {
+                return parse_map_element(val);
+            };
+
+            std::vector<std::vector<TySonObject>> result;
+            std::transform(vec_data.begin(), vec_data.end(), std::back_inserter(result), to_map_element);
+            std::for_each(result.begin(), result.end(), [this](auto key_val){map_.try_emplace(key_val[0], key_val[1]);});
         }
 
     public:
@@ -314,13 +302,12 @@ namespace tyson
         std::vector<std::pair<TySonObject, TySonObject>> get(std::string_view collection)
         {
             std::vector<std::pair<TySonObject, TySonObject>> result {};
-            std::copy_if(collection_objects_.begin(), collection_objects_.end(),
-                         std::back_inserter(result),
-                         [&collection](const std::pair<TySonObject, TySonObject> &val)
+            std::for_each(collection_objects_.begin(), collection_objects_.end(),
+                         [&collection, &result](const std::pair<TySonObject, TySonObject> &val)
                          {
                              if (val.first.value<TySonType::Link>().first == collection)
                              {
-                                 return val;
+                                 result.emplace_back(val);
                              }
                          });
             return result;
