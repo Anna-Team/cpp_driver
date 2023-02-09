@@ -12,6 +12,9 @@
 
 namespace tyson
 {
+    /**
+     * AnnaDB data types
+     */
     enum class TySonType
     {
         Number = 'n',
@@ -36,6 +39,14 @@ namespace tyson
         std::map<TySonObject, TySonObject> map_ {};
         std::pair<std::string, std::string> link_ {};
 
+        /**
+         * Parse a AnnaDB(TySON) Vector into a std::vector<TySonObject>
+         * AnnaDB(TySON) Vector example:
+         * v[n|1|,n|2|,n|3|,]
+         *
+         * @param object string_view the raw string of a AnnaDB(TySON) Vector
+         * @see Tyson.tyson::TySonObject
+         */
         void parse_vector_elements(std::string_view object)
         {
             const auto to_tyson_object = [](std::string &val) -> TySonObject {
@@ -51,6 +62,15 @@ namespace tyson
             std::transform(vec_data.begin(), vec_data.end(), std::back_inserter(vector_), to_tyson_object);
         }
 
+        /**
+         * Parse AnnaDB(TySON) Map values into a std::vector<TySonObject>
+         * AnnaDB(TySON) Map example:
+         * m{ s|bar|: s|baz|,}
+         *
+         * @param object string_view the raw string of a AnnaDB(TySON) Map
+         * @return the inner elements of a TySON Map parsed into a TySonObject
+         * @see Tyson.tyson::TySonObject
+         */
         std::vector<TySonObject> parse_map_element(std::string_view object)
         {
             const auto to_tyson_object = [](std::string &val) -> TySonObject {
@@ -66,6 +86,14 @@ namespace tyson
             return result;
         }
 
+        /**
+         * Parse AnnaDB(TySON) Map into a std::vector<TySonObject>
+         * AnnaDB(TySON) Map example:
+         * m{ s|bar|: s|baz|,}
+         *
+         * @param object string_view the raw string of a AnnaDB(TySON) Map
+         * @see Tyson.tyson::TySonObject
+         */
         void parse_map_elements(std::string_view object)
         {
             auto end_type_sep = object.find_first_of('{') + 1;
@@ -87,6 +115,12 @@ namespace tyson
 
         TySonObject() = default;
 
+        /**
+         * Create a new TySonObject from a raw AnnaDB data type string
+         *
+         * @param object representing a AnnaDB data type
+         * @see <a href="https://annadb.dev/documentation/data_types/">AnnaDB data types</a>
+         */
         explicit TySonObject(std::string_view object)
         {
             auto end_type_sep = object.find_first_of('|');
@@ -156,6 +190,12 @@ namespace tyson
             return std::tie(this->type_, this->value_, this->vector_) < std::tie(rhs.type_, rhs.value_, rhs.vector_);
         }
 
+        /**
+         * Get the value of a AnnaDB Map as TySonObject
+         *
+         * @param key must be a string inside of AnnaDB Map
+         * @return TySonObject value from a TySonObject Map if exists
+         */
         std::optional<TySonObject> operator[](const std::string_view key) const
         {
             if (type_ == TySonType::Map)
@@ -178,17 +218,33 @@ namespace tyson
             }
         }
 
+        /**
+         *
+         * @return the type name of the current TysonObject
+         */
         [[nodiscard]] TySonType type() const
         {
             return type_;
         }
 
+        /**
+         * Get the current value of the TySonObject
+         *
+         * @tparam T must be of type TySonType
+         * @return the current value representation
+         */
         template<TySonType T>
         [[nodiscard]] std::string value() const
         {
             return value_;
         }
 
+        /**
+         * If the TySonObject represents a AnnaDB Bool Primitive
+         *
+         * @tparam T TySonType::Bool
+         * @return true if the value representation is the string `true` false otherwise
+         */
         template<TySonType T>
         requires (T == TySonType::Bool)
         [[nodiscard]] bool value() const
@@ -196,6 +252,12 @@ namespace tyson
             return value_ == "true";
         }
 
+        /**
+         * If the TySonObject represents a AnnaDB Link Primitive
+         *
+         * @tparam T TySonType::Link
+         * @return collection name and object_id as uuid-string
+         */
         template<TySonType T>
         requires (T == TySonType::Link)
         [[nodiscard]] std::pair<std::string, std::string> value() const
@@ -203,6 +265,12 @@ namespace tyson
             return link_;
         }
 
+        /**
+         * If the TySonObject represents a AnnaDB Vector
+         *
+         * @tparam T TySonType::Vector
+         * @return vector of TySonObjects
+         */
         template<TySonType T>
         requires (T == TySonType::Vector)
         [[nodiscard]] std::vector<TySonObject> value() const
@@ -210,6 +278,12 @@ namespace tyson
             return vector_;
         }
 
+        /**
+         * If the TySonObject represents a AnnaDB Map
+         *
+         * @tparam T TySonType::Map
+         * @return Key-Value pairs of TySonObjects
+         */
         template<TySonType T>
         requires (T == TySonType::Map)
         [[nodiscard]] std::map<TySonObject, TySonObject> value() const
@@ -217,6 +291,13 @@ namespace tyson
             return map_;
         }
 
+        /**
+         * If the TySonObject represents a AnnaDB Number Primitive
+         * you can parse it into the type you want normal it will be returned as string
+         *
+         * @tparam T must be a arithmetic type
+         * @return the casted value
+         */
         template<typename T>
         requires std::is_arithmetic_v<T>
         [[nodiscard]] T value() const
@@ -273,16 +354,38 @@ namespace tyson
     public:
         TySonCollectionObject() = default;
 
+        /**
+         * Add a new AnnaDB(TySon) string representation to the current collection.
+         * It will be parsed automatically into a TySonObject
+         *
+         * @param object
+         */
         void add(const std::string_view &object)
         {
             collection_ids_.emplace_back(object);
         };
 
+        /**
+         * Add a new AnnaDB(TySon) pair of string representations to the current collection.
+         * It will be parsed automatically into a TySonObject
+         *
+         * @param object
+         */
         void add(const std::pair<std::string_view, std::string_view> &object)
         {
             collection_objects_.emplace_back(TySonObject(object.first), TySonObject(object.second));
         };
 
+        /**
+         * Get the node value from the AnnaDB response data|:objects
+         * Example:
+         *      test|ea63e06f-9d1c-442f-89fd-c5041d863f5f|:s|foo|,
+         *      `get("ea63e06f-9d1c-442f-89fd-c5041d863f5f")` => TySonObject with value `foo` and type `String`
+         *
+         * @tparam T TySonType::Object
+         * @param obj_id uuid-string
+         * @return TySonObject if found by the link_id
+         */
         template<TySonType T>
         requires (T == TySonType::Object)
         std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view obj_id)
@@ -297,6 +400,13 @@ namespace tyson
             return {};
         }
 
+        /**
+         * Get all nodes from the AnnaDB response data|:objects which belongs to a specific collection
+         *
+         * @tparam T TySonType::Objects
+         * @param collection name
+         * @return vector of TySonObject pairs which belongs to the collection
+         */
         template<TySonType T>
         requires (T == TySonType::Objects)
         std::vector<std::pair<TySonObject, TySonObject>> get(std::string_view collection)
@@ -313,6 +423,14 @@ namespace tyson
             return result;
         }
 
+        /**
+         * Get the node from the AnnaDB response data|:objects
+         *
+         * @tparam T TySonType::Object
+         * @param collection name
+         * @param obj_id uuid-string
+         * @return TySonObject pair if found by collection name and link_id
+         */
         template<TySonType T>
         requires (T == TySonType::Object)
         std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view collection, std::string_view obj_id)
@@ -329,6 +447,13 @@ namespace tyson
             return {};
         }
 
+        /**
+         * Get the node object from the AnnaDB response data|:ids
+         *
+         * @tparam T TySonType::ID
+         * @param obj_id uuid-string
+         * @return TySonObject if found by link_id
+         */
         template<TySonType T>
         requires (T == TySonType::ID)
         std::optional<TySonObject> get(std::string_view obj_id)
@@ -343,6 +468,13 @@ namespace tyson
             return {};
         }
 
+        /**
+         * Get all nodes from the AnnaDB response data|:ids
+         *
+         * @tparam T TySonType::ID
+         * @param collection name
+         * @return vector of TySonObjects which belongs to the collection found by collection name
+         */
         template<TySonType T>
         requires (T == TySonType::ID)
         std::vector<TySonObject> get(std::string_view collection)
@@ -360,14 +492,22 @@ namespace tyson
             return result;
         }
 
+        /**
+         * Get the node from the AnnaDB response data|:ids
+         *
+         * @tparam T TySonType::ID
+         * @param collection name
+         * @param obj_id uuid-string
+         * @return TySonObject if found by collection name and link_id
+         */
         template<TySonType T>
         requires (T == TySonType::ID)
-        std::optional<TySonObject> get(std::pair<std::string_view, std::string_view> collection_id)
+        std::optional<TySonObject> get(std::string_view collection, std::string_view obj_id)
         {
             for (const TySonObject &val: collection_ids_)
             {
                 auto tysonLink = val.value<TySonType::Link>();
-                if (std::tie(tysonLink.first, tysonLink.second) == std::tie(collection_id.first, collection_id.second))
+                if (std::tie(tysonLink.first, tysonLink.second) == std::tie(collection, obj_id))
                 {
                     return val;
                 }
