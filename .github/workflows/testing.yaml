@@ -17,6 +17,9 @@ jobs:
       - name: install cmake
         run: sudo apt install -y cmake
 
+      - name: install zmq
+        run: sudo apt install -y libzmq3-dev
+
       - name: build cmake
         working-directory: ./src
         run: |
