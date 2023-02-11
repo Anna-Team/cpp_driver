@@ -35,9 +35,9 @@ namespace tyson
     {
         TySonType type_;
         std::string value_;
-        std::vector<TySonObject> vector_ {};
-        std::map<TySonObject, TySonObject> map_ {};
-        std::pair<std::string, std::string> link_ {};
+        std::vector<TySonObject> vector_{};
+        std::map<TySonObject, TySonObject> map_{};
+        std::pair<std::string, std::string> link_{};
 
         /**
          * Parse a AnnaDB(TySON) Vector into a std::vector<TySonObject>
@@ -49,7 +49,8 @@ namespace tyson
          */
         void parse_vector_elements(std::string_view object)
         {
-            const auto to_tyson_object = [](std::string &val) -> TySonObject {
+            const auto to_tyson_object = [](std::string &val) -> TySonObject
+            {
                 return TySonObject{val};
             };
 
@@ -73,7 +74,8 @@ namespace tyson
          */
         std::vector<TySonObject> parse_map_element(std::string_view object)
         {
-            const auto to_tyson_object = [](std::string &val) -> TySonObject {
+            const auto to_tyson_object = [](std::string &val) -> TySonObject
+            {
                 return TySonObject{val};
             };
 
@@ -102,18 +104,24 @@ namespace tyson
 
             auto vec_data = utils::split(map_data, ',');
 
-            auto to_map_element = [this](auto &val) -> std::vector<TySonObject> {
+            auto to_map_element = [this](auto &val) -> std::vector<TySonObject>
+            {
                 return parse_map_element(val);
             };
 
             std::vector<std::vector<TySonObject>> result;
             std::transform(vec_data.begin(), vec_data.end(), std::back_inserter(result), to_map_element);
-            std::for_each(result.begin(), result.end(), [this](auto key_val){map_.try_emplace(key_val[0], key_val[1]);});
+            std::for_each(result.begin(), result.end(), [this](auto key_val)
+            {
+                map_.try_emplace(key_val[0], key_val[1]);
+            });
         }
 
     public:
 
         TySonObject() = default;
+
+        ~TySonObject() = default;
 
         /**
          * Create a new TySonObject from a raw AnnaDB data type string
@@ -163,26 +171,10 @@ namespace tyson
             }
         }
 
-        ~TySonObject()
-        {
-            value_.clear();
-            vector_.clear();
-            map_.clear();
-            link_ = {};
-        }
-
-        TySonObject(const TySonObject& rhs) : type_(rhs.type_),
-                                              value_(rhs.value_),
-                                              vector_(rhs.vector_),
-                                              map_(rhs.map_),
-                                              link_(rhs.link_){}
-
-        TySonObject& operator=(const TySonObject &rhs) = default;
-
         bool operator==(const TySonObject &rhs) const
         {
             return std::tie(this->type_, this->value_, this->vector_, this->map_, this->link_) ==
-            std::tie(rhs.type_, rhs.value_, rhs.vector_, rhs.map_, rhs.link_);
+                   std::tie(rhs.type_, rhs.value_, rhs.vector_, rhs.map_, rhs.link_);
         }
 
         bool operator<(const TySonObject &rhs) const
@@ -205,10 +197,10 @@ namespace tyson
                               map_.end(),
                               [&result, &key](const std::pair<TySonObject, TySonObject> &obj)
                               {
-                                    if (obj.first.value_ == key)
-                                    {
-                                        result = obj.second;
-                                    }
+                                  if (obj.first.value_ == key)
+                                  {
+                                      result = obj.second;
+                                  }
                               });
                 return result;
             }
@@ -305,54 +297,44 @@ namespace tyson
             if (type_ == TySonType::Number || type_ == TySonType::Bool || type_ == TySonType::Timestamp)
             {
                 std::size_t pos{};
-                T result{};
 
                 switch (*typeid(T).name())
                 {
                     case 's':
                     case 'j':
                     case 'i':
-                        result = std::stoi(value_, &pos);
-                        break;
+                        return std::stoi(value_, &pos);
                     case 'l':
-                        result = std::stol(value_, &pos);
-                        break;
+                        return std::stol(value_, &pos);
                     case 'f':
-                        result = static_cast<T>(std::stof(value_, &pos));
-                        break;
+                        return static_cast<T>(std::stof(value_, &pos));
                     case 'd':
-                        result = static_cast<T>(std::stod(value_, &pos));
-                        break;
+                        return static_cast<T>(std::stod(value_, &pos));
                     case 'x':
-                        result = std::stoll(value_, &pos);
-                        break;
+                        return std::stoll(value_, &pos);
                     case 'e':
-                        result = static_cast<T>(std::stold(value_, &pos));
-                        break;
+                        return static_cast<T>(std::stold(value_, &pos));
                     case 'b':
-                        result = value_ == "true";
-                        break;
+                        return value_ == "true";
                     case 'c':
-                        result = value_.c_str()[0];
-                        break;
+                        return value_.c_str()[0];
                 }
-                return result;
             }
-            else
-            {
-                throw std::invalid_argument("Invalid TySonType");
-            }
+
+            throw std::invalid_argument("Invalid Type");
         }
     };
 
 
     class TySonCollectionObject
     {
-        std::vector<TySonObject> collection_ids_ {};
-        std::vector<std::pair<TySonObject, TySonObject>> collection_objects_ {};
+        std::vector<TySonObject> collection_ids_{};
+        std::vector<std::pair<TySonObject, TySonObject>> collection_objects_{};
 
     public:
         TySonCollectionObject() = default;
+
+        ~TySonCollectionObject() = default;
 
         /**
          * Add a new AnnaDB(TySon) string representation to the current collection.
@@ -411,15 +393,15 @@ namespace tyson
         requires (T == TySonType::Objects)
         std::vector<std::pair<TySonObject, TySonObject>> get(std::string_view collection)
         {
-            std::vector<std::pair<TySonObject, TySonObject>> result {};
+            std::vector<std::pair<TySonObject, TySonObject>> result{};
             std::for_each(collection_objects_.begin(), collection_objects_.end(),
-                         [&collection, &result](const std::pair<TySonObject, TySonObject> &val)
-                         {
-                             if (val.first.value<TySonType::Link>().first == collection)
-                             {
-                                 result.emplace_back(val);
-                             }
-                         });
+                          [&collection, &result](const std::pair<TySonObject, TySonObject> &val)
+                          {
+                              if (val.first.value<TySonType::Link>().first == collection)
+                              {
+                                  result.emplace_back(val);
+                              }
+                          });
             return result;
         }
 
@@ -479,7 +461,7 @@ namespace tyson
         requires (T == TySonType::ID)
         std::vector<TySonObject> get(std::string_view collection)
         {
-            std::vector<TySonObject> result {};
+            std::vector<TySonObject> result{};
             std::copy_if(collection_ids_.begin(), collection_ids_.end(),
                          std::back_inserter(result),
                          [&collection](const TySonObject &val)

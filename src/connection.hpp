@@ -41,29 +41,21 @@ namespace annadb
 
     std::ostream& operator<< (std::ostream& os, MetaType metaType)
     {
-        std::string meta_str;
-
         switch (metaType)
         {
-
             case MetaType::insert_meta:
-                meta_str = "insert_meta";
-                break;
+                return os << "insert_meta";
             case MetaType::get_meta:
-                meta_str = "get_meta";
-                break;
+                return os << "get_meta";
             case MetaType::find_meta:
-                meta_str = "find_meta";
-                break;
+                return os << "find_meta";
             case MetaType::update_meta:
-                meta_str = "update_meta";
-                break;
+                return os << "update_meta";
             case MetaType::none:
-                meta_str = "none";
-                break;
+                return os << "none";
         }
 
-        return os << meta_str;
+        return os << "";
     }
 
     const auto metaTypes = std::map<std::string, MetaType>{std::make_pair(":insert_meta", MetaType::insert_meta),
@@ -75,6 +67,12 @@ namespace annadb
     {
         std::string data_;
 
+        /**
+         * Split the data into sections to create later TysonObjects
+         *
+         * @param str_data the raw string data inside of the AnnaDB response
+         * @return the parts of the data response
+         */
         std::vector<KeyVal> split_data(std::string_view str_data)
         {
             auto new_data = std::regex_replace(str_data.data(), pattern, "^$&");
@@ -88,8 +86,20 @@ namespace annadb
         }
 
     public:
-        explicit Data(std::string_view data) : data_(data) {}
 
+        /**
+         * create a new Data object from the raw string
+         * @param data
+         */
+        explicit Data(std::string_view data) : data_(data) {}
+        ~Data() = default;
+
+        /**
+         * the AnnaDB response can contains Objects or IDs which will be handled differently
+         *
+         * @tparam T the TySonType Objects or IDs
+         * @return a TySonCollection which holds either the IDs or the Objects
+         */
         template<tyson::TySonType T>
         requires (T == tyson::TySonType::Objects || T == tyson::TySonType::IDs)
         std::optional<tyson::TySonCollectionObject> get()
@@ -144,6 +154,13 @@ namespace annadb
         MetaType metaType = MetaType::none;
         tyson::TySonObject data_;
 
+        /**
+         * parsing the data part of meta into a TySonObject
+         * the data part comes after `find_meta`
+         *
+         * exampl.: s|meta|:find_meta{s|count|:n|5|}
+         * the data part here is: `{s|count|:n|5|}`
+         */
         void parse_data()
         {
             auto pos_map_start = meta_txt_.find('{');
@@ -151,6 +168,13 @@ namespace annadb
             data_ = tyson::TySonObject {map_str};
         }
 
+        /**
+         * parsing the kind of meta into a MetaType
+         * the kind/MetaType is the part between s|meta| and {s|count|:n|5|}
+         *
+         * exampl.: s|meta|:find_meta{s|count|:n|5|}
+         * the MetaType part here is: `find_meta`
+         */
         void parse_type()
         {
             auto pos_type_start = meta_txt_.find(':');
@@ -175,6 +199,11 @@ namespace annadb
 
     public:
 
+        /**
+         * Creating a new Meta object from the AnnaDB response
+         *
+         * @param meta_txt string
+         */
         explicit Meta(std::string_view meta_txt)
         {
             meta_txt_ = meta_txt;
@@ -182,11 +211,21 @@ namespace annadb
             parse_type();
         }
 
+        ~Meta() = default;
+
+        /**
+         *
+         * @return the data part of the meta object
+         */
         tyson::TySonObject data()
         {
             return data_;
         }
 
+        /**
+         *
+         * @return the type part of the meta object
+         */
         MetaType type()
         {
             return metaType;
@@ -199,6 +238,12 @@ namespace annadb
         std::string data_;
         std::string meta_;
 
+        /**
+         * Parse the AnnaDB query response into a meta and a data object
+         * exampl.: `result:<ok|false>[response{s|data|<...>, s|meta|<...>}]`
+         *
+         * @param response string
+         */
         void parse_response(std::string_view response)
         {
             /*
@@ -236,22 +281,43 @@ namespace annadb
         }
 
     public:
+
+        /**
+         * Creating a new Journal object from the AnnaDB response
+         *
+         * @param response string
+         */
         explicit Journal(std::string_view response)
         {
             parse_response(response);
         }
 
+        ~Journal() = default;
+
+        /**
+         * Indicates if the query request was successful
+         *
+         * @return the query result
+         */
         [[nodiscard]] bool ok() const
         {
             return result_;
         }
 
+        /**
+         *
+         * @return the meta part of the AnnaDB query response
+         */
         [[nodiscard]] Meta meta() const
         {
             Meta meta{meta_};
             return meta;
         }
 
+        /**
+         *
+         * @return the data part of the AnnaDB query response
+         */
         [[nodiscard]] Data data() const
         {
             Data data{data_};
@@ -299,6 +365,15 @@ namespace annadb
         }
 
     public:
+
+        /**
+         * Create a new AnnaDB object with settings to enable a connection.
+         *
+         * @param username string
+         * @param password string
+         * @param host string
+         * @param port number
+         */
         AnnaDB(std::string_view username,
                std::string_view password,
                std::string_view host,
@@ -312,16 +387,28 @@ namespace annadb
 
         ~AnnaDB() = default;
 
+        /**
+         * open a connection with the AnnaDB
+         */
         void connect()
         {
             requester.connect("tcp://" + host_ + ":" + port_);
         }
 
+        /**
+         * close the connection to the AnnaDB
+         */
         void close()
         {
             requester.close();
         }
 
+        /**
+         * Send a TySON formatted query to AnnaDB
+         *
+         * @param query string in TySON format
+         * @return a Journal object representing the result of the query if successful
+         */
         [[nodiscard]] std::optional<Journal> send(std::string_view query)
         {
             auto result = zmq_send(query);

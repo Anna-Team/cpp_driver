@@ -13,6 +13,14 @@
 
 namespace utils
 {
+    /**
+     * Helper to split up a string by a delimiter and put them into a std::vector
+     * with the range library
+     *
+     * @param txt original string
+     * @param delim the char on which to split
+     * @return the strings inside of a vector
+     */
     inline std::vector<std::string> split(std::string_view txt, char delim)
     {   const auto to_string = [](auto && chr) -> std::string {
             const std::ranges::common_view cv = std::ranges::common_view{chr};
