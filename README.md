@@ -17,7 +17,7 @@ AnnaDB uses a custom query language dubbed [TySON](https://github.com/roman-righ
 - googletest
 
 ## Docs
-- generated via `doxygen` under [docs](docs)
+- generated via `doxygen` under [docs](https://anna-team.github.io/cpp_driver/html/annotated.html)
 
 ## local development
 - create a AnnaDB instance via `docker-compose up` access the DB via port `10001` on `localhost`
