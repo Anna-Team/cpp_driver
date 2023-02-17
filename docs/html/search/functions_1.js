@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['close_0',['close',['../classannadb_1_1AnnaDB.html#a709f1664bdc539bdfd2533db6d04da52',1,'annadb::AnnaDB']]],
-  ['connect_1',['connect',['../classannadb_1_1AnnaDB.html#a5b451c757817b312936f9cd73798d9ff',1,'annadb::AnnaDB']]]
+  ['bool_0',['Bool',['../classtyson_1_1TySonObject.html#a9b755581bff8223bdb5fd54102135172',1,'tyson::TySonObject']]]
 ];

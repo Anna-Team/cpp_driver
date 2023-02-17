@@ -104,7 +104,7 @@ namespace annadb::Query
 
     class Insert : public QueryCmd
     {
-        std::vector<std::unique_ptr<tyson::TySonObject>> values;
+        std::vector<tyson::TySonObject> values_;
 
         std::string annadb_query() override
         {
@@ -122,7 +122,7 @@ namespace annadb::Query
 
     public:
         Insert() : QueryCmd("insert", true) {}
-        Insert(const Insert &) : QueryCmd("insert", true) {}
+        Insert(const Insert &rhs) : QueryCmd("insert", true), values_(rhs.values_) {}
     };
 
 

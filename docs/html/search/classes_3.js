@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keyval_0',['KeyVal',['../structannadb_1_1KeyVal.html',1,'annadb']]]
+  ['get_0',['Get',['../classannadb_1_1Query_1_1Get.html',1,'annadb::Query']]]
 ];

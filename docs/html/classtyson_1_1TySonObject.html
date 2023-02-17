@@ -75,6 +75,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classtyson_1_1TySonObject-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">tyson::TySonObject Class Reference</div></div>
 </div><!--header-->
@@ -101,6 +103,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (con
 requires (T == TySonType::Bool)</td></tr>
 <tr class="memitem:ab01e43806798593634a00e06e30fc6b3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ab01e43806798593634a00e06e30fc6b3">value</a> () const</td></tr>
 <tr class="separator:ab01e43806798593634a00e06e30fc6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5db999a3db1e3d809a3e0d138af9f2b"><td class="memTemplParams" colspan="2">template&lt;TySonType T&gt; <br />
+requires (T == TySonType::Null)</td></tr>
+<tr class="memitem:ae5db999a3db1e3d809a3e0d138af9f2b"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ae5db999a3db1e3d809a3e0d138af9f2b">value</a> () const</td></tr>
+<tr class="separator:ae5db999a3db1e3d809a3e0d138af9f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a2349d8b04edbaf5c444ad9ff2502c2"><td class="memTemplParams" colspan="2">template&lt;TySonType T&gt; <br />
 requires (T == TySonType::Link)</td></tr>
 <tr class="memitem:a3a2349d8b04edbaf5c444ad9ff2502c2"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::string, std::string &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#a3a2349d8b04edbaf5c444ad9ff2502c2">value</a> () const</td></tr>
@@ -117,6 +123,33 @@ requires (T == TySonType::Map)</td></tr>
 requires std::is_arithmetic_v&lt;T&gt;</td></tr>
 <tr class="memitem:a044f4ca1c8e4ceb5f570d5c7f5b4692c"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#a044f4ca1c8e4ceb5f570d5c7f5b4692c">value</a> () const</td></tr>
 <tr class="separator:a044f4ca1c8e4ceb5f570d5c7f5b4692c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a21fcc1b75394f44ee7d8bdf30c5b89d9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
+requires std::is_integral_v&lt;T&gt;</td></tr>
+<tr class="memitem:a21fcc1b75394f44ee7d8bdf30c5b89d9"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#a21fcc1b75394f44ee7d8bdf30c5b89d9">Number</a> (T number)</td></tr>
+<tr class="separator:a21fcc1b75394f44ee7d8bdf30c5b89d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0cc39f41a878bdaf540c75c1197df0f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ac0cc39f41a878bdaf540c75c1197df0f">String</a> (const std::string &amp;str)</td></tr>
+<tr class="separator:ac0cc39f41a878bdaf540c75c1197df0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b755581bff8223bdb5fd54102135172"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#a9b755581bff8223bdb5fd54102135172">Bool</a> (bool bl)</td></tr>
+<tr class="separator:a9b755581bff8223bdb5fd54102135172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad40ad339820c04cac12facc642a07107"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ad40ad339820c04cac12facc642a07107">Null</a> ()</td></tr>
+<tr class="separator:ad40ad339820c04cac12facc642a07107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6df9d906405d9a5fe78a96f478b29b00"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#a6df9d906405d9a5fe78a96f478b29b00">Timestamp</a> (unsigned long long seconds)</td></tr>
+<tr class="separator:a6df9d906405d9a5fe78a96f478b29b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c0e22ebd69d9dc7d42a6f51485b14c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ad5c0e22ebd69d9dc7d42a6f51485b14c">Link</a> (const std::string &amp;collection, const std::string &amp;uuid)</td></tr>
+<tr class="separator:ad5c0e22ebd69d9dc7d42a6f51485b14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9645d4d13b25530def8fbccbea25b80"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#af9645d4d13b25530def8fbccbea25b80">Vector</a> (std::vector&lt; <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &amp;objs)</td></tr>
+<tr class="separator:af9645d4d13b25530def8fbccbea25b80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1f767ae4fb7d306f868dc316edff002"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ac1f767ae4fb7d306f868dc316edff002">Map</a> (std::map&lt; std::string, <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &amp;objs)</td></tr>
+<tr class="separator:ac1f767ae4fb7d306f868dc316edff002"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a1cb2c17dcdd699bab544394e84f315bb"><td class="memItemLeft" align="right" valign="top"><a id="a1cb2c17dcdd699bab544394e84f315bb" name="a1cb2c17dcdd699bab544394e84f315bb"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;out, <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> const &amp;obj)</td></tr>
+<tr class="separator:a1cb2c17dcdd699bab544394e84f315bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a62783f9bd1ca559d751bfec72b8c886f" name="a62783f9bd1ca559d751bfec72b8c886f"></a>
@@ -154,6 +187,189 @@ requires std::is_arithmetic_v&lt;T&gt;</td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9b755581bff8223bdb5fd54102135172" name="a9b755581bff8223bdb5fd54102135172"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b755581bff8223bdb5fd54102135172">&#9670;&#160;</a></span>Bool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Bool </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bl</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Bool</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bl</td><td>the value of the new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad5c0e22ebd69d9dc7d42a6f51485b14c" name="ad5c0e22ebd69d9dc7d42a6f51485b14c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5c0e22ebd69d9dc7d42a6f51485b14c">&#9670;&#160;</a></span>Link()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Link </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>collection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>uuid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Link</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">collection</td><td>the name of the reference collection </td></tr>
+    <tr><td class="paramname">uuid</td><td>the id of the element inside of the collection </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
+<a id="ac1f767ae4fb7d306f868dc316edff002" name="ac1f767ae4fb7d306f868dc316edff002"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1f767ae4fb7d306f868dc316edff002">&#9670;&#160;</a></span>Map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Map </td>
+          <td>(</td>
+          <td class="paramtype">std::map&lt; std::string, <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>objs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Map</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">objs</td><td>a std::map of std::string and <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
+<a id="ad40ad339820c04cac12facc642a07107" name="ad40ad339820c04cac12facc642a07107"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad40ad339820c04cac12facc642a07107">&#9670;&#160;</a></span>Null()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Null </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Null</p>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
+<a id="a21fcc1b75394f44ee7d8bdf30c5b89d9" name="a21fcc1b75394f44ee7d8bdf30c5b89d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21fcc1b75394f44ee7d8bdf30c5b89d9">&#9670;&#160;</a></span>Number()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; <br />
+requires std::is_integral_v&lt;T&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Number </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>number</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Number</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>an integral type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">number</td><td>the value of the new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
 <a id="abe89e1c639a3a3fd6c40d2d3febfdad5" name="abe89e1c639a3a3fd6c40d2d3febfdad5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe89e1c639a3a3fd6c40d2d3febfdad5">&#9670;&#160;</a></span>operator[]()</h2>
 
@@ -188,6 +404,74 @@ requires std::is_arithmetic_v&lt;T&gt;</td></tr>
 
 </div>
 </div>
+<a id="ac0cc39f41a878bdaf540c75c1197df0f" name="ac0cc39f41a878bdaf540c75c1197df0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0cc39f41a878bdaf540c75c1197df0f">&#9670;&#160;</a></span>String()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::String </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> String</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>the value of the new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
+<a id="a6df9d906405d9a5fe78a96f478b29b00" name="a6df9d906405d9a5fe78a96f478b29b00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6df9d906405d9a5fe78a96f478b29b00">&#9670;&#160;</a></span>Timestamp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Timestamp </td>
+          <td>(</td>
+          <td class="paramtype">unsigned long long&#160;</td>
+          <td class="paramname"><em>seconds</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Timestamp</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seconds</td><td>that have elapsed since the Unix epoch </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
+
+</div>
+</div>
 <a id="a85bcc5d29cec034a734febde79b7647b" name="a85bcc5d29cec034a734febde79b7647b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85bcc5d29cec034a734febde79b7647b">&#9670;&#160;</a></span>type()</h2>
 
@@ -215,7 +499,7 @@ requires std::is_arithmetic_v&lt;T&gt;</td></tr>
 </div>
 </div>
 <a id="a5379fe5420786879fa7b917eea244361" name="a5379fe5420786879fa7b917eea244361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5379fe5420786879fa7b917eea244361">&#9670;&#160;</a></span>value() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5379fe5420786879fa7b917eea244361">&#9670;&#160;</a></span>value() <span class="overload">[1/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +534,7 @@ template&lt;TySonType T&gt; </div>
 </div>
 </div>
 <a id="ab01e43806798593634a00e06e30fc6b3" name="ab01e43806798593634a00e06e30fc6b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab01e43806798593634a00e06e30fc6b3">&#9670;&#160;</a></span>value() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab01e43806798593634a00e06e30fc6b3">&#9670;&#160;</a></span>value() <span class="overload">[2/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,8 +569,44 @@ requires (T == TySonType::Bool)</div>
 
 </div>
 </div>
+<a id="ae5db999a3db1e3d809a3e0d138af9f2b" name="ae5db999a3db1e3d809a3e0d138af9f2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5db999a3db1e3d809a3e0d138af9f2b">&#9670;&#160;</a></span>value() <span class="overload">[3/7]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;TySonType T&gt; <br />
+requires (T == TySonType::Null)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string tyson::TySonObject::value </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>If the <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> represents a AnnaDB null Primitive</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>TySonType::Null </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>an empty string to indicate null </dd></dl>
+
+</div>
+</div>
 <a id="a3a2349d8b04edbaf5c444ad9ff2502c2" name="a3a2349d8b04edbaf5c444ad9ff2502c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a2349d8b04edbaf5c444ad9ff2502c2">&#9670;&#160;</a></span>value() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a2349d8b04edbaf5c444ad9ff2502c2">&#9670;&#160;</a></span>value() <span class="overload">[4/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +642,7 @@ requires (T == TySonType::Link)</div>
 </div>
 </div>
 <a id="a9e061cf36829923d50bd602c9ef73b8a" name="a9e061cf36829923d50bd602c9ef73b8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e061cf36829923d50bd602c9ef73b8a">&#9670;&#160;</a></span>value() <span class="overload">[4/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e061cf36829923d50bd602c9ef73b8a">&#9670;&#160;</a></span>value() <span class="overload">[5/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -358,7 +678,7 @@ requires (T == TySonType::Vector)</div>
 </div>
 </div>
 <a id="a3faff04ae5fbb5537dc021296d1555b7" name="a3faff04ae5fbb5537dc021296d1555b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3faff04ae5fbb5537dc021296d1555b7">&#9670;&#160;</a></span>value() <span class="overload">[5/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3faff04ae5fbb5537dc021296d1555b7">&#9670;&#160;</a></span>value() <span class="overload">[6/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -394,7 +714,7 @@ requires (T == TySonType::Map)</div>
 </div>
 </div>
 <a id="a044f4ca1c8e4ceb5f570d5c7f5b4692c" name="a044f4ca1c8e4ceb5f570d5c7f5b4692c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a044f4ca1c8e4ceb5f570d5c7f5b4692c">&#9670;&#160;</a></span>value() <span class="overload">[6/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a044f4ca1c8e4ceb5f570d5c7f5b4692c">&#9670;&#160;</a></span>value() <span class="overload">[7/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -426,6 +746,40 @@ requires std::is_arithmetic_v&lt;T&gt;</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the casted value </dd></dl>
+
+</div>
+</div>
+<a id="af9645d4d13b25530def8fbccbea25b80" name="af9645d4d13b25530def8fbccbea25b80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9645d4d13b25530def8fbccbea25b80">&#9670;&#160;</a></span>Vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Vector </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>objs</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Create a new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> Vector</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">objs</td><td>a std::vector of TySonObjects </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> </dd></dl>
 
 </div>
 </div>

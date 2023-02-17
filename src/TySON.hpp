@@ -117,10 +117,51 @@ namespace tyson
             });
         }
 
+        friend std::ostream& operator<<(std::ostream &out, TySonObject const &obj)
+        {
+            switch (obj.type())
+            {
+                case TySonType::Number:
+                    return out << "n|" << obj.value_ << "|";
+                case TySonType::String:
+                    return out << "s|" << obj.value_ << "|";
+                case TySonType::Bool:
+                    return out << "b|" << obj.value_ << "|";
+                case TySonType::Null:
+                    return out << "null";
+                case TySonType::Timestamp:
+                    return out << "utc|" << obj.value_ << "|";
+                case TySonType::Link:
+                    return out << std::get<0>(obj.link_) << "|" << std::get<1>(obj.link_) << "|";
+                case TySonType::Vector:
+                {
+                    std::stringstream sstream;
+                    std::for_each(obj.vector_.begin(),
+                                  obj.vector_.end(),
+                                  [&sstream](const auto &val){ sstream << val << ","; });
+
+                    return out << "v[" << sstream.str() << "]";
+                }
+                case TySonType::Map:
+                {
+                    std::stringstream sstream;
+                    std::for_each(obj.map_.begin(),
+                                  obj.map_.end(),
+                                  [&sstream](const std::pair<TySonObject, TySonObject> &val)
+                                  {
+                                        sstream << val.first << ":" << val.second << ",";
+                                  });
+
+                    return out << "m{" << sstream.str() << "}";
+                }
+                default:
+                    return out << "";
+            }
+        }
+
     public:
 
-        TySonObject() = default;
-
+        TySonObject() : type_(tyson::TySonType::Null) {};
         ~TySonObject() = default;
 
         /**
@@ -183,6 +224,126 @@ namespace tyson
         }
 
         /**
+         * Create a new TySonObject Number
+         *
+         * @tparam T an integral type
+         * @param number the value of the new TySonObject
+         * @return new TySonObject
+         */
+        template<typename T>
+        requires std::is_integral_v<T>
+        static TySonObject Number(T number)
+        {
+            TySonObject tySonObject {};
+            tySonObject.value_ = std::to_string(number);
+            tySonObject.type_ = TySonType::Number;
+            return tySonObject;
+        }
+
+
+        /**
+         * Create a new TySonObject String
+         *
+         * @param str the value of the new TySonObject
+         * @return new TySonObject
+         */
+        static TySonObject String(const std::string &str)
+        {
+            TySonObject tySonObject {};
+            tySonObject.value_ = str;
+            tySonObject.type_ = TySonType::String;
+            return tySonObject;
+        }
+
+        /**
+         * Create a new TySonObject Bool
+         *
+         * @param bl the value of the new TySonObject
+         * @return new TySonObject
+         */
+        static TySonObject Bool(bool bl)
+        {
+            TySonObject tySonObject {};
+            tySonObject.value_ = bl ? "true" : "false";
+            tySonObject.type_ = TySonType::Bool;
+            return tySonObject;
+        }
+
+        /**
+         * Create a new TySonObject Null
+         *
+         * @return new TySonObject
+         */
+        static TySonObject Null()
+        {
+            TySonObject tySonObject {};
+            tySonObject.value_ = "null";
+            tySonObject.type_ = TySonType::Null;
+            return tySonObject;
+        }
+
+        /**
+         * Create a new TySonObject Timestamp
+         *
+         * @param seconds that have elapsed since the Unix epoch
+         * @return new TySonObject
+         */
+        static TySonObject Timestamp(unsigned long long seconds)
+        {
+            TySonObject tySonObject {};
+            tySonObject.value_ = std::to_string(seconds);
+            tySonObject.type_ = TySonType::Timestamp;
+            return tySonObject;
+        }
+
+        /**
+         * Create a new TySonObject Link
+         *
+         * @param collection the name of the reference collection
+         * @param uuid the id of the element inside of the collection
+         * @return new TySonObject
+         */
+        static TySonObject Link(const std::string &collection, const std::string &uuid)
+        {
+            TySonObject tySonObject {};
+            tySonObject.link_ = {collection, uuid};
+            tySonObject.type_ = TySonType::Link;
+            return tySonObject;
+        }
+
+        /**
+         * Create a new TySonObject Vector
+         *
+         * @param objs a std::vector of TySonObjects
+         * @return new TySonObject
+         */
+        static TySonObject Vector(std::vector<TySonObject> &objs)
+        {
+            TySonObject tySonObject {};
+            tySonObject.vector_ = {std::move(objs)};
+            tySonObject.type_ = TySonType::Vector;
+            return tySonObject;
+        }
+
+        /**
+         * Create a new TySonObject Map
+         *
+         * @param objs a std::map of std::string and TySonObject
+         * @return new TySonObject
+         */
+        static TySonObject Map(std::map<std::string, TySonObject> &objs)
+        {
+            TySonObject tySonObject {};
+            std::for_each(objs.begin(), objs.end(),
+                          [&tySonObject](std::pair<const std::string, TySonObject> &val)
+                          {
+                                tySonObject.map_.try_emplace(TySonObject::String(val.first), std::move(val.second));
+                          });
+            tySonObject.type_ = TySonType::Map;
+            return tySonObject;
+        }
+
+        /**
          * Get the value of a AnnaDB Map as TySonObject
          *
          * @param key must be a string inside of AnnaDB Map
@@ -242,6 +403,19 @@ namespace tyson
         [[nodiscard]] bool value() const
         {
             return value_ == "true";
+        }
+
+        /**
+         * If the TySonObject represents a AnnaDB null Primitive
+         *
+         * @tparam T TySonType::Null
+         * @return an empty string to indicate null
+         */
+        template<TySonType T>
+        requires (T == TySonType::Null)
+        [[nodiscard]] std::string value() const
+        {
+            return "";
         }
 
         /**

@@ -87,13 +87,18 @@ Test library</h1>
 <li>googletest</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md3"></a>
+Docs</h1>
+<ul>
+<li>generated via <code>doxygen</code> under <a href="https://anna-team.github.io/cpp_driver/html/annotated.html">docs</a></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md4"></a>
 local development</h1>
 <ul>
 <li>create a AnnaDB instance via <code>docker-compose up</code> access the DB via port <code>10001</code> on <code>localhost</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 How to use</h1>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 1. Create a connection to AnnaDB</h2>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#include &quot;connection.hpp&quot;</div>
@@ -104,10 +109,10 @@ How to use</h1>
 <div class="line">// do something</div>
 <div class="line"> </div>
 <div class="line">con.close();</div>
-</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md7"></a>
 2. Make a query to AnnaDB</h2>
 <ul>
-<li><a href="https://annadb.dev/documentation/insert/">AnnaDB Query Documentation</a></li>
+<li><a href="https://annadb.dev/documentation/insert/">AnnaDB QueryCmd Documentation</a></li>
 <li>the result of a query request is a <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">std::optional&lt;annadb::Journal&gt;</div>
 </div><!-- fragment --> <div class="fragment"><div class="line"> {c++}</div>
@@ -123,7 +128,7 @@ How to use</h1>
 <div class="line">// ...</div>
 </div><!-- fragment --> </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 3. Inspect the AnnaDB result</h2>
 <ul>
 <li>the <code><a class="el" href="classannadb_1_1Journal.html">annadb::Journal</a></code> class <div class="fragment"><div class="line"> {c++}</div>

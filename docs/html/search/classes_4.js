@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['meta_0',['Meta',['../classannadb_1_1Meta.html',1,'annadb']]]
+  ['insert_0',['Insert',['../classannadb_1_1Query_1_1Insert.html',1,'annadb::Query']]]
 ];
