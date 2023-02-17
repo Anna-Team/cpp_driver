@@ -36,7 +36,7 @@ con.connect();
 con.close();
 ``` 
 ### 2. Make a query to AnnaDB
-- [AnnaDB Query Documentation](https://annadb.dev/documentation/insert/)
+- [AnnaDB QueryCmd Documentation](https://annadb.dev/documentation/insert/)
 - the result of a query request is a 
 ```c++
 std::optional<annadb::Journal>

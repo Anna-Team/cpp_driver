@@ -27,7 +27,7 @@ if ("$ENV{TESTING}")
 else ()
     find_package(cppzmq)
 
-    add_executable(annadb_driver main.cpp connection.hpp TySON.hpp utils.hpp)
+    add_executable(annadb_driver main.cpp connection.hpp TySON.hpp utils.hpp query.hpp)
     target_link_libraries(annadb_driver cppzmq)
 endif ()
 
