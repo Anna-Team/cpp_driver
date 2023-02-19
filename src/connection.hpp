@@ -10,6 +10,7 @@
 #include <valarray>
 #include <zmq.hpp>
 #include "TySON.hpp"
+#include "query.hpp"
 
 
 namespace annadb
@@ -144,6 +145,7 @@ namespace annadb
 
     class Meta
     {
+        tyson::TySonObject data_;
         /*
          * Always a TySON map object
          * s|meta|:find_meta{s|count|:n|5|}
@@ -152,7 +154,7 @@ namespace annadb
 
         std::string count_;
         MetaType metaType = MetaType::none;
-        tyson::TySonObject data_;
+
 
         /**
          * parsing the data part of meta into a TySonObject
@@ -234,9 +236,9 @@ namespace annadb
 
     class Journal
     {
-        bool result_ = false;
         std::string data_;
         std::string meta_;
+        bool result_ = false;
 
         /**
          * Parse the AnnaDB query response into a meta and a data object
@@ -332,8 +334,8 @@ namespace annadb
         std::string host_;
         std::string port_;
 
-        zmq::context_t context {1};
         zmq::socket_t requester {context, ZMQ_REQ};
+        zmq::context_t context {1};
 
         inline bool zmq_send(std::string_view query)
         {
@@ -412,6 +414,30 @@ namespace annadb
         [[nodiscard]] std::optional<Journal> send(std::string_view query)
         {
             auto result = zmq_send(query);
+
+            if (result)
+            {
+                auto response = zmq_receive();
+                if (response)
+                {
+                    return Journal(*response);
+                }
+            }
+            return {};
+        }
+
+        /**
+         * Send a TySON formatted query to AnnaDB
+         *
+         * @param query @see query.annadb::Query::Query
+         * @return a Journal object representing the result of the query if successful
+         */
+        [[nodiscard]] std::optional<Journal> send(annadb::Query::Query &query)
+        {
+            std::stringstream sstream;
+            sstream << query;
+
+            auto result = zmq_send(sstream.str());
 
             if (result)
             {

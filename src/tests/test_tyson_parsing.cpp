@@ -230,3 +230,16 @@ TEST(tyson_parsing, create_tyson_map)
 
     ASSERT_EQ(sstream.str(), "m{s|active|:b|false|,s|num|:n|10|,}");
 }
+
+TEST(tyson_parsing, create_tyson_value)
+{
+    std::stringstream sstream;
+    auto num = tyson::TySonObject::Number(10);
+
+    auto val = tyson::TySonObject::Value("num", num);
+    ASSERT_EQ(val.type(), tyson::TySonType::Value);
+
+    sstream << val;
+
+    ASSERT_EQ(sstream.str(), "value|num|:n|10|");
+}

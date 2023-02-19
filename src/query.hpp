@@ -6,11 +6,25 @@
 #define ANNADB_DRIVER_QUERY_HPP
 
 #include <string>
-#include <stdarg.h>
+#include <cstdarg>
+#include <utility>
 #include "TySON.hpp"
+#include "query_comparision.hpp"
 
 namespace annadb::Query
 {
+
+    /**
+     * Inside of the update statement you can decide
+     * if you either want to set the field to a particular value
+     * or if you want to increase the field to a particular value
+     *
+     */
+    enum class UpdateType
+    {
+        Inc = 0,
+        Set = 1,
+    };
 
     struct SortCmd
     {
@@ -23,6 +37,12 @@ namespace annadb::Query
         std::string field_;
 
     public:
+
+        /**
+         * Sort in ascending order by
+         *
+         * @param field
+         */
         explicit Asc(std::string_view field) : field_(field) {}
 
         [[nodiscard]] std::string data() const override
@@ -36,6 +56,12 @@ namespace annadb::Query
         std::string field_;
 
     public:
+
+        /**
+         * Sort in descending order by
+         *
+         * @param field
+         */
         explicit Desc(std::string_view field) : field_(field) {}
 
         [[nodiscard]] std::string data() const override
@@ -58,8 +84,6 @@ namespace annadb::Query
         QueryCmd() = default;
         explicit QueryCmd(std::string_view name, bool start_cmd) : name_(name), start_cmd_(start_cmd) {}
         virtual ~QueryCmd() = default;
-
-        QueryCmd(QueryCmd &&rhs) = default;
 
         [[nodiscard]] std::string name()
         {
@@ -94,7 +118,7 @@ namespace annadb::Query
                 return false;
             }
 
-            auto res = std::find(next_steps_().begin(), next_steps_().end(), cmdName);
+            auto res = std::find(previous_steps_().begin(), previous_steps_().end(), cmdName);
             return res != next_steps_().end();
         }
 
@@ -108,7 +132,12 @@ namespace annadb::Query
 
         std::string annadb_query() override
         {
-            return "";
+            std::stringstream sstream;
+            sstream << "insert[";
+            std::for_each(values_.begin(), values_.end(),
+                          [&sstream](auto &val){ sstream << val << ",";});
+            sstream << "]";
+            return sstream.str();
         }
 
         [[nodiscard]] std::vector<std::string> previous_steps_() override
@@ -121,16 +150,28 @@ namespace annadb::Query
         }
 
     public:
-        Insert() : QueryCmd("insert", true) {}
-        Insert(const Insert &rhs) : QueryCmd("insert", true), values_(rhs.values_) {}
+        explicit Insert(tyson::TySonObject &obj) : QueryCmd("insert", true)
+        {
+            values_.emplace_back(std::move(obj));
+        }
+
+        explicit Insert(std::vector<tyson::TySonObject> &objs) : QueryCmd("insert", true), values_(std::move(objs)) {}
+
     };
 
 
     class Get : public QueryCmd
     {
+        std::vector<tyson::TySonObject> values_;
+
         std::string annadb_query() override
         {
-            return "";
+            std::stringstream sstream;
+            sstream << "get[";
+            std::for_each(values_.begin(), values_.end(),
+                          [&sstream](auto &val){ sstream << val << ",";});
+            sstream << "]";
+            return sstream.str();
         }
 
         [[nodiscard]] std::vector<std::string> previous_steps_() override
@@ -143,17 +184,27 @@ namespace annadb::Query
         }
 
     public:
-        Get() : QueryCmd("find", true) {}
-        Get(const Get &) : QueryCmd("find", true) {}
-
+        Get(tyson::TySonObject &obj) : QueryCmd("get", true)
+        {
+            values_.emplace_back(obj);
+        }
+        Get(std::vector<tyson::TySonObject> &objs) : QueryCmd("get", true), values_(std::move(objs)) {}
     };
 
 
     class Find : public QueryCmd
     {
+        std::vector<std::unique_ptr<Comparison>> comparators_;
         std::string annadb_query() override
         {
-            return "";
+            std::stringstream sstream;
+            sstream << "find[";
+            for (auto &val : comparators_)
+            {
+                sstream << val->str() << ",";
+            }
+            sstream << "]";
+            return sstream.str();
         }
 
         [[nodiscard]] std::vector<std::string> previous_steps_() override
@@ -166,7 +217,183 @@ namespace annadb::Query
         }
 
     public:
-        Find(const Find &) : QueryCmd("find", true) {};
+        Find() : QueryCmd("find", true) {};
+        Find(Find &&rhs) = default;
+
+        Find& eq(tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Eq>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements by equally comparison
+         *
+         * @param value @see TySON.tyson::TySonObject
+         * @return the Find class to add additional filter
+         */
+        static Find EQ(tyson::TySonObject &value)
+        {
+            Find find {};
+            find.eq(value);
+            return find;
+        }
+
+        Find& neq(tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Neq>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements not equally comparison
+         *
+         * @param value @see TySON.tyson::TySonObject
+         * @return the Find class to add additional filter
+         */
+        static Find NEQ(tyson::TySonObject &value)
+        {
+            Find find {};
+            find.neq(value);
+            return find;
+        }
+
+        Find& gt(tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Gt>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements which are greater
+         *
+         * @param value @see TySON.tyson::TySonObject
+         * @return the Find class to add additional filter
+         */
+        static Find GT(tyson::TySonObject &value)
+        {
+            Find find {};
+            find.gt(value);
+            return find;
+        }
+
+        Find& gte(tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Gte>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements which are greater or equally
+         *
+         * @param value @see TySON.tyson::TySonObject
+         * @return the Find class to add additional filter
+         */
+        static Find GTE(tyson::TySonObject &value)
+        {
+            Find find {};
+            find.gte(value);
+            return find;
+        }
+
+        Find& lt(tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Lt>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements which are less
+         *
+         * @param value @see TySON.tyson::TySonObject
+         * @return the Find class to add additional filter
+         */
+        static Find LT(tyson::TySonObject &value)
+        {
+            Find find {};
+            find.lt(value);
+            return find;
+        }
+
+        Find& lte(tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Lte>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements which are less or equally
+         *
+         * @param value @see TySON.tyson::TySonObject
+         * @return the Find class to add additional filter
+         */
+        static Find LTE(tyson::TySonObject &value)
+        {
+            Find find {};
+            find.lte(value);
+            return find;
+        }
+
+        Find& q(And &value)
+        {
+            comparators_.emplace_back(std::make_unique<And>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements which meet both statements
+         *
+         * @param comp_1 @see query_comparison.annadb::Query::Comparison
+         * @param comp_2  @see query_comparison.annadb::Query::Comparison
+         * @return the Find class to add additional filter
+         */
+        static Find AND(Comparison &comp_1, Comparison &comp_2)
+        {
+            And and_ {comp_1, comp_2};
+            Find find {};
+            find.q(and_);
+            return find;
+        }
+
+        Find& q(Or &value)
+        {
+            comparators_.emplace_back(std::make_unique<Or>(value));
+            return *this;
+        }
+
+        /**
+         * Find elements by or comparison
+         *
+         * @param comp @see query_comparison.annadb::Query::Comparison
+         * @return the Find class to add additional filter
+         */
+        static Find OR(std::vector<Comparison> &comp)
+        {
+            Or or_ {comp};
+            Find find {};
+            find.q(or_);
+            return find;
+        }
+
+        Find& q(Not &value)
+        {
+            comparators_.emplace_back(std::make_unique<Not>(value));
+            return *this;
+        }
+
+        /**
+         * Exclude a specific field
+         *
+         * @param field
+         * @return the Find class to add additional filter
+         */
+        static Find NOT(std::string_view field)
+        {
+            Not not_ {field};
+            Find find {};
+            find.q(not_);
+            return find;
+        }
 
     };
 
@@ -269,9 +496,30 @@ namespace annadb::Query
 
     class Update : public QueryCmd
     {
+        std::vector<std::tuple<UpdateType, tyson::TySonObject>> values_ {};
+
         std::string annadb_query() override
         {
-            return "";
+            std::stringstream sstream;
+            sstream << "update[";
+            for (auto &val : values_)
+            {
+                auto type = std::get<0>(val);
+                auto obj = std::get<1>(val);
+
+                if (type == UpdateType::Set)
+                {
+                    sstream << "set{" << obj << "},";
+                }
+                else
+                {
+                    sstream << "inc{" << obj << "},";
+                }
+            }
+
+            sstream << "]";
+
+            return sstream.str();
         }
 
         [[nodiscard]] std::vector<std::string> previous_steps_() override
@@ -284,7 +532,20 @@ namespace annadb::Query
         }
 
     public:
-        Update(const Update &) : QueryCmd("update", true) {};
+
+        Update(tyson::TySonObject &val, UpdateType &type) : QueryCmd("update", false)
+        {
+            values_.emplace_back(type, val);
+        }
+        Update(std::vector<tyson::TySonObject> &values, UpdateType &type) : QueryCmd("update", false)
+        {
+            std::for_each(values.begin(), values.end(),
+                          [this, &type](auto val)
+                          {
+                            this->values_.emplace_back(type, val);
+                          });
+        }
+        Update(std::vector<std::tuple<UpdateType, tyson::TySonObject>> &&values) : QueryCmd("update", false), values_(values) {}
     };
 
 
@@ -292,7 +553,7 @@ namespace annadb::Query
     {
         std::string annadb_query() override
         {
-            return "";
+            return "delete";
         }
 
         [[nodiscard]] std::vector<std::string> previous_steps_() override
@@ -305,12 +566,14 @@ namespace annadb::Query
         }
 
     public:
-        Delete(const Delete &) : QueryCmd("delete", true) {};
+        Delete() = default;
+        Delete(const Delete &) : QueryCmd("delete", false) {};
     };
 
 
     class Query
     {
+        std::string collection_name_;
         std::vector<std::unique_ptr<annadb::Query::QueryCmd>> cmds_ {};
         void add_to_cmds(std::unique_ptr<QueryCmd> queryCmd)
         {
@@ -338,44 +601,232 @@ namespace annadb::Query
             }
         }
 
+        friend std::ostream& operator<<(std::ostream &out, Query &query)
+        {
+            std::stringstream sstream;
+            sstream << "collection|" << query.collection_name_ << "|";
+
+            if (query.cmds_.size() == 1)
+            {
+                sstream << ":" << query.cmds_[0]->query() << ";";
+            }
+            else
+            {
+                sstream << ":q[";
+                for (auto &cmd: query.cmds_)
+                {
+                    sstream << cmd->query() << ",";
+                }
+                sstream << "];";
+            }
+            return out << sstream.str();
+        }
+
     public:
-        Query() = default;
+        /**
+         * The class to create your queries
+         *
+         * @param collection_name
+         */
+        explicit Query(std::string collection_name) : collection_name_(std::move(collection_name)) {};
         ~Query() = default;
 
-        Query& insert(Insert &insert)
+        /**
+         * Create Insert statement
+         *
+         * @param insert @see query.annadb::Query::Insert
+         */
+        void insert(Insert &insert)
+        {
+            this->add_to_cmds(std::make_unique<Insert>(std::move(insert)));
+        }
+
+        /**
+         * Create Insert statement
+         *
+         * @param insert @see TySON.tyson::TySonObject
+         */
+        void insert(tyson::TySonObject &insert)
         {
             this->add_to_cmds(std::make_unique<Insert>(insert));
-            return *this;
         }
-        Query& find(Find &find)
+
+        /**
+         * Create Insert statement
+         *
+         * @param insert
+         */
+        void insert(std::vector<tyson::TySonObject> &insert)
         {
-            this->add_to_cmds(std::make_unique<Find>(find));
+            this->add_to_cmds(std::make_unique<Insert>(insert));
+        }
+
+        /**
+         * Create Get statement
+         *
+         * @param get @see query.annadb::Query::Get
+         * @return the query class to add additional statements
+         */
+        Query& get(Get &get)
+        {
+            this->add_to_cmds(std::make_unique<Get>(std::move(get)));
             return *this;
         }
-        Query& get(Get &get)
+
+        /**
+         * Create Get statement
+         *
+         * @param get @see TySON.tyson::TySonObject
+         * @return the query class to add additional statements
+         */
+        Query& get(tyson::TySonObject &get)
         {
             this->add_to_cmds(std::make_unique<Get>(get));
             return *this;
         }
+
+        /**
+        * Create Get statement
+        *
+        * @param get
+        * @return the query class to add additional statements
+        */
+        Query& get(std::vector<tyson::TySonObject> &get)
+        {
+            this->add_to_cmds(std::make_unique<Get>(get));
+            return *this;
+        }
+
+        /**
+         * Create Find statement
+         *
+         * @param find @see query.annadb::Query::Find
+         * @return the query class to add additional statements
+         */
+        Query& find(Find &&find)
+        {
+            this->add_to_cmds(std::make_unique<Find>(std::move(find)));
+            return *this;
+        }
+
+        /**
+         * Create Limit statement
+         *
+         * @param limit @see query.annadb::Query::Limit
+         * @return the query class to add additional statements
+         */
         Query& limit(Limit &limit)
+        {
+            this->add_to_cmds(std::make_unique<Limit>(std::move(limit)));
+            return *this;
+        }
+
+        /**
+         * Create Limit statement
+         *
+         * @tparam T integral
+         * @param limit the amount of values in the result
+         * @return the query class to add additional statements
+         */
+        template<typename T>
+        requires std::is_integral_v<T>
+        Query& limit(T &limit)
         {
             this->add_to_cmds(std::make_unique<Limit>(limit));
             return *this;
         }
+
+        /**
+         * Create Offset statement
+         *
+         * @param offset @see query.annadb::Query::Offset
+         * @return the query class to add additional statements
+         */
         Query& offset(Offset &offset)
         {
             this->add_to_cmds(std::make_unique<Offset>(offset));
             return *this;
         }
-        Query& update(Update &update)
+
+        /**
+         * Create Offset statement
+         *
+         * @tparam T integral
+         * @param offset the amount of values you skip in the result
+         * @return the query class to add additional statements
+         */
+        template<typename T>
+        requires std::is_integral_v<T>
+        Query& offset(T &offset)
         {
-            this->add_to_cmds(std::make_unique<Update>(update));
+            this->add_to_cmds(std::make_unique<Offset>(offset));
             return *this;
         }
-        Query& remove(Delete &del)
+
+        /**
+         * Create Update statement
+         *
+         * @param kind @see query.annadb::Query::UpdateType
+         * @param value must be of type TySonType::Value @see TySON.tyson::TySonObject
+         */
+        void update(UpdateType &kind, tyson::TySonObject &value)
         {
-            this->add_to_cmds(std::make_unique<Delete>(del));
-            return *this;
+            if (value.type() == tyson::TySonType::Value)
+            {
+                this->add_to_cmds(std::make_unique<Update>(value, kind));
+            }
+            else
+            {
+                throw std::invalid_argument("Only `tyson::TySonType::Value` are allowed.");
+            }
+        }
+
+        /**
+         * Create Update statement
+         *
+         * @param kind @see query.annadb::Query::UpdateType
+         * @param values must contain only types of TySonType::Value @see TySON.tyson::TySonObject
+         */
+        void update(UpdateType &kind, std::vector<tyson::TySonObject> &values)
+        {
+            if (std::all_of(values.begin(), values.end(),
+                            [](const auto &val){ return val.type() == tyson::TySonType::Value;}))
+            {
+                this->add_to_cmds(std::make_unique<Update>(values, kind));
+            }
+            else
+            {
+                throw std::invalid_argument("Only `tyson::TySonType::Values` are allowed.");
+            }
+        }
+
+        /**
+         * Create Update statement
+         *
+         * @param values can be a vector of mixed UpdateType with the corresponding value
+         * @see query.annadb::Query::UpdateType
+         * @see TySON.tyson::TySonObject
+         */
+        void update(std::vector<std::tuple<UpdateType, tyson::TySonObject>> &values)
+        {
+            if (std::all_of(values.begin(), values.end(),
+                            [](const auto &val){ return std::get<1>(val).type() == tyson::TySonType::Value;}))
+            {
+                this->add_to_cmds(std::make_unique<Update>(std::move(values)));
+            }
+            else
+            {
+                throw std::invalid_argument("Only `tyson::TySonType::Values` are allowed.");
+            }
+        }
+
+        /**
+         * Create Delete statement
+         *
+         */
+        void delete_q()
+        {
+            this->add_to_cmds(std::make_unique<Delete>(Delete()));
         }
     };
 }

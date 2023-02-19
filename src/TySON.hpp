@@ -28,16 +28,17 @@ namespace tyson
         Object = 'o',
         ID = 'i',
         Objects = 'y',
-        IDs = 'z'
+        IDs = 'z',
+        Value = 'e'
     };
 
     class TySonObject
     {
-        TySonType type_;
-        std::string value_;
         std::vector<TySonObject> vector_{};
         std::map<TySonObject, TySonObject> map_{};
         std::pair<std::string, std::string> link_{};
+        TySonType type_;
+        std::string value_;
 
         /**
          * Parse a AnnaDB(TySON) Vector into a std::vector<TySonObject>
@@ -133,6 +134,8 @@ namespace tyson
                     return out << "utc|" << obj.value_ << "|";
                 case TySonType::Link:
                     return out << std::get<0>(obj.link_) << "|" << std::get<1>(obj.link_) << "|";
+                case TySonType::Value:
+                    return out << "value|" << obj.map_.begin()->first.value_ << "|:" << obj.map_.begin()->second;
                 case TySonType::Vector:
                 {
                     std::stringstream sstream;
@@ -322,6 +325,14 @@ namespace tyson
             TySonObject tySonObject {};
             tySonObject.vector_ = {std::move(objs)};
             tySonObject.type_ = TySonType::Vector;
+            return tySonObject;
+        }
+
+        static TySonObject Value(const std::string &field, TySonObject &val)
+        {
+            TySonObject tySonObject {};
+            tySonObject.map_.try_emplace(TySonObject::String(field), val);
+            tySonObject.type_ = TySonType::Value;
             return tySonObject;
         }
 
