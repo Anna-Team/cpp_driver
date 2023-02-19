@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['journal_0',['Journal',['../classannadb_1_1Journal.html#a9ab334cde21b0a4fafd655ab0be93ab1',1,'annadb::Journal']]]
+  ['find_0',['find',['../classannadb_1_1Query_1_1Query.html#acc6ce17c6d53bf49ae1fa19eb8eb971d',1,'annadb::Query::Query']]]
 ];

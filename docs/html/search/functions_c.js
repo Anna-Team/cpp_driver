@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['value_0',['value',['../classtyson_1_1TySonObject.html#a5379fe5420786879fa7b917eea244361',1,'tyson::TySonObject::value() const'],['../classtyson_1_1TySonObject.html#ab01e43806798593634a00e06e30fc6b3',1,'tyson::TySonObject::value() const'],['../classtyson_1_1TySonObject.html#ae5db999a3db1e3d809a3e0d138af9f2b',1,'tyson::TySonObject::value() const'],['../classtyson_1_1TySonObject.html#a3a2349d8b04edbaf5c444ad9ff2502c2',1,'tyson::TySonObject::value() const'],['../classtyson_1_1TySonObject.html#a9e061cf36829923d50bd602c9ef73b8a',1,'tyson::TySonObject::value() const'],['../classtyson_1_1TySonObject.html#a3faff04ae5fbb5537dc021296d1555b7',1,'tyson::TySonObject::value() const'],['../classtyson_1_1TySonObject.html#a044f4ca1c8e4ceb5f570d5c7f5b4692c',1,'tyson::TySonObject::value() const']]],
-  ['vector_1',['Vector',['../classtyson_1_1TySonObject.html#af9645d4d13b25530def8fbccbea25b80',1,'tyson::TySonObject']]]
+  ['offset_0',['offset',['../classannadb_1_1Query_1_1Query.html#ac12e8ed1cf4db50efbaa3c889d4a7716',1,'annadb::Query::Query::offset(Offset &amp;offset)'],['../classannadb_1_1Query_1_1Query.html#a0b63d6ab93baeec8457ebc0354c1f23d',1,'annadb::Query::Query::offset(T &amp;offset)']]],
+  ['ok_1',['ok',['../classannadb_1_1Journal.html#a43894a79c3f3b380033d280c2922a900',1,'annadb::Journal']]],
+  ['operator_5b_5d_2',['operator[]',['../classtyson_1_1TySonObject.html#abe89e1c639a3a3fd6c40d2d3febfdad5',1,'tyson::TySonObject']]],
+  ['or_3',['OR',['../classannadb_1_1Query_1_1Find.html#ae37e1bae6dce54ced419f4ecbe059116',1,'annadb::Query::Find']]]
 ];

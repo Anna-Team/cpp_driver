@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['timestamp_0',['Timestamp',['../classtyson_1_1TySonObject.html#a6df9d906405d9a5fe78a96f478b29b00',1,'tyson::TySonObject']]],
-  ['type_1',['type',['../classannadb_1_1Meta.html#afee8a7f3068e632384af70d92db2f2a4',1,'annadb::Meta::type()'],['../classtyson_1_1TySonObject.html#a85bcc5d29cec034a734febde79b7647b',1,'tyson::TySonObject::type() const']]],
-  ['tysonobject_2',['TySonObject',['../classtyson_1_1TySonObject.html#a62783f9bd1ca559d751bfec72b8c886f',1,'tyson::TySonObject']]]
+  ['neq_0',['NEQ',['../classannadb_1_1Query_1_1Find.html#a24508dd188aecd5cbeb93bdbc98b6256',1,'annadb::Query::Find']]],
+  ['not_1',['NOT',['../classannadb_1_1Query_1_1Find.html#ab3d8470c9e16d9f2ab1750473314e224',1,'annadb::Query::Find']]],
+  ['null_2',['Null',['../classtyson_1_1TySonObject.html#ad40ad339820c04cac12facc642a07107',1,'tyson::TySonObject']]],
+  ['number_3',['Number',['../classtyson_1_1TySonObject.html#a21fcc1b75394f44ee7d8bdf30c5b89d9',1,'tyson::TySonObject']]]
 ];

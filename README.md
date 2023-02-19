@@ -4,10 +4,11 @@
 
 This is a C++ driver built for type-safe query creation.
 
-AnnaDB uses a custom query language dubbed [TySON](https://github.com/roman-right/tyson)
+AnnaDB uses a custom query language called [TySON](https://github.com/roman-right/tyson)
 
 
-## Required
+## Requiredccccccvrcuhfhjvhckhlgnhbjurfnderebdflnkicvcr
+
 - [zeromq](https://zeromq.org/download/)
 - cmake >= 3.24
 

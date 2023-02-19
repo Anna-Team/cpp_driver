@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['map_0',['Map',['../classtyson_1_1TySonObject.html#ac1f767ae4fb7d306f868dc316edff002',1,'tyson::TySonObject']]],
-  ['meta_1',['Meta',['../classannadb_1_1Meta.html#a2b292a33e295de3651e0499d8a292f2c',1,'annadb::Meta']]],
-  ['meta_2',['meta',['../classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae',1,'annadb::Journal']]]
+  ['insert_0',['insert',['../classannadb_1_1Query_1_1Query.html#af253eb086c00088bcf9f7dc7b5378e70',1,'annadb::Query::Query::insert(Insert &amp;insert)'],['../classannadb_1_1Query_1_1Query.html#aaf193429f31423ee9170b41a203f9313',1,'annadb::Query::Query::insert(tyson::TySonObject &amp;insert)'],['../classannadb_1_1Query_1_1Query.html#a75ef6318e6c8407582354b7438c04e39',1,'annadb::Query::Query::insert(std::vector&lt; tyson::TySonObject &gt; &amp;insert)']]]
 ];

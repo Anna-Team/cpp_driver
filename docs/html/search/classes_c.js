@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tysoncollectionobject_0',['TySonCollectionObject',['../classtyson_1_1TySonCollectionObject.html',1,'tyson']]],
-  ['tysonobject_1',['TySonObject',['../classtyson_1_1TySonObject.html',1,'tyson']]]
+  ['offset_0',['Offset',['../classannadb_1_1Query_1_1Offset.html',1,'annadb::Query']]],
+  ['or_1',['Or',['../classannadb_1_1Query_1_1Or.html',1,'annadb::Query']]]
 ];
