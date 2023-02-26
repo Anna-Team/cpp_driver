@@ -47,6 +47,10 @@ if ("$ENV{GCC}")
                                          -fsanitize=address
                            )
     target_link_options(annadb_driver PRIVATE -fsanitize=address)
+elseif("$ENV{CLANG}")
+    target_compile_options(annadb_driver PRIVATE
+                                         -Wall
+                                         -Wpedantic)
 endif()
 
 target_compile_features(annadb_driver PUBLIC cxx_std_20)
