@@ -150,11 +150,34 @@ namespace annadb::Query
         }
 
     public:
+        
+        /**
+         * Create a new insert statement from a single obj
+         *
+         * @param obj the TySonObject you want to insert into your DB collection
+         * @see TySON::tyson::TySonObject
+         */
         explicit Insert(tyson::TySonObject &obj) : QueryCmd("insert", true)
         {
             values_.emplace_back(std::move(obj));
         }
-
+    
+        template<typename ...T>
+        explicit Insert(T&& ...values) : QueryCmd("insert", true)
+        {
+            std::vector<tyson::TySonObject> objs {};
+            objs.reserve(sizeof...(values));
+            (objs.emplace_back(values), ...);
+            
+            values_ = std::move(objs);
+        }
+    
+        /**
+         * Create a new insert statement from a vector objs
+         *
+         * @param objs the vector of TySonObjects you want to insert into your DB collection
+         * @see TySON::tyson::TySonObject
+         */
         explicit Insert(std::vector<tyson::TySonObject> &objs) : QueryCmd("insert", true), values_(std::move(objs)) {}
 
     };
@@ -184,11 +207,67 @@ namespace annadb::Query
         }
 
     public:
+        
+        /**
+         * Create a new get-Query statement from a single obj
+         *
+         * @param obj must be of TySonType::Link
+         * @see TySON.tyson::TySonType
+         *
+         * @throw invalid_argument if obj is not TySonType::Link
+         */
         Get(tyson::TySonObject &obj) : QueryCmd("get", true)
         {
+            if (obj.type() != tyson::TySonType::Link)
+            {
+                throw std::invalid_argument(".get can only be used with a TySonObject of TySonType::Link.");
+            }
+            
             values_.emplace_back(obj);
         }
-        Get(std::vector<tyson::TySonObject> &objs) : QueryCmd("get", true), values_(std::move(objs)) {}
+    
+        /**
+         * Create a new get-Query statement from a vector of objs
+         *
+         * @param objs must be a vector of TySonType::Link's
+         * @see TySON.tyson::TySonType
+         *
+         * @throw invalid_argument if not all objs are TySonType::Link's
+         */
+        Get(std::vector<tyson::TySonObject> &objs) : QueryCmd("get", true)
+        {
+            auto all_Links = std::all_of(objs.cbegin(), objs.cend(), [](const tyson::TySonObject val)
+            {
+                return val.type() == tyson::TySonType::Link;
+            });
+            
+            if (!all_Links)
+            {
+                throw std::invalid_argument(".get can only be used with a TySonObject of TySonType::Link.");
+            }
+    
+            values_ = std::move(objs);
+        }
+    
+        template<typename ...T>
+        explicit Get(T &&...values) : QueryCmd("get", true)
+        {
+            std::vector<tyson::TySonObject> objs {};
+            objs.reserve(sizeof...(values));
+            (objs.emplace_back(values), ...);
+            
+            auto all_Links = std::all_of(objs.cbegin(), objs.cend(), [](const tyson::TySonObject val)
+            {
+                return val.type() == tyson::TySonType::Link;
+            });
+        
+            if (!all_Links)
+            {
+                throw std::invalid_argument(".get can only be used with a TySonObject of TySonType::Link.");
+            }
+        
+            values_ = std::move(objs);
+        }
     };
 
 
@@ -225,6 +304,12 @@ namespace annadb::Query
             comparators_.emplace_back(std::make_unique<Eq>(value));
             return *this;
         }
+    
+        Find& eq(std::string_view path_to_field, tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Eq>(path_to_field, value));
+            return *this;
+        }
 
         /**
          * Find elements by equally comparison
@@ -242,6 +327,12 @@ namespace annadb::Query
         Find& neq(tyson::TySonObject &value)
         {
             comparators_.emplace_back(std::make_unique<Neq>(value));
+            return *this;
+        }
+    
+        Find& neq(std::string_view path_to_field, tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Neq>(path_to_field, value));
             return *this;
         }
 
@@ -263,6 +354,12 @@ namespace annadb::Query
             comparators_.emplace_back(std::make_unique<Gt>(value));
             return *this;
         }
+    
+        Find& gt(std::string_view path_to_field, tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Gt>(path_to_field,value));
+            return *this;
+        }
 
         /**
          * Find elements which are greater
@@ -280,6 +377,12 @@ namespace annadb::Query
         Find& gte(tyson::TySonObject &value)
         {
             comparators_.emplace_back(std::make_unique<Gte>(value));
+            return *this;
+        }
+    
+        Find& gte(std::string_view path_to_field, tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Gte>(path_to_field, value));
             return *this;
         }
 
@@ -301,6 +404,12 @@ namespace annadb::Query
             comparators_.emplace_back(std::make_unique<Lt>(value));
             return *this;
         }
+    
+        Find& lt(std::string_view path_to_field, tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Lt>(path_to_field, value));
+            return *this;
+        }
 
         /**
          * Find elements which are less
@@ -318,6 +427,12 @@ namespace annadb::Query
         Find& lte(tyson::TySonObject &value)
         {
             comparators_.emplace_back(std::make_unique<Lte>(value));
+            return *this;
+        }
+    
+        Find& lte(std::string_view path_to_field, tyson::TySonObject &value)
+        {
+            comparators_.emplace_back(std::make_unique<Lte>(path_to_field, value));
             return *this;
         }
 
@@ -425,7 +540,32 @@ namespace annadb::Query
 
     public:
         explicit Sort(std::vector<std::unique_ptr<annadb::Query::SortCmd>> &&cmds) : QueryCmd("sort", false), cmds_(std::move(cmds)) {}
+    
+        template<std::convertible_to<std::string> ...T>
+        static Sort ASC(T&& ...fields)
+        {
+            std::vector<std::unique_ptr<annadb::Query::SortCmd>> cmds {};
+            cmds.reserve(sizeof...(fields));
+            
+            (cmds.push_back(
+                    std::make_unique<Asc>(annadb::Query::Asc(fields)
+                    )), ...);
+        
+            return Sort(std::move(cmds));
+        }
+    
+        template<std::convertible_to<std::string> ...T>
+        static Sort DESC(T&& ...fields)
+        {
+            std::vector<std::unique_ptr<annadb::Query::SortCmd>> cmds = {};
+            (
+                cmds.push_back(
+                        std::make_unique<Desc>(annadb::Query::Desc(fields))
+                        ), ...
+            );
 
+            return Sort(std::move(cmds));
+        }
     };
 
 
@@ -660,6 +800,17 @@ namespace annadb::Query
         {
             this->add_to_cmds(std::make_unique<Insert>(insert));
         }
+    
+        /**
+         * Create Insert statement
+         *
+         * @param insert
+         */
+        template<typename ...T>
+        void insert(T&& ...insert)
+        {
+            this->add_to_cmds(std::make_unique<Insert>(insert...));
+        }
 
         /**
          * Create Get statement
@@ -696,6 +847,19 @@ namespace annadb::Query
             this->add_to_cmds(std::make_unique<Get>(get));
             return *this;
         }
+    
+        /**
+         * Create Get statement
+         *
+         * @param values
+         * @return the query class to add additional statements
+         */
+        template<std::convertible_to<tyson::TySonObject> ...T>
+        Query& get(T &&...values)
+        {
+            this->add_to_cmds(std::make_unique<Get>(values...));
+            return *this;
+        }
 
         /**
          * Create Find statement
@@ -706,6 +870,18 @@ namespace annadb::Query
         Query& find(Find &&find)
         {
             this->add_to_cmds(std::make_unique<Find>(std::move(find)));
+            return *this;
+        }
+    
+        /**
+         * Create Find statement
+         *
+         * @param find @see query.annadb::Query::Find
+         * @return the query class to add additional statements
+         */
+        Query& sort(Sort &&sort)
+        {
+            this->add_to_cmds(std::make_unique<Sort>(std::move(sort)));
             return *this;
         }
 
@@ -730,7 +906,7 @@ namespace annadb::Query
          */
         template<typename T>
         requires std::is_integral_v<T>
-        Query& limit(T &limit)
+        Query& limit(T &&limit)
         {
             this->add_to_cmds(std::make_unique<Limit>(limit));
             return *this;
@@ -757,7 +933,7 @@ namespace annadb::Query
          */
         template<typename T>
         requires std::is_integral_v<T>
-        Query& offset(T &offset)
+        Query& offset(T &&offset)
         {
             this->add_to_cmds(std::make_unique<Offset>(offset));
             return *this;
@@ -793,6 +969,24 @@ namespace annadb::Query
                             [](const auto &val){ return val.type() == tyson::TySonType::Value;}))
             {
                 this->add_to_cmds(std::make_unique<Update>(values, kind));
+            }
+            else
+            {
+                throw std::invalid_argument("Only `tyson::TySonType::Values` are allowed.");
+            }
+        }
+    
+        template<std::convertible_to<tyson::TySonObject> ...T>
+        void update(UpdateType &kind, T&& ...values)
+        {
+            std::vector<tyson::TySonObject> objects {};
+            objects.reserve(sizeof...(values));
+            (objects.emplace_back(values), ...);
+            
+            if (std::all_of(objects.begin(), objects.end(),
+                            [](const auto &val){ return val.type() == tyson::TySonType::Value;}))
+            {
+                this->add_to_cmds(std::make_unique<Update>(objects, kind));
             }
             else
             {
