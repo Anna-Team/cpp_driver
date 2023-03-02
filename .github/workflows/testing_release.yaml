@@ -1,0 +1,32 @@
+name: Testing-Release
+on: [push]
+
+jobs:
+  test-app-gcc-release:
+    runs-on: ubuntu-latest
+    env:
+      TESTING: 1
+      GCC: 1
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install gcc
+        run: sudo apt install -y build-essential
+
+      - name: install cmake
+        run: sudo apt install -y cmake
+
+      - name: install zmq
+        run: sudo apt install -y libzmq3-dev
+
+      - name: build cmake
+        working-directory: ./src
+        run: |
+          mkdir build && cd build
+          cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+          make -j2
+
+      - name: run test
+        working-directory: ./src/build
+        run: ./annadb_driver
