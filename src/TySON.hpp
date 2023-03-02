@@ -328,7 +328,7 @@ namespace tyson
             return tySonObject;
         }
 
-        static TySonObject Value(const std::string &field, TySonObject &val)
+        static TySonObject Value(const std::string &field, TySonObject &&val)
         {
             TySonObject tySonObject {};
             tySonObject.map_.try_emplace(TySonObject::String(field), val);

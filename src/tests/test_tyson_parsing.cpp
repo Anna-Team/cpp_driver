@@ -234,9 +234,8 @@ TEST(tyson_parsing, create_tyson_map)
 TEST(tyson_parsing, create_tyson_value)
 {
     std::stringstream sstream;
-    auto num = tyson::TySonObject::Number(10);
 
-    auto val = tyson::TySonObject::Value("num", num);
+    auto val = tyson::TySonObject::Value("num", tyson::TySonObject::Number(10));
     ASSERT_EQ(val.type(), tyson::TySonType::Value);
 
     sstream << val;

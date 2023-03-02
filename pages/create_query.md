@@ -96,6 +96,8 @@ query.find(
         // annadb::Query::Find::LTE(min_num)
 );
 
+...
+
 ```
 
 Example __Static__ Version with `field`
@@ -108,13 +110,18 @@ auto min_num = tyson::TySonObject::Number(5);
 
 query.find(
         annadb::Query::Find::GT("my.field.num", min_num)
-);
+        );
+
+...
 
 ```
 
 Example with instance of `Find` class
 - this makes it easier to concat multiple finds which will __not__ result in an And statement
 ```c++
+#include "query.hpp"
+...
+
 // create a TySonObject object with which we want to compare
 auto min_num = tyson::TySonObject::Number(5);
 
@@ -128,10 +135,16 @@ query.find(std::move(
         // if you want to compare with a specific field you can add this information
         // findQuery.lt("my.num", min_num)
         );
+
+...
+
 ```
 
 Example with `AND`
 ```c++
+#include "query.hpp"
+...
+
 auto min_num = tyson::TySonObject::Number(5);
 auto max_num = tyson::TySonObject::Number(50);
 
@@ -141,10 +154,16 @@ auto upper_bound = annadb::Query::Lte("num", max_num);
 query.find(
         annadb::Query::Find::AND(lower_bound, upper_bound)
 );
+
+...
+
 ```
 
 Example with `OR`
 ```c++
+#include "query.hpp"
+...
+
 auto min_num = tyson::TySonObject::Number(5);
 auto max_num = tyson::TySonObject::Number(50);
 
@@ -154,16 +173,25 @@ auto upper_bound = annadb::Query::Lte("num", max_num);
 query.find(
         annadb::Query::Find::OR(lower_bound, upper_bound)
 );
+
+...
+
 ```
 
 Example with `NOT`
 ```c++
+#include "query.hpp"
+...
+
 query.find(
         annadb::Query::Find::NOT("exclude.me")
 );
+
+...
+
 ```
 
-# The sort query
+## The sort query
 - can __not__ be used alone
 - must be used with the `Sort` class
 - possible choices are `ASC`, `DESC` both can be used static
@@ -171,38 +199,106 @@ query.find(
 
 single field
 ```c++
+#include "query.hpp"
+...
+
 auto min_num = tyson::TySonObject::Number(5);
 
 query.find(annadb::Query::Find::GT(min_num))
      .sort(annadb::Query::Sort::DESC("some.field"));
 
+...
+
 ```
 multiple fields
 ```c++
+#include "query.hpp"
+...
+
 auto min_num = tyson::TySonObject::Number(5);
 
 query.find(annadb::Query::Find::GT(min_num))
      .sort(annadb::Query::Sort::ASC("some", "fields", "to", "sort"));
+
+...
+
 ```
 
-# The limit query
+## The limit query
 - can __not__ be used alone
 - needs an integral
 ```c++
+#include "query.hpp"
+...
+
 auto min_num = tyson::TySonObject::Number(5);
 
 query.find(
         annadb::Query::Find::GT("my.field.num", min_num).limit<short>(6)
 );
+
+...
+
 ```
 
-# The offset query
+## The offset query
 - can __not__ be used alone
 - needs an integral
 ```c++
+#include "query.hpp"
+...
+
 auto min_num = tyson::TySonObject::Number(5);
 
 query.find(
         annadb::Query::Find::GT("my.field.num", min_num).offset<int>(260)
 );
+
+...
+
+```
+
+## The update query
+- can __not__ be used alone and must be the last if you combine multiple statements
+- you can either use `annadb::Query::UpdateType::Set` to set a field to a specific value or 
+`annadb::Query::UpdateType::Inc` to increase a field by a specific value
+- can only be used with an instance of `tyson::TySonObject::Value`
+```c++
+#include "query.hpp"
+...
+
+// create a TySON Link object
+auto link = tyson::TySonObject::Link("test", "b2279b93-00b3-4b44-9670-82a76922c0da");
+
+// create a TySON value object
+auto new_val = tyson::TySonObject::Value("num",  // the name of the field 
+                                         tyson::TySonObject::Number(100) // the new value
+                                         );
+
+query.get(link).update(annadb::Query::UpdateType::Set, // how you want to update
+                       new_val // the value with which you want to update
+                       ); 
+
+// use get command combined with limit
+query.get(val_1).limit<short>(5);
+
+...
+
+```
+
+## The delete query
+- can __not__ be used alone and must be the last if you combine multiple statements
+```c++
+#include "query.hpp"
+...
+
+auto min_num = tyson::TySonObject::Number(5);
+
+auto query = annadb::Query::Query("test");
+
+// this query will delete all findings
+query.find(annadb::Query::Find::GT(min_num)).delete_q();
+
+...
+
 ```

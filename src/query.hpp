@@ -945,7 +945,7 @@ namespace annadb::Query
          * @param kind @see query.annadb::Query::UpdateType
          * @param value must be of type TySonType::Value @see TySON.tyson::TySonObject
          */
-        void update(UpdateType &kind, tyson::TySonObject &value)
+        void update(UpdateType &&kind, tyson::TySonObject &value)
         {
             if (value.type() == tyson::TySonType::Value)
             {

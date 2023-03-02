@@ -119,9 +119,8 @@ TEST(annadb_query, create_get_query_many_v1)
 
     auto val_1 = tyson::TySonObject::Link("test", "b2279b93-00b3-4b44-9670-82a76922c0da");
     auto val_2 = tyson::TySonObject::Link("test", "cf3d77c0-75bd-41e4-aa46-b9ae9f5856a4");
-
-    auto values = std::vector<tyson::TySonObject>{val_1, val_2};
-    auto get = annadb::Query::Get(values);
+    
+    auto get = annadb::Query::Get(val_1, val_2);
 
     query.get(get);
     sstream << query;
@@ -201,12 +200,12 @@ TEST(annadb_query, get_allows_only_tyson_link_objects)
 
 TEST(annadb_query, create_update_query_starting_pipeline_not_allowed)
 {
-    auto new_num = tyson::TySonObject::Number(100);
-    auto new_val = tyson::TySonObject::Value("num", new_num);
-    auto update_type = annadb::Query::UpdateType::Set;
+    std::stringstream sstream;
+    
+    auto new_val = tyson::TySonObject::Value("num", tyson::TySonObject::Number(100));
 
     auto query = annadb::Query::Query("test");
-    ASSERT_THROW(query.update(update_type, new_val), std::invalid_argument);
+    ASSERT_THROW(query.update(annadb::Query::UpdateType::Set, new_val), std::invalid_argument);
 }
 
 TEST(annadb_query, create_update_query)
@@ -214,12 +213,11 @@ TEST(annadb_query, create_update_query)
     std::stringstream sstream;
 
     auto link = tyson::TySonObject::Link("test", "b2279b93-00b3-4b44-9670-82a76922c0da");
-    auto new_num = tyson::TySonObject::Number(100);
-    auto new_val = tyson::TySonObject::Value("num", new_num);
-    auto update_type = annadb::Query::UpdateType::Set;
+    auto new_val = tyson::TySonObject::Value("num", tyson::TySonObject::Number(100));
 
     auto query = annadb::Query::Query("test");
-    query.get(link).update(update_type, new_val);
+    query.get(link).update(annadb::Query::UpdateType::Set, new_val);
+    
     sstream << query;
 
     ASSERT_EQ(sstream.str(),
@@ -316,4 +314,16 @@ TEST(annadb_query, create_offset_query)
     sstream << query;
     
     ASSERT_EQ(sstream.str(), "collection|test|:q[find[gt{root: n|5|},],offset(n|6|),];");
+}
+
+TEST(annadb_query, create_delete_query)
+{
+    std::stringstream sstream;
+    auto min_num = tyson::TySonObject::Number(5);
+    
+    auto query = annadb::Query::Query("test");
+    query.find(annadb::Query::Find::GT(min_num)).delete_q();
+    sstream << query;
+    
+    ASSERT_EQ(sstream.str(), "collection|test|:q[find[gt{root: n|5|},],delete,];");
 }
