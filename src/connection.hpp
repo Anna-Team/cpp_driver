@@ -166,7 +166,8 @@ namespace annadb
         void parse_data()
         {
             auto pos_map_start = meta_txt_.find('{');
-            auto map_str = "m" + meta_txt_.substr(pos_map_start, meta_txt_.size() - pos_map_start);
+            auto pos_map_end = meta_txt_.rfind('}') + 1;
+            auto map_str = "m" + meta_txt_.substr(pos_map_start, pos_map_end - pos_map_start);
             data_ = tyson::TySonObject {map_str};
         }
 
@@ -222,6 +223,19 @@ namespace annadb
         tyson::TySonObject data()
         {
             return data_;
+        }
+    
+        template<typename T>
+        requires std::is_integral_v<T>
+        std::optional<T> rows()
+        {
+            auto count = data_["count"];
+            if (count)
+            {
+                auto res = count.value().value<T>();
+                return res;
+            }
+            return {};
         }
 
         /**
