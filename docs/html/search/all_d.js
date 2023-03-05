@@ -5,5 +5,5 @@ var searchData=
   ['ok_2',['ok',['../classannadb_1_1Journal.html#a43894a79c3f3b380033d280c2922a900',1,'annadb::Journal']]],
   ['operator_5b_5d_3',['operator[]',['../classtyson_1_1TySonObject.html#abe89e1c639a3a3fd6c40d2d3febfdad5',1,'tyson::TySonObject']]],
   ['or_4',['Or',['../classannadb_1_1Query_1_1Or.html',1,'annadb::Query']]],
-  ['or_5',['OR',['../classannadb_1_1Query_1_1Find.html#ae37e1bae6dce54ced419f4ecbe059116',1,'annadb::Query::Find']]]
+  ['or_5',['OR',['../classannadb_1_1Query_1_1Find.html#a4c1583a00d23ef83709e2fe023d7d4cb',1,'annadb::Query::Find']]]
 ];

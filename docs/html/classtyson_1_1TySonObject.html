@@ -140,8 +140,9 @@ requires std::is_integral_v&lt;T&gt;</td></tr>
 <tr class="separator:a6df9d906405d9a5fe78a96f478b29b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5c0e22ebd69d9dc7d42a6f51485b14c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#ad5c0e22ebd69d9dc7d42a6f51485b14c">Link</a> (const std::string &amp;collection, const std::string &amp;uuid)</td></tr>
 <tr class="separator:ad5c0e22ebd69d9dc7d42a6f51485b14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9645d4d13b25530def8fbccbea25b80"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#af9645d4d13b25530def8fbccbea25b80">Vector</a> (std::vector&lt; <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &amp;objs)</td></tr>
-<tr class="separator:af9645d4d13b25530def8fbccbea25b80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d504103b3c271aaf387b34125d3c965"><td class="memTemplParams" colspan="2">template&lt;std::convertible_to&lt; <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> &gt; ... Values&gt; </td></tr>
+<tr class="memitem:a7d504103b3c271aaf387b34125d3c965"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonObject.html#a7d504103b3c271aaf387b34125d3c965">Vector</a> (Values &amp;&amp;...objs)</td></tr>
+<tr class="separator:a7d504103b3c271aaf387b34125d3c965"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99f94783f5a403b746d5f5f24a7af914"><td class="memItemLeft" align="right" valign="top"><a id="a99f94783f5a403b746d5f5f24a7af914" name="a99f94783f5a403b746d5f5f24a7af914"></a>
 static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Value</b> (const std::string &amp;field, <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &amp;&amp;val)</td></tr>
 <tr class="separator:a99f94783f5a403b746d5f5f24a7af914"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -752,11 +753,13 @@ requires std::is_arithmetic_v&lt;T&gt;</div>
 
 </div>
 </div>
-<a id="af9645d4d13b25530def8fbccbea25b80" name="af9645d4d13b25530def8fbccbea25b80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9645d4d13b25530def8fbccbea25b80">&#9670;&#160;</a></span>Vector()</h2>
+<a id="a7d504103b3c271aaf387b34125d3c965" name="a7d504103b3c271aaf387b34125d3c965"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d504103b3c271aaf387b34125d3c965">&#9670;&#160;</a></span>Vector()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;std::convertible_to&lt; <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> &gt; ... Values&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -764,7 +767,7 @@ requires std::is_arithmetic_v&lt;T&gt;</div>
         <tr>
           <td class="memname">static <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> tyson::TySonObject::Vector </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">Values &amp;&amp;...&#160;</td>
           <td class="paramname"><em>objs</em></td><td>)</td>
           <td></td>
         </tr>
