@@ -33,6 +33,10 @@ In order to compare a field of the object path to value notation could be used:
 
 namespace annadb::Query
 {
+    /**
+     * Inside of the compare statement you can decide how to compare
+     *
+     */
     enum class ComparisonType
     {
         EQ,

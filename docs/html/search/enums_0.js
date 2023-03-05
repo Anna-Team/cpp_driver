@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['updatetype_0',['UpdateType',['../namespaceannadb_1_1Query.html#a35e1c18725243ff5ce860fce1515f647',1,'annadb::Query']]]
+  ['comparisontype_0',['ComparisonType',['../namespaceannadb_1_1Query.html#aeae7af97b9ebc7dbfad9c849a7013675',1,'annadb::Query']]]
 ];
