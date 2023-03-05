@@ -33,7 +33,7 @@ namespace utils
         vec.reserve(std::distance(range_.begin(), range_.end()));
 
         std::ranges::copy(range_, std::back_inserter(vec));
-
+        
         return vec;
     }
 }

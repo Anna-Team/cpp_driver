@@ -320,10 +320,12 @@ namespace tyson
          * @param objs a std::vector of TySonObjects
          * @return new TySonObject
          */
-        static TySonObject Vector(std::vector<TySonObject> &objs)
+        template<std::convertible_to<tyson::TySonObject> ...Values>
+        static TySonObject Vector(Values &&...objs)
         {
             TySonObject tySonObject {};
-            tySonObject.vector_ = {std::move(objs)};
+            tySonObject.vector_.reserve(sizeof ...(objs));
+            (tySonObject.vector_.emplace_back(objs), ...);
             tySonObject.type_ = TySonType::Vector;
             return tySonObject;
         }

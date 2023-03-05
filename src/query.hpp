@@ -348,16 +348,30 @@ namespace annadb::Query
             find.neq(value);
             return find;
         }
-
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gt(T &&value)
+        {
+            comparators_.emplace_back(std::make_unique<Gt>(std::forward<tyson::TySonObject>(value)));
+            return *this;
+        }
+        
         Find& gt(tyson::TySonObject &value)
         {
             comparators_.emplace_back(std::make_unique<Gt>(value));
             return *this;
         }
     
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gt(std::string_view path_to_field, T &&value)
+        {
+            comparators_.emplace_back(std::make_unique<Gt>(path_to_field, std::forward<tyson::TySonObject>(value)));
+            return *this;
+        }
+    
         Find& gt(std::string_view path_to_field, tyson::TySonObject &value)
         {
-            comparators_.emplace_back(std::make_unique<Gt>(path_to_field,value));
+            comparators_.emplace_back(std::make_unique<Gt>(path_to_field, value));
             return *this;
         }
 
@@ -367,22 +381,25 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find GT(tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        static Find GT(T &&value)
         {
             Find find {};
             find.gt(value);
             return find;
         }
-
-        Find& gte(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gte(T &&value)
         {
-            comparators_.emplace_back(std::make_unique<Gte>(value));
+            comparators_.emplace_back(std::make_unique<Gte>(std::forward<tyson::TySonObject>(value)));
             return *this;
         }
     
-        Find& gte(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gte(std::string_view path_to_field, T &&value)
         {
-            comparators_.emplace_back(std::make_unique<Gte>(path_to_field, value));
+            comparators_.emplace_back(std::make_unique<Gte>(path_to_field, std::forward<tyson::TySonObject>(value)));
             return *this;
         }
 
@@ -392,22 +409,25 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find GTE(tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        static Find GTE(T value)
         {
             Find find {};
-            find.gte(value);
+            find.gte(std::forward<tyson::TySonObject>(value));
             return find;
         }
-
-        Find& lt(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lt(T value)
         {
-            comparators_.emplace_back(std::make_unique<Lt>(value));
+            comparators_.emplace_back(std::make_unique<Lt>(std::forward<tyson::TySonObject>(value)));
             return *this;
         }
     
-        Find& lt(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lt(std::string_view path_to_field, T value)
         {
-            comparators_.emplace_back(std::make_unique<Lt>(path_to_field, value));
+            comparators_.emplace_back(std::make_unique<Lt>(path_to_field, std::forward<tyson::TySonObject>(value)));
             return *this;
         }
 
@@ -417,22 +437,25 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find LT(tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        static Find LT(T value)
         {
             Find find {};
-            find.lt(value);
+            find.lt(std::forward<tyson::TySonObject>(value));
             return find;
         }
-
-        Find& lte(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lte(T value)
         {
-            comparators_.emplace_back(std::make_unique<Lte>(value));
+            comparators_.emplace_back(std::make_unique<Lte>(std::forward<tyson::TySonObject>(value)));
             return *this;
         }
     
-        Find& lte(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lte(std::string_view path_to_field, T value)
         {
-            comparators_.emplace_back(std::make_unique<Lte>(path_to_field, value));
+            comparators_.emplace_back(std::make_unique<Lte>(path_to_field, std::forward<tyson::TySonObject>(value)));
             return *this;
         }
 
@@ -462,9 +485,10 @@ namespace annadb::Query
          * @param comp_2  @see query_comparison.annadb::Query::Comparison
          * @return the Find class to add additional filter
          */
-        static Find AND(Comparison &comp_1, Comparison &comp_2)
+        template<std::convertible_to<Comparison> ...Comps>
+        static Find AND(Comps ...comps)
         {
-            And and_ {comp_1, comp_2};
+            And and_ {comps ...};
             Find find {};
             find.q(and_);
             return find;
@@ -482,9 +506,10 @@ namespace annadb::Query
          * @param comp @see query_comparison.annadb::Query::Comparison
          * @return the Find class to add additional filter
          */
-        static Find OR(std::vector<Comparison> &comp)
+        template<std::convertible_to<Comparison> ...Comps>
+        static Find OR(Comps ...comps)
         {
-            Or or_ {comp};
+            Or or_ {comps ...};
             Find find {};
             find.q(or_);
             return find;

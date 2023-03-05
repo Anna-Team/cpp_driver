@@ -197,12 +197,9 @@ TEST(tyson_parsing, create_tyson_vector)
 
     auto new_num = tyson::TySonObject::Number(10);
     auto new_str = tyson::TySonObject::String("fizzbuzz");
-    std::vector<tyson::TySonObject> new_values {new_num, new_str};
 
-    auto val = tyson::TySonObject::Vector(new_values);
-
-    // new_values will be moved into the TySon Vector object
-    ASSERT_EQ(new_values.size(), 0);
+    auto val = tyson::TySonObject::Vector(new_num, new_str);
+    
     ASSERT_EQ(val.type(), tyson::TySonType::Vector);
 
     std::vector<tyson::TySonObject> expected {new_num, new_str};
