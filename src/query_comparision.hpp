@@ -34,7 +34,7 @@ In order to compare a field of the object path to value notation could be used:
 namespace annadb::Query
 {
     /**
-     * Inside of the compare statement you can decide how to compare
+     * Inside of the compare statement you must decide how to compare
      *
      */
     enum class ComparisonType
@@ -50,7 +50,9 @@ namespace annadb::Query
         NOT
     };
     
-    
+    /**
+     * The Base class for all comparison options
+     */
     class Comparison
     {
         tyson::TySonObject value_;
@@ -150,6 +152,9 @@ namespace annadb::Query
         }
     };
 
+    /**
+     * The equal comparison class
+     */
     class Eq : public Comparison
     {
     public:
@@ -159,6 +164,9 @@ namespace annadb::Query
         Eq(std::string_view path_to_field, tyson::TySonObject &&value) : Comparison(value, path_to_field, "eq") {};
     };
 
+    /**
+     * The not equal comparison class
+     */
     class Neq : public Comparison
     {
     public:
@@ -167,7 +175,10 @@ namespace annadb::Query
         explicit Neq(tyson::TySonObject &&value) : Comparison(value, "neq") {};
         Neq(std::string_view path_to_field, tyson::TySonObject &&value) : Comparison(value, path_to_field, "neq") {};
     };
-
+    
+    /**
+     * The greater comparison class
+     */
     class Gt : public Comparison
     {
     public:
@@ -176,7 +187,10 @@ namespace annadb::Query
         explicit Gt(tyson::TySonObject &&value) : Comparison(value, "gt") {};
         Gt(std::string_view path_to_field, tyson::TySonObject &&value) : Comparison(value, path_to_field, "gt") {};
     };
-
+    
+    /**
+     * The greater or equal comparison class
+     */
     class Gte : public Comparison
     {
     public:
@@ -185,7 +199,10 @@ namespace annadb::Query
         explicit Gte(tyson::TySonObject &&value) : Comparison(value, "gte") {};
         Gte(std::string_view path_to_field, tyson::TySonObject &&value) : Comparison(value, path_to_field, "gte") {};
     };
-
+    
+    /**
+     * The less comparison class
+     */
     class Lt : public Comparison
     {
     public:
@@ -194,7 +211,10 @@ namespace annadb::Query
         explicit Lt(tyson::TySonObject &&value) : Comparison(value, "lt") {};
         Lt(std::string_view path_to_field, tyson::TySonObject &&value) : Comparison(value, path_to_field, "lt") {};
     };
-
+    
+    /**
+     * The less or equal comparison class
+     */
     class Lte : public Comparison
     {
     public:
@@ -203,7 +223,10 @@ namespace annadb::Query
         explicit Lte(const tyson::TySonObject &&value) : Comparison(value, "lte") {};
         Lte(std::string_view path_to_field, tyson::TySonObject &&value) : Comparison(value, path_to_field, "lte") {};
     };
-
+    
+    /**
+     * The and comparison class
+     */
     class And : public Comparison
     {
         std::vector<Comparison> compares_{};
@@ -219,6 +242,10 @@ namespace annadb::Query
         }
     
     public:
+        /**
+         * Initialise `And` comparison class
+         * @param comps a variadic number of comparison objects which should be included in the `And` clause
+         */
         template<std::convertible_to<Comparison> ...Comps>
         And(Comps ...comps) : Comparison("", "and")
         {
@@ -227,6 +254,9 @@ namespace annadb::Query
         }
     };
     
+    /**
+     * The or comparison class
+     */
     class Or : public Comparison
     {
         std::vector<Comparison> compares_{};
@@ -242,6 +272,10 @@ namespace annadb::Query
         }
     
     public:
+        /**
+         * Initialise the `Or` comparison
+         * @param comps a variadic number of comparison objects which should be included in the `Or` clause
+         */
         template<std::convertible_to<Comparison> ...Comps>
         explicit Or(Comps ...comps) : Comparison("", "or")
         {
@@ -250,6 +284,9 @@ namespace annadb::Query
         }
     };
     
+    /**
+     * The not comparison class
+     */
     class Not : public Comparison
     {
         [[nodiscard]] std::string to_string() override

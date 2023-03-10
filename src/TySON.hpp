@@ -38,7 +38,7 @@ namespace tyson
      * @return the string representation
      */
     template<std::convertible_to<TySonType> Obj>
-    std::string_view TySonType_repr(Obj &&obj)
+    std::string_view TySonType_repr(Obj &&obj) noexcept
     {
         switch (obj)
         {
@@ -92,7 +92,7 @@ namespace tyson
          * @param object string_view the raw string of a AnnaDB(TySON) Vector
          * @see Tyson.tyson::TySonObject
          */
-        void parse_vector_elements(std::string_view object)
+        void parse_vector_elements(std::string_view object) noexcept
         {
             const auto to_tyson_object = [](std::string &val) -> TySonObject
             {
@@ -117,7 +117,7 @@ namespace tyson
          * @return the inner elements of a TySON Map parsed into a TySonObject
          * @see Tyson.tyson::TySonObject
          */
-        [[ nodiscard ]] std::vector<TySonObject> parse_map_element(std::string_view object)
+        [[ nodiscard ]] std::vector<TySonObject> parse_map_element(std::string_view object) noexcept
         {
             const auto to_tyson_object = [](std::string &val) -> TySonObject
             {
@@ -141,7 +141,7 @@ namespace tyson
          * @param object string_view the raw string of a AnnaDB(TySON) Map
          * @see Tyson.tyson::TySonObject
          */
-        void parse_map_elements(std::string_view object)
+        void parse_map_elements(std::string_view object) noexcept
         {
             auto end_type_sep = object.find_first_of('{') + 1;
             auto end_value_sep = (object.size() - 1) - end_type_sep;
@@ -166,7 +166,7 @@ namespace tyson
          * @return the string representation of the current TySON object in it's special format
          * @example: TySON::Number(5) => n|5|
          */
-        friend std::ostream& operator<<(std::ostream &out, TySonObject const &obj)
+        friend std::ostream& operator<<(std::ostream &out, TySonObject const &obj) noexcept
         {
             switch (obj.type())
             {
@@ -212,7 +212,7 @@ namespace tyson
 
     public:
 
-        TySonObject() : type_(tyson::TySonType::Null) {};
+        TySonObject() noexcept : type_(tyson::TySonType::Null) {};
         ~TySonObject() = default;
 
         /**
@@ -221,7 +221,7 @@ namespace tyson
          * @param object representing a AnnaDB data type
          * @see <a href="https://annadb.dev/documentation/data_types/">AnnaDB data types</a>
          */
-        explicit TySonObject(std::string_view object)
+        explicit TySonObject(std::string_view object) noexcept
         {
             auto end_type_sep = object.find_first_of('|');
             auto end_value_sep = (object.size() - 1) - (end_type_sep + 1);
@@ -268,7 +268,7 @@ namespace tyson
          * @param rhs TySonObject
          * @return bool
          */
-        [[ nodiscard ]] bool operator==(const TySonObject &rhs) const
+        [[ nodiscard ]] bool operator==(const TySonObject &rhs) const noexcept
         {
             return std::tie(this->type_, this->value_, this->vector_, this->map_, this->link_) ==
                    std::tie(rhs.type_, rhs.value_, rhs.vector_, rhs.map_, rhs.link_);
@@ -279,7 +279,7 @@ namespace tyson
          * @param rhs TySonObject
          * @return bool
          */
-        [[ nodiscard ]] bool operator<(const TySonObject &rhs) const
+        [[ nodiscard ]] bool operator<(const TySonObject &rhs) const noexcept
         {
             return std::tie(this->type_, this->value_, this->vector_) < std::tie(rhs.type_, rhs.value_, rhs.vector_);
         }
@@ -312,7 +312,7 @@ namespace tyson
          */
         template<typename T>
         requires std::is_integral_v<T>
-        [[ nodiscard ]] static TySonObject Number(T number)
+        [[ nodiscard ]] static TySonObject Number(T number) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.value_ = std::to_string(number);
@@ -327,7 +327,7 @@ namespace tyson
          * @param str the value of the new TySonObject
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject String(const std::string &str)
+        [[ nodiscard ]] static TySonObject String(const std::string &str) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.value_ = str;
@@ -341,7 +341,7 @@ namespace tyson
          * @param bl the value of the new TySonObject
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Bool(bool bl)
+        [[ nodiscard ]] static TySonObject Bool(bool bl) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.value_ = bl ? "true" : "false";
@@ -354,7 +354,7 @@ namespace tyson
          *
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Null()
+        [[ nodiscard ]] static TySonObject Null() noexcept
         {
             TySonObject tySonObject {};
             tySonObject.value_ = "null";
@@ -368,7 +368,7 @@ namespace tyson
          * @param seconds that have elapsed since the Unix epoch
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Timestamp(unsigned long long seconds)
+        [[ nodiscard ]] static TySonObject Timestamp(unsigned long long seconds) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.value_ = std::to_string(seconds);
@@ -383,7 +383,7 @@ namespace tyson
          * @param uuid the id of the element inside of the collection
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Link(const std::string &collection, const std::string &uuid)
+        [[ nodiscard ]] static TySonObject Link(const std::string &collection, const std::string &uuid) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.link_ = {collection, uuid};
@@ -398,7 +398,7 @@ namespace tyson
          * @return new TySonObject
          */
         template<std::convertible_to<tyson::TySonObject> ...Values>
-        [[ nodiscard ]] static TySonObject Vector(Values &&...objs)
+        [[ nodiscard ]] static TySonObject Vector(Values &&...objs) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.vector_.reserve(sizeof ...(objs));
@@ -414,7 +414,7 @@ namespace tyson
          * @param val the TySonObject which should be used instead
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Value(const std::string &field, TySonObject &&val)
+        [[ nodiscard ]] static TySonObject Value(const std::string &field, TySonObject &&val) noexcept
         {
             TySonObject tySonObject {};
             tySonObject.map_.try_emplace(TySonObject::String(field), val);
@@ -428,7 +428,7 @@ namespace tyson
          * @param objs a std::map of std::string and TySonObject
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Map(std::map<std::string, TySonObject> &objs)
+        [[ nodiscard ]] static TySonObject Map(std::map<std::string, TySonObject> &objs) noexcept
         {
             TySonObject tySonObject {};
             std::for_each(objs.begin(), objs.end(),
@@ -446,7 +446,7 @@ namespace tyson
          * @param objs a std::map of std::string and TySonObject
          * @return new TySonObject
          */
-        [[ nodiscard ]] static TySonObject Map()
+        [[ nodiscard ]] static TySonObject Map() noexcept
         {
             TySonObject tySonObject {};
             tySonObject.type_ = TySonType::Map;
@@ -459,7 +459,7 @@ namespace tyson
          * @param key must be a string inside of AnnaDB Map
          * @return TySonObject value from a TySonObject Map if exists
          */
-        [[ nodiscard ]] std::optional<TySonObject> operator[](const std::string_view key) const
+        [[ nodiscard ]] std::optional<TySonObject> operator[](const std::string_view key) const noexcept
         {
             if (type_ == TySonType::Map)
             {
@@ -485,7 +485,7 @@ namespace tyson
          *
          * @return the type name of the current TysonObject
          */
-        [[nodiscard]] TySonType type() const
+        [[nodiscard]] TySonType type() const noexcept
         {
             return type_;
         }
@@ -497,7 +497,7 @@ namespace tyson
          * @return the current value representation
          */
         template<TySonType T>
-        [[nodiscard]] std::string value() const
+        [[nodiscard]] std::string value() const noexcept
         {
             return value_;
         }
@@ -510,7 +510,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Bool)
-        [[nodiscard]] bool value() const
+        [[nodiscard]] bool value() const noexcept
         {
             return value_ == "true";
         }
@@ -523,7 +523,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Null)
-        [[nodiscard]] std::string value() const
+        [[nodiscard]] std::string value() const noexcept
         {
             return "";
         }
@@ -536,7 +536,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Link)
-        [[nodiscard]] std::pair<std::string, std::string> value() const
+        [[nodiscard]] std::pair<std::string, std::string> value() const noexcept
         {
             return link_;
         }
@@ -549,7 +549,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Vector)
-        [[nodiscard]] std::vector<TySonObject> value() const
+        [[nodiscard]] std::vector<TySonObject> value() const noexcept
         {
             return vector_;
         }
@@ -562,7 +562,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Map)
-        [[nodiscard]] std::map<TySonObject, TySonObject> value() const
+        [[nodiscard]] std::map<TySonObject, TySonObject> value() const noexcept
         {
             return map_;
         }
@@ -654,7 +654,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Object)
-        [[ nodiscard ]] std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view obj_id)
+        [[ nodiscard ]] std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view obj_id) noexcept
         {
             for (const auto &val: collection_objects_)
             {
@@ -675,7 +675,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Objects)
-        [[ nodiscard ]] std::vector<std::pair<TySonObject, TySonObject>> get(std::string_view collection)
+        [[ nodiscard ]] std::vector<std::pair<TySonObject, TySonObject>> get(std::string_view collection) noexcept
         {
             std::vector<std::pair<TySonObject, TySonObject>> result{};
             std::for_each(collection_objects_.begin(), collection_objects_.end(),
@@ -699,7 +699,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::Object)
-        [[ nodiscard ]] std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view collection, std::string_view obj_id)
+        [[ nodiscard ]] std::optional<std::pair<TySonObject, TySonObject>> get(std::string_view collection, std::string_view obj_id) noexcept
         {
             for (const std::pair<TySonObject, TySonObject> &val: collection_objects_)
             {
@@ -722,7 +722,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::ID)
-        [[ nodiscard ]] std::optional<TySonObject> get(std::string_view obj_id)
+        [[ nodiscard ]] std::optional<TySonObject> get(std::string_view obj_id) noexcept
         {
             for (const TySonObject &val: collection_ids_)
             {
@@ -743,7 +743,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::ID)
-        [[ nodiscard ]] std::vector<TySonObject> get(std::string_view collection)
+        [[ nodiscard ]] std::vector<TySonObject> get(std::string_view collection) noexcept
         {
             std::vector<TySonObject> result{};
             std::copy_if(collection_ids_.begin(), collection_ids_.end(),
@@ -768,7 +768,7 @@ namespace tyson
          */
         template<TySonType T>
         requires (T == TySonType::ID)
-        [[ nodiscard ]] std::optional<TySonObject> get(std::string_view collection, std::string_view obj_id)
+        [[ nodiscard ]] std::optional<TySonObject> get(std::string_view collection, std::string_view obj_id) noexcept
         {
             for (const TySonObject &val: collection_ids_)
             {

@@ -21,7 +21,7 @@ namespace utils
      * @param delim the char on which to split
      * @return the strings inside of a vector
      */
-    inline std::vector<std::string> split(std::string_view txt, char delim)
+    inline std::vector<std::string> split(std::string_view txt, char delim) noexcept
     {   const auto to_string = [](auto && chr) -> std::string {
             const std::ranges::common_view cv = std::ranges::common_view{chr};
             return {cv.begin(), cv.end()};

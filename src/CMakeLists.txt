@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 project(annadb_driver VERSION 1.0 LANGUAGES CXX)
 
+find_package(cppzmq)
+
 if ("$ENV{TESTING}")
     enable_testing()
 
@@ -19,14 +21,12 @@ if ("$ENV{TESTING}")
             TySON.hpp
             tests/test_tyson_parsing.cpp
             tests/test_connection_data.cpp tests/test_query_creating.cpp tests/test_comparator.cpp)
-    target_link_libraries(annadb_driver gtest_main)
+    target_link_libraries(annadb_driver gtest_main cppzmq)
 
     include(GoogleTest)
     gtest_discover_tests(annadb_driver)
 
 else ()
-    find_package(cppzmq)
-
     add_executable(annadb_driver main.cpp connection.hpp TySON.hpp utils.hpp query.hpp query_comparision.hpp)
     target_link_libraries(annadb_driver cppzmq)
 endif ()

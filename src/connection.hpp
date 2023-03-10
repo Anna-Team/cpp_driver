@@ -40,7 +40,7 @@ namespace annadb
         update_meta = 'u'
     };
 
-    std::ostream& operator<< (std::ostream& os, MetaType metaType)
+    std::ostream& operator<< (std::ostream& os, MetaType metaType) noexcept
     {
         switch (metaType)
         {
@@ -74,7 +74,7 @@ namespace annadb
          * @param str_data the raw string data inside of the AnnaDB response
          * @return the parts of the data response
          */
-        std::vector<KeyVal> split_data(std::string_view str_data)
+        std::vector<KeyVal> split_data(std::string_view str_data) noexcept
         {
             auto new_data = std::regex_replace(str_data.data(), pattern, "^$&");
             auto data = utils::split(new_data, '^');
@@ -92,7 +92,7 @@ namespace annadb
          * create a new Data object from the raw string
          * @param data
          */
-        explicit Data(std::string_view data) : data_(data) {}
+        explicit Data(std::string_view data) noexcept : data_(data) {}
         ~Data() = default;
 
         /**
@@ -103,7 +103,7 @@ namespace annadb
          */
         template<tyson::TySonType T>
         requires (T == tyson::TySonType::Objects || T == tyson::TySonType::IDs)
-        std::optional<tyson::TySonCollectionObject> get()
+        std::optional<tyson::TySonCollectionObject> get() noexcept
         {
             if (data_.starts_with(std::string("s|data|:objects")) && T == tyson::TySonType::Objects)
             {
@@ -163,7 +163,7 @@ namespace annadb
          * exampl.: s|meta|:find_meta{s|count|:n|5|}
          * the data part here is: `{s|count|:n|5|}`
          */
-        void parse_data()
+        void parse_data() noexcept
         {
             auto pos_map_start = meta_txt_.find('{');
             auto pos_map_end = meta_txt_.rfind('}') + 1;
@@ -178,7 +178,7 @@ namespace annadb
          * exampl.: s|meta|:find_meta{s|count|:n|5|}
          * the MetaType part here is: `find_meta`
          */
-        void parse_type()
+        void parse_type() noexcept
         {
             auto pos_type_start = meta_txt_.find(':');
             auto pos_type_end = meta_txt_.find('{');
@@ -186,7 +186,7 @@ namespace annadb
             metaType = metaTypes.at(meta_type_str);
         }
 
-        friend std::ostream & operator<<(std::ostream &os, const Meta& meta)
+        friend std::ostream & operator<<(std::ostream &os, const Meta& meta) noexcept
         {
             std::string count_val = "0";
 
@@ -207,7 +207,7 @@ namespace annadb
          *
          * @param meta_txt string
          */
-        explicit Meta(std::string_view meta_txt)
+        explicit Meta(std::string_view meta_txt) noexcept
         {
             meta_txt_ = meta_txt;
             parse_data();
@@ -220,14 +220,14 @@ namespace annadb
          *
          * @return the data part of the meta object
          */
-        tyson::TySonObject data()
+        tyson::TySonObject data() noexcept
         {
             return data_;
         }
     
         template<typename T>
         requires std::is_integral_v<T>
-        std::optional<T> rows()
+        std::optional<T> rows() noexcept
         {
             auto count = data_["count"];
             if (count)
@@ -242,7 +242,7 @@ namespace annadb
          *
          * @return the type part of the meta object
          */
-        MetaType type()
+        MetaType type() noexcept
         {
             return metaType;
         }
@@ -260,7 +260,7 @@ namespace annadb
          *
          * @param response string
          */
-        void parse_response(std::string_view response)
+        void parse_response(std::string_view response) noexcept
         {
             /*
              * The response format from annadb is
@@ -286,7 +286,7 @@ namespace annadb
             meta_ = response.substr(pos_meta_begin, pos_response_end - pos_meta_begin);
         }
 
-        friend std::ostream & operator<<(std::ostream &os, const Journal& journal)
+        friend std::ostream & operator<<(std::ostream &os, const Journal& journal) noexcept
         {
             std::string result = journal.ok() ? "ok" : "err";
             auto meta = journal.meta();
@@ -303,7 +303,7 @@ namespace annadb
          *
          * @param response string
          */
-        explicit Journal(std::string_view response)
+        explicit Journal(std::string_view response) noexcept
         {
             parse_response(response);
         }
@@ -315,7 +315,7 @@ namespace annadb
          *
          * @return the query result
          */
-        [[nodiscard]] bool ok() const
+        [[nodiscard]] bool ok() const noexcept
         {
             return result_;
         }
@@ -324,7 +324,7 @@ namespace annadb
          *
          * @return the meta part of the AnnaDB query response
          */
-        [[nodiscard]] Meta meta() const
+        [[nodiscard]] Meta meta() const noexcept
         {
             Meta meta{meta_};
             return meta;
@@ -334,7 +334,7 @@ namespace annadb
          *
          * @return the data part of the AnnaDB query response
          */
-        [[nodiscard]] Data data() const
+        [[nodiscard]] Data data() const noexcept
         {
             Data data{data_};
             return data;
@@ -347,11 +347,11 @@ namespace annadb
         std::string password_;
         std::string host_;
         std::string port_;
-
-        zmq::socket_t requester {context, ZMQ_REQ};
+    
         zmq::context_t context {1};
+        zmq::socket_t requester {context, ZMQ_REQ};
 
-        inline bool zmq_send(std::string_view query)
+        bool zmq_send(std::string_view query) noexcept
         {
             zmq::message_t message(query.size());
             std::memcpy(message.data(), query.data(), query.size());
@@ -366,7 +366,7 @@ namespace annadb
             return false;
         }
 
-        inline std::optional<std::string> zmq_receive()
+        std::optional<std::string> zmq_receive() noexcept
         {
             zmq::message_t message;
             auto response = requester.recv(message, zmq::recv_flags::none);
@@ -394,7 +394,7 @@ namespace annadb
                std::string_view password,
                std::string_view host,
                u_short port
-        ) : username_(username),
+        ) noexcept : username_(username),
             password_(password),
             host_(host),
             port_(std::to_string(port))
@@ -406,15 +406,15 @@ namespace annadb
         /**
          * open a connection with the AnnaDB
          */
-        void connect()
+        void connect() noexcept
         {
-            requester.connect("tcp://" + host_ + ":" + port_);
+            // requester.connect("tcp://" + host_ + ":" + port_);
         }
 
         /**
          * close the connection to the AnnaDB
          */
-        void close()
+        void close() noexcept
         {
             requester.close();
         }
@@ -425,7 +425,7 @@ namespace annadb
          * @param query string in TySON format
          * @return a Journal object representing the result of the query if successful
          */
-        [[nodiscard]] std::optional<Journal> send(std::string_view query)
+        [[nodiscard]] std::optional<Journal> send(std::string_view query) noexcept
         {
             auto result = zmq_send(query);
 
@@ -446,12 +446,13 @@ namespace annadb
          * @param query @see query.annadb::Query::Query
          * @return a Journal object representing the result of the query if successful
          */
-        [[nodiscard]] std::optional<Journal> send(annadb::Query::Query &query)
+        [[nodiscard]] std::optional<Journal> send(annadb::Query::Query &query) noexcept
         {
             std::stringstream sstream;
             sstream << query;
-
-            auto result = zmq_send(sstream.str());
+            
+            auto query_str = sstream.str();
+            auto result = zmq_send(query_str);
 
             if (result)
             {
