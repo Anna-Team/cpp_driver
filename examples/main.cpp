@@ -38,17 +38,16 @@ void insert_some_values(annadb::AnnaDB &connection, const std::string &collectio
     if (result)
     {
         std::cout << "Insert query was successful\n";
-        
+
         auto journal = result.value();
         auto new_rows = journal.meta().rows<short>();
-        
+
         std::cout << "Inserted: " << new_rows.value() << " new rows.\n";
-        
-        auto new_ids = journal.data().get<tyson::TySonType::IDs>();
-        for (const auto &val: new_ids.value().get<tyson::TySonType::Objects>(collection_name))
+
+        auto new_ids = journal.data().get<tyson::TySonType::IDs>().value();
+        for (auto &val: new_ids.get<tyson::TySonType::IDs>(collection_name))
         {
-            std::cout << val.first << "\n";
-            std::cout << val.second << "\n";
+            std::cout << val << "\n";
         };
     }
     else

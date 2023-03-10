@@ -617,7 +617,10 @@ namespace tyson
 
     public:
         TySonCollectionObject() = default;
-
+        explicit TySonCollectionObject(size_t size)
+        {
+            collection_ids_.reserve(size);
+        }
         ~TySonCollectionObject() = default;
 
         /**
@@ -626,9 +629,10 @@ namespace tyson
          *
          * @param object
          */
-        void add(const std::string_view &object)
+        void add(const std::string &object)
         {
-            collection_ids_.emplace_back(object);
+            auto tyson_str_data = utils::split(object, '|');
+            collection_ids_.emplace_back(TySonObject::Link(tyson_str_data[0], tyson_str_data[1]));
         };
 
         /**
@@ -737,22 +741,21 @@ namespace tyson
         /**
          * Get all nodes from the AnnaDB response data|:ids
          *
-         * @tparam T TySonType::ID
+         * @tparam T TySonType::IDs
          * @param collection name
          * @return vector of TySonObjects which belongs to the collection found by collection name
          */
         template<TySonType T>
-        requires (T == TySonType::ID)
+        requires (T == TySonType::IDs)
         [[ nodiscard ]] std::vector<TySonObject> get(std::string_view collection) noexcept
         {
             std::vector<TySonObject> result{};
-            std::copy_if(collection_ids_.begin(), collection_ids_.end(),
-                         std::back_inserter(result),
-                         [&collection](const TySonObject &val)
+            std::for_each(collection_ids_.begin(), collection_ids_.end(),
+                         [&result, &collection](const TySonObject &val)
                          {
                              if (val.value<TySonType::Link>().first == collection)
                              {
-                                 return val;
+                                 result.emplace_back(val);
                              }
                          });
             return result;

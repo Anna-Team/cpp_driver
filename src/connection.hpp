@@ -124,11 +124,11 @@ namespace annadb
             }
             else if (data_.starts_with(std::string("s|data|:ids"))  && T == tyson::TySonType::IDs)
             {
-                tyson::TySonCollectionObject object {};
                 auto start_val = data_.find_first_of('[');
                 auto end_val = data_.find_last_of(']');
 
-                auto tyson_str_data = utils::split(data_.substr(start_val, end_val - start_val), ',');
+                auto tyson_str_data = utils::split(data_.substr(start_val + 1, end_val - start_val - 1), ',');
+                tyson::TySonCollectionObject object {tyson_str_data.size()};
                 for (auto &link_data: tyson_str_data)
                 {
                     object.add(link_data);
@@ -408,7 +408,7 @@ namespace annadb
          */
         void connect() noexcept
         {
-            // requester.connect("tcp://" + host_ + ":" + port_);
+            requester.connect("tcp://" + host_ + ":" + port_);
         }
 
         /**
