@@ -118,7 +118,7 @@ $(function() {
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        update_meta = <span class="charliteral">&#39;u&#39;</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    };</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, MetaType metaType)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, MetaType metaType) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordflow">switch</span> (metaType)</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        {</div>
@@ -146,7 +146,7 @@ $(function() {
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    {</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        std::string data_;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        std::vector&lt;KeyVal&gt; split_data(std::string_view str_data)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        std::vector&lt;KeyVal&gt; split_data(std::string_view str_data) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        {</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            <span class="keyword">auto</span> new_data = std::regex_replace(str_data.data(), pattern, <span class="stringliteral">&quot;^$&amp;&quot;</span>);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keyword">auto</span> data = utils::split(new_data, <span class="charliteral">&#39;^&#39;</span>);</div>
@@ -160,12 +160,12 @@ $(function() {
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classannadb_1_1Data.html#af1bc688e6210141982d9c21d4e5e90f3">   95</a></span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classannadb_1_1Data.html#af1bc688e6210141982d9c21d4e5e90f3">Data</a>(std::string_view data) : data_(data) {}</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classannadb_1_1Data.html#a1fa16483d896eb19b1df99a7f5c02980">   95</a></span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classannadb_1_1Data.html#a1fa16483d896eb19b1df99a7f5c02980">Data</a>(std::string_view data) noexcept : data_(data) {}</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <a class="code hl_class" href="classannadb_1_1Data.html">~Data</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">template</span>&lt;tyson::TySonType T&gt;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">requires</span> (T == tyson::TySonType::Objects || T == tyson::TySonType::IDs)</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classannadb_1_1Data.html#a89a4e011062df5faf8023dc3a9fdc253">  106</a></span>        std::optional&lt;tyson::TySonCollectionObject&gt; <a class="code hl_function" href="classannadb_1_1Data.html#a89a4e011062df5faf8023dc3a9fdc253">get</a>()</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classannadb_1_1Data.html#a084e7c40b22e67fb5e311536dd9a0b70">  106</a></span>        std::optional&lt;tyson::TySonCollectionObject&gt; <a class="code hl_function" href="classannadb_1_1Data.html#a084e7c40b22e67fb5e311536dd9a0b70">get</a>() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        {</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            <span class="keywordflow">if</span> (data_.starts_with(std::string(<span class="stringliteral">&quot;s|data|:objects&quot;</span>)) &amp;&amp; T == tyson::TySonType::Objects)</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            {</div>
@@ -186,14 +186,14 @@ $(function() {
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            }</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (data_.starts_with(std::string(<span class="stringliteral">&quot;s|data|:ids&quot;</span>))  &amp;&amp; T == tyson::TySonType::IDs)</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <a class="code hl_class" href="classtyson_1_1TySonCollectionObject.html">tyson::TySonCollectionObject</a> <span class="keywordtype">object</span> {};</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="keyword">auto</span> start_val = data_.find_first_of(<span class="charliteral">&#39;[&#39;</span>);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                <span class="keyword">auto</span> end_val = data_.find_last_of(<span class="charliteral">&#39;]&#39;</span>);</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keyword">auto</span> tyson_str_data = utils::split(data_.substr(start_val, end_val - start_val), <span class="charliteral">&#39;,&#39;</span>);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <span class="keyword">auto</span> start_val = data_.find_first_of(<span class="charliteral">&#39;[&#39;</span>);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="keyword">auto</span> end_val = data_.find_last_of(<span class="charliteral">&#39;]&#39;</span>);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                <span class="keyword">auto</span> tyson_str_data = utils::split(data_.substr(start_val + 1, end_val - start_val - 1), <span class="charliteral">&#39;,&#39;</span>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <a class="code hl_class" href="classtyson_1_1TySonCollectionObject.html">tyson::TySonCollectionObject</a> <span class="keywordtype">object</span> {tyson_str_data.size()};</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;link_data: tyson_str_data)</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                    <span class="keywordtype">object</span>.add(link_data);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                    <span class="keywordtype">object</span>.<a class="code hl_function" href="classtyson_1_1TySonCollectionObject.html#ae527cc2dd89cd973dc99ce46b016c08a">add</a>(link_data);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                }</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                tyson_str_data.clear();</div>
@@ -218,7 +218,7 @@ $(function() {
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        MetaType metaType = MetaType::none;</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keywordtype">void</span> parse_data()</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keywordtype">void</span> parse_data() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        {</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            <span class="keyword">auto</span> pos_map_start = meta_txt_.find(<span class="charliteral">&#39;{&#39;</span>);</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="keyword">auto</span> pos_map_end = meta_txt_.rfind(<span class="charliteral">&#39;}&#39;</span>) + 1;</div>
@@ -226,7 +226,7 @@ $(function() {
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            data_ = <a class="code hl_class" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> {map_str};</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        }</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <span class="keywordtype">void</span> parse_type()</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <span class="keywordtype">void</span> parse_type() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        {</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            <span class="keyword">auto</span> pos_type_start = meta_txt_.find(<span class="charliteral">&#39;:&#39;</span>);</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            <span class="keyword">auto</span> pos_type_end = meta_txt_.find(<span class="charliteral">&#39;{&#39;</span>);</div>
@@ -234,14 +234,14 @@ $(function() {
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            metaType = metaTypes.at(meta_type_str);</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        }</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">friend</span> std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, <span class="keyword">const</span> <a class="code hl_class" href="classannadb_1_1Meta.html">Meta</a>&amp; meta)</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">friend</span> std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, <span class="keyword">const</span> <a class="code hl_class" href="classannadb_1_1Meta.html">Meta</a>&amp; meta) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        {</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            std::string count_val = <span class="stringliteral">&quot;0&quot;</span>;</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keyword">auto</span> count = meta.data_[<span class="stringliteral">&quot;count&quot;</span>];</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="keywordflow">if</span> (count)</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            {</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                count_val = count.<a class="code hl_function" href="classtyson_1_1TySonObject.html#a5379fe5420786879fa7b917eea244361">value</a>().value&lt;tyson::TySonType::String&gt;();</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                count_val = count.<a class="code hl_function" href="classtyson_1_1TySonObject.html#a7069bf8dedb5d304eda03cdc3f1cdbf9">value</a>().value&lt;tyson::TySonType::String&gt;();</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            }</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            std::string repr = <span class="stringliteral">&quot;{s|count|:n|&quot;</span> + count_val + <span class="stringliteral">&quot;|&quot;</span>;</div>
@@ -250,7 +250,7 @@ $(function() {
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="classannadb_1_1Meta.html#a2b292a33e295de3651e0499d8a292f2c">  210</a></span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classannadb_1_1Meta.html#a2b292a33e295de3651e0499d8a292f2c">Meta</a>(std::string_view meta_txt)</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="classannadb_1_1Meta.html#ae6292ae5ecff1a8bdd32f7aa761b4311">  210</a></span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classannadb_1_1Meta.html#ae6292ae5ecff1a8bdd32f7aa761b4311">Meta</a>(std::string_view meta_txt) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        {</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            meta_txt_ = meta_txt;</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            parse_data();</div>
@@ -259,25 +259,25 @@ $(function() {
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <a class="code hl_class" href="classannadb_1_1Meta.html">~Meta</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classannadb_1_1Meta.html#ac04ef6796e27487c10323d260b62cd71">  223</a></span>        <a class="code hl_class" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> <a class="code hl_function" href="classannadb_1_1Meta.html#ac04ef6796e27487c10323d260b62cd71">data</a>()</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="classannadb_1_1Meta.html#ad614fdf8397f2f1508e48efd89221d71">  223</a></span>        <a class="code hl_class" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> <a class="code hl_function" href="classannadb_1_1Meta.html#ad614fdf8397f2f1508e48efd89221d71">data</a>() noexcept</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        {</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="keywordflow">return</span> data_;</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        }</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    </div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        <span class="keyword">requires</span> std::is_integral_v&lt;T&gt;</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        std::optional&lt;T&gt; rows()</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        std::optional&lt;T&gt; rows() noexcept</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        {</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="keyword">auto</span> count = data_[<span class="stringliteral">&quot;count&quot;</span>];</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            <span class="keywordflow">if</span> (count)</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            {</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                <span class="keyword">auto</span> res = count.<a class="code hl_function" href="classtyson_1_1TySonObject.html#a5379fe5420786879fa7b917eea244361">value</a>().value&lt;T&gt;();</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                <span class="keyword">auto</span> res = count.<a class="code hl_function" href="classtyson_1_1TySonObject.html#a7069bf8dedb5d304eda03cdc3f1cdbf9">value</a>().value&lt;T&gt;();</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                <span class="keywordflow">return</span> res;</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            }</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            <span class="keywordflow">return</span> {};</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        }</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno"><a class="line" href="classannadb_1_1Meta.html#afee8a7f3068e632384af70d92db2f2a4">  245</a></span>        MetaType <a class="code hl_function" href="classannadb_1_1Meta.html#afee8a7f3068e632384af70d92db2f2a4">type</a>()</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno"><a class="line" href="classannadb_1_1Meta.html#a79702689f7cfb2594794f4731f179498">  245</a></span>        MetaType <a class="code hl_function" href="classannadb_1_1Meta.html#a79702689f7cfb2594794f4731f179498">type</a>() noexcept</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        {</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="keywordflow">return</span> metaType;</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        }</div>
@@ -289,7 +289,7 @@ $(function() {
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        std::string meta_;</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keywordtype">bool</span> result_ = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="keywordtype">void</span> parse_response(std::string_view response)</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="keywordtype">void</span> parse_response(std::string_view response) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        {</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            <span class="comment">/*</span></div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><span class="comment">             * The response format from annadb is</span></div>
@@ -315,40 +315,40 @@ $(function() {
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            meta_ = response.substr(pos_meta_begin, pos_response_end - pos_meta_begin);</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        }</div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keyword">friend</span> std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, <span class="keyword">const</span> <a class="code hl_class" href="classannadb_1_1Journal.html">Journal</a>&amp; journal)</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keyword">friend</span> std::ostream &amp; operator&lt;&lt;(std::ostream &amp;os, <span class="keyword">const</span> <a class="code hl_class" href="classannadb_1_1Journal.html">Journal</a>&amp; journal) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        {</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            std::string result = journal.<a class="code hl_function" href="classannadb_1_1Journal.html#a43894a79c3f3b380033d280c2922a900">ok</a>() ? <span class="stringliteral">&quot;ok&quot;</span> : <span class="stringliteral">&quot;err&quot;</span>;</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            <span class="keyword">auto</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">meta</a> = journal.<a class="code hl_function" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">meta</a>();</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            <span class="keyword">auto</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">data</a> = <span class="stringliteral">&quot;journal.data()&quot;</span>; <span class="comment">// journal.data();</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            std::string result = journal.<a class="code hl_function" href="classannadb_1_1Journal.html#a94fb796a77930de2fbef5c4c4feb0564">ok</a>() ? <span class="stringliteral">&quot;ok&quot;</span> : <span class="stringliteral">&quot;err&quot;</span>;</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            <span class="keyword">auto</span> <a class="code hl_function" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">meta</a> = journal.<a class="code hl_function" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">meta</a>();</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            <span class="keyword">auto</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">data</a> = <span class="stringliteral">&quot;journal.data()&quot;</span>; <span class="comment">// journal.data();</span></div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            std::string repr = <span class="stringliteral">&quot;result:&quot;</span> + result + <span class="stringliteral">&quot;[response{&quot;</span>;</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <span class="keywordflow">return</span> os &lt;&lt; repr &lt;&lt; <a class="code hl_function" href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">data</a> &lt;&lt; <a class="code hl_function" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">meta</a> &lt;&lt; <span class="stringliteral">&quot;,},];&quot;</span>;</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <span class="keywordflow">return</span> os &lt;&lt; repr &lt;&lt; <a class="code hl_function" href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">data</a> &lt;&lt; <a class="code hl_function" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">meta</a> &lt;&lt; <span class="stringliteral">&quot;,},];&quot;</span>;</div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        }</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a9ab334cde21b0a4fafd655ab0be93ab1">  306</a></span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a9ab334cde21b0a4fafd655ab0be93ab1">Journal</a>(std::string_view response)</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a011eebade84122a9f168a8069878a25a">  306</a></span>        <span class="keyword">explicit</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a011eebade84122a9f168a8069878a25a">Journal</a>(std::string_view response) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        {</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            parse_response(response);</div>
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        }</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <a class="code hl_class" href="classannadb_1_1Journal.html">~Journal</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a43894a79c3f3b380033d280c2922a900">  318</a></span>        [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a43894a79c3f3b380033d280c2922a900">ok</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span><span class="keyword">        </span>{</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a94fb796a77930de2fbef5c4c4feb0564">  318</a></span>        [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a94fb796a77930de2fbef5c4c4feb0564">ok</a>() const noexcept</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        {</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            <span class="keywordflow">return</span> result_;</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        }</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">  327</a></span>        [[nodiscard]] <a class="code hl_class" href="classannadb_1_1Meta.html">Meta</a> <a class="code hl_function" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">meta</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span><span class="keyword">        </span>{</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <a class="code hl_class" href="classannadb_1_1Meta.html">Meta</a> <a class="code hl_function" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">meta</a>{meta_};</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">meta</a>;</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">  327</a></span>        [[nodiscard]] <a class="code hl_class" href="classannadb_1_1Meta.html">Meta</a> <a class="code hl_function" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">meta</a>() const noexcept</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        {</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <a class="code hl_class" href="classannadb_1_1Meta.html">Meta</a> <a class="code hl_function" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">meta</a>{meta_};</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">meta</a>;</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        }</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">  337</a></span>        [[nodiscard]] <a class="code hl_class" href="classannadb_1_1Data.html">Data</a> <a class="code hl_function" href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">data</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span><span class="keyword">        </span>{</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <a class="code hl_class" href="classannadb_1_1Data.html">Data</a> <a class="code hl_function" href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">data</a>{data_};</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">data</a>;</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno"><a class="line" href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">  337</a></span>        [[nodiscard]] <a class="code hl_class" href="classannadb_1_1Data.html">Data</a> <a class="code hl_function" href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">data</a>() const noexcept</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        {</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <a class="code hl_class" href="classannadb_1_1Data.html">Data</a> <a class="code hl_function" href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">data</a>{data_};</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">data</a>;</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        }</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    };</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
@@ -358,11 +358,11 @@ $(function() {
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        std::string password_;</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        std::string host_;</div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        std::string port_;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        zmq::socket_t requester {context, ZMQ_REQ};</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        zmq::context_t context {1};</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    </div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        zmq::context_t context {1};</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        zmq::socket_t requester {context, ZMQ_REQ};</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keyword">inline</span> <span class="keywordtype">bool</span> zmq_send(std::string_view query)</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordtype">bool</span> zmq_send(std::string_view query) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        {</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            zmq::message_t message(query.size());</div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            std::memcpy(message.data(), query.data(), query.size());</div>
@@ -377,7 +377,7 @@ $(function() {
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        }</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="keyword">inline</span> std::optional&lt;std::string&gt; zmq_receive()</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        std::optional&lt;std::string&gt; zmq_receive() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        {</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>            zmq::message_t message;</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>            <span class="keyword">auto</span> response = requester.recv(message, zmq::recv_flags::none);</div>
@@ -393,11 +393,11 @@ $(function() {
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span> </div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#ad4e4ccad0b02cb9f73224e5656b68a64">  393</a></span>        <a class="code hl_function" href="classannadb_1_1AnnaDB.html#ad4e4ccad0b02cb9f73224e5656b68a64">AnnaDB</a>(std::string_view username,</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#ae3a455c4ae60a82000bb081ae34dba70">  393</a></span>        <a class="code hl_function" href="classannadb_1_1AnnaDB.html#ae3a455c4ae60a82000bb081ae34dba70">AnnaDB</a>(std::string_view username,</div>
 <div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>               std::string_view password,</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>               std::string_view host,</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>               u_short port</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        ) : username_(username),</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        ) noexcept : username_(username),</div>
 <div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            password_(password),</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>            host_(host),</div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            port_(std::to_string(port))</div>
@@ -406,17 +406,17 @@ $(function() {
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        <a class="code hl_class" href="classannadb_1_1AnnaDB.html">~AnnaDB</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#a5b451c757817b312936f9cd73798d9ff">  409</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classannadb_1_1AnnaDB.html#a5b451c757817b312936f9cd73798d9ff">connect</a>()</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#a9d778c3f44ebec53bf0207180b98f0f0">  409</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classannadb_1_1AnnaDB.html#a9d778c3f44ebec53bf0207180b98f0f0">connect</a>() noexcept</div>
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        {</div>
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>            requester.connect(<span class="stringliteral">&quot;tcp://&quot;</span> + host_ + <span class="stringliteral">&quot;:&quot;</span> + port_);</div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        }</div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span> </div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#a709f1664bdc539bdfd2533db6d04da52">  417</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classannadb_1_1AnnaDB.html#a709f1664bdc539bdfd2533db6d04da52">close</a>()</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#af0c9f075b715170d43696f499e706fbd">  417</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classannadb_1_1AnnaDB.html#af0c9f075b715170d43696f499e706fbd">close</a>() noexcept</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>        {</div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>            requester.close();</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>        }</div>
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#af005b166c5a91570dbafc2d74b35569a">  428</a></span>        [[nodiscard]] std::optional&lt;Journal&gt; <a class="code hl_function" href="classannadb_1_1AnnaDB.html#af005b166c5a91570dbafc2d74b35569a">send</a>(std::string_view query)</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#a60c0dc2b4752ba3cbedfea516af35195">  428</a></span>        [[nodiscard]] std::optional&lt;Journal&gt; <a class="code hl_function" href="classannadb_1_1AnnaDB.html#a60c0dc2b4752ba3cbedfea516af35195">send</a>(std::string_view query) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>        {</div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>            <span class="keyword">auto</span> result = zmq_send(query);</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
@@ -431,49 +431,51 @@ $(function() {
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>            <span class="keywordflow">return</span> {};</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        }</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span> </div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#a9e23c91f78b9df9c11b8828cd14d74b0">  449</a></span>        [[nodiscard]] std::optional&lt;Journal&gt; <a class="code hl_function" href="classannadb_1_1AnnaDB.html#a9e23c91f78b9df9c11b8828cd14d74b0">send</a>(<a class="code hl_class" href="classannadb_1_1Query_1_1Query.html">annadb::Query::Query</a> &amp;query)</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno"><a class="line" href="classannadb_1_1AnnaDB.html#ac0177243016487f7e2bbf1d28c4295a7">  449</a></span>        [[nodiscard]] std::optional&lt;Journal&gt; <a class="code hl_function" href="classannadb_1_1AnnaDB.html#ac0177243016487f7e2bbf1d28c4295a7">send</a>(<a class="code hl_class" href="classannadb_1_1Query_1_1Query.html">annadb::Query::Query</a> &amp;query) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        {</div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>            std::stringstream sstream;</div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>            sstream &lt;&lt; query;</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span> </div>
-<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>            <span class="keyword">auto</span> result = zmq_send(sstream.str());</div>
-<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>            <span class="keywordflow">if</span> (result)</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>            {</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>                <span class="keyword">auto</span> response = zmq_receive();</div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>                <span class="keywordflow">if</span> (response)</div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>                {</div>
-<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>                    <span class="keywordflow">return</span> <a class="code hl_class" href="classannadb_1_1Journal.html">Journal</a>(*response);</div>
-<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>                }</div>
-<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>            }</div>
-<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>            <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>        }</div>
-<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>    };</div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>}</div>
-<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span> </div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="preprocessor">#endif </span><span class="comment">//ANNADB_DRIVER_CONNECTION_HPP</span></div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>            </div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>            <span class="keyword">auto</span> query_str = sstream.str();</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>            <span class="keyword">auto</span> result = zmq_send(query_str);</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span> </div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>            <span class="keywordflow">if</span> (result)</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>            {</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>                <span class="keyword">auto</span> response = zmq_receive();</div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>                <span class="keywordflow">if</span> (response)</div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>                {</div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>                    <span class="keywordflow">return</span> <a class="code hl_class" href="classannadb_1_1Journal.html">Journal</a>(*response);</div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>                }</div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>            }</div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>            <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>        }</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>    };</div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>}</div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span> </div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">#endif </span><span class="comment">//ANNADB_DRIVER_CONNECTION_HPP</span></div>
 <div class="ttc" id="aclassannadb_1_1AnnaDB_html"><div class="ttname"><a href="classannadb_1_1AnnaDB.html">annadb::AnnaDB</a></div><div class="ttdef"><b>Definition:</b> connection.hpp:345</div></div>
-<div class="ttc" id="aclassannadb_1_1AnnaDB_html_a5b451c757817b312936f9cd73798d9ff"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#a5b451c757817b312936f9cd73798d9ff">annadb::AnnaDB::connect</a></div><div class="ttdeci">void connect()</div><div class="ttdef"><b>Definition:</b> connection.hpp:409</div></div>
-<div class="ttc" id="aclassannadb_1_1AnnaDB_html_a709f1664bdc539bdfd2533db6d04da52"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#a709f1664bdc539bdfd2533db6d04da52">annadb::AnnaDB::close</a></div><div class="ttdeci">void close()</div><div class="ttdef"><b>Definition:</b> connection.hpp:417</div></div>
-<div class="ttc" id="aclassannadb_1_1AnnaDB_html_a9e23c91f78b9df9c11b8828cd14d74b0"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#a9e23c91f78b9df9c11b8828cd14d74b0">annadb::AnnaDB::send</a></div><div class="ttdeci">std::optional&lt; Journal &gt; send(annadb::Query::Query &amp;query)</div><div class="ttdef"><b>Definition:</b> connection.hpp:449</div></div>
-<div class="ttc" id="aclassannadb_1_1AnnaDB_html_ad4e4ccad0b02cb9f73224e5656b68a64"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#ad4e4ccad0b02cb9f73224e5656b68a64">annadb::AnnaDB::AnnaDB</a></div><div class="ttdeci">AnnaDB(std::string_view username, std::string_view password, std::string_view host, u_short port)</div><div class="ttdef"><b>Definition:</b> connection.hpp:393</div></div>
-<div class="ttc" id="aclassannadb_1_1AnnaDB_html_af005b166c5a91570dbafc2d74b35569a"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#af005b166c5a91570dbafc2d74b35569a">annadb::AnnaDB::send</a></div><div class="ttdeci">std::optional&lt; Journal &gt; send(std::string_view query)</div><div class="ttdef"><b>Definition:</b> connection.hpp:428</div></div>
+<div class="ttc" id="aclassannadb_1_1AnnaDB_html_a60c0dc2b4752ba3cbedfea516af35195"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#a60c0dc2b4752ba3cbedfea516af35195">annadb::AnnaDB::send</a></div><div class="ttdeci">std::optional&lt; Journal &gt; send(std::string_view query) noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:428</div></div>
+<div class="ttc" id="aclassannadb_1_1AnnaDB_html_a9d778c3f44ebec53bf0207180b98f0f0"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#a9d778c3f44ebec53bf0207180b98f0f0">annadb::AnnaDB::connect</a></div><div class="ttdeci">void connect() noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:409</div></div>
+<div class="ttc" id="aclassannadb_1_1AnnaDB_html_ac0177243016487f7e2bbf1d28c4295a7"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#ac0177243016487f7e2bbf1d28c4295a7">annadb::AnnaDB::send</a></div><div class="ttdeci">std::optional&lt; Journal &gt; send(annadb::Query::Query &amp;query) noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:449</div></div>
+<div class="ttc" id="aclassannadb_1_1AnnaDB_html_ae3a455c4ae60a82000bb081ae34dba70"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#ae3a455c4ae60a82000bb081ae34dba70">annadb::AnnaDB::AnnaDB</a></div><div class="ttdeci">AnnaDB(std::string_view username, std::string_view password, std::string_view host, u_short port) noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:393</div></div>
+<div class="ttc" id="aclassannadb_1_1AnnaDB_html_af0c9f075b715170d43696f499e706fbd"><div class="ttname"><a href="classannadb_1_1AnnaDB.html#af0c9f075b715170d43696f499e706fbd">annadb::AnnaDB::close</a></div><div class="ttdeci">void close() noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:417</div></div>
 <div class="ttc" id="aclassannadb_1_1Data_html"><div class="ttname"><a href="classannadb_1_1Data.html">annadb::Data</a></div><div class="ttdef"><b>Definition:</b> connection.hpp:68</div></div>
-<div class="ttc" id="aclassannadb_1_1Data_html_a89a4e011062df5faf8023dc3a9fdc253"><div class="ttname"><a href="classannadb_1_1Data.html#a89a4e011062df5faf8023dc3a9fdc253">annadb::Data::get</a></div><div class="ttdeci">std::optional&lt; tyson::TySonCollectionObject &gt; get()</div><div class="ttdef"><b>Definition:</b> connection.hpp:106</div></div>
-<div class="ttc" id="aclassannadb_1_1Data_html_af1bc688e6210141982d9c21d4e5e90f3"><div class="ttname"><a href="classannadb_1_1Data.html#af1bc688e6210141982d9c21d4e5e90f3">annadb::Data::Data</a></div><div class="ttdeci">Data(std::string_view data)</div><div class="ttdef"><b>Definition:</b> connection.hpp:95</div></div>
+<div class="ttc" id="aclassannadb_1_1Data_html_a084e7c40b22e67fb5e311536dd9a0b70"><div class="ttname"><a href="classannadb_1_1Data.html#a084e7c40b22e67fb5e311536dd9a0b70">annadb::Data::get</a></div><div class="ttdeci">std::optional&lt; tyson::TySonCollectionObject &gt; get() noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:106</div></div>
+<div class="ttc" id="aclassannadb_1_1Data_html_a1fa16483d896eb19b1df99a7f5c02980"><div class="ttname"><a href="classannadb_1_1Data.html#a1fa16483d896eb19b1df99a7f5c02980">annadb::Data::Data</a></div><div class="ttdeci">Data(std::string_view data) noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:95</div></div>
 <div class="ttc" id="aclassannadb_1_1Journal_html"><div class="ttname"><a href="classannadb_1_1Journal.html">annadb::Journal</a></div><div class="ttdef"><b>Definition:</b> connection.hpp:252</div></div>
-<div class="ttc" id="aclassannadb_1_1Journal_html_a43894a79c3f3b380033d280c2922a900"><div class="ttname"><a href="classannadb_1_1Journal.html#a43894a79c3f3b380033d280c2922a900">annadb::Journal::ok</a></div><div class="ttdeci">bool ok() const</div><div class="ttdef"><b>Definition:</b> connection.hpp:318</div></div>
-<div class="ttc" id="aclassannadb_1_1Journal_html_a7365625271f1d6426c1acf36986b82ae"><div class="ttname"><a href="classannadb_1_1Journal.html#a7365625271f1d6426c1acf36986b82ae">annadb::Journal::meta</a></div><div class="ttdeci">Meta meta() const</div><div class="ttdef"><b>Definition:</b> connection.hpp:327</div></div>
-<div class="ttc" id="aclassannadb_1_1Journal_html_a76b5a0299f018b383cdb72d40a9db287"><div class="ttname"><a href="classannadb_1_1Journal.html#a76b5a0299f018b383cdb72d40a9db287">annadb::Journal::data</a></div><div class="ttdeci">Data data() const</div><div class="ttdef"><b>Definition:</b> connection.hpp:337</div></div>
-<div class="ttc" id="aclassannadb_1_1Journal_html_a9ab334cde21b0a4fafd655ab0be93ab1"><div class="ttname"><a href="classannadb_1_1Journal.html#a9ab334cde21b0a4fafd655ab0be93ab1">annadb::Journal::Journal</a></div><div class="ttdeci">Journal(std::string_view response)</div><div class="ttdef"><b>Definition:</b> connection.hpp:306</div></div>
+<div class="ttc" id="aclassannadb_1_1Journal_html_a011eebade84122a9f168a8069878a25a"><div class="ttname"><a href="classannadb_1_1Journal.html#a011eebade84122a9f168a8069878a25a">annadb::Journal::Journal</a></div><div class="ttdeci">Journal(std::string_view response) noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:306</div></div>
+<div class="ttc" id="aclassannadb_1_1Journal_html_a2990bd4bdb4ebd72a07e01440aa0e882"><div class="ttname"><a href="classannadb_1_1Journal.html#a2990bd4bdb4ebd72a07e01440aa0e882">annadb::Journal::data</a></div><div class="ttdeci">Data data() const noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:337</div></div>
+<div class="ttc" id="aclassannadb_1_1Journal_html_a94fb796a77930de2fbef5c4c4feb0564"><div class="ttname"><a href="classannadb_1_1Journal.html#a94fb796a77930de2fbef5c4c4feb0564">annadb::Journal::ok</a></div><div class="ttdeci">bool ok() const noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:318</div></div>
+<div class="ttc" id="aclassannadb_1_1Journal_html_ae8d47751052c1ffa311b98dc2d776cc7"><div class="ttname"><a href="classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7">annadb::Journal::meta</a></div><div class="ttdeci">Meta meta() const noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:327</div></div>
 <div class="ttc" id="aclassannadb_1_1Meta_html"><div class="ttname"><a href="classannadb_1_1Meta.html">annadb::Meta</a></div><div class="ttdef"><b>Definition:</b> connection.hpp:147</div></div>
-<div class="ttc" id="aclassannadb_1_1Meta_html_a2b292a33e295de3651e0499d8a292f2c"><div class="ttname"><a href="classannadb_1_1Meta.html#a2b292a33e295de3651e0499d8a292f2c">annadb::Meta::Meta</a></div><div class="ttdeci">Meta(std::string_view meta_txt)</div><div class="ttdef"><b>Definition:</b> connection.hpp:210</div></div>
-<div class="ttc" id="aclassannadb_1_1Meta_html_ac04ef6796e27487c10323d260b62cd71"><div class="ttname"><a href="classannadb_1_1Meta.html#ac04ef6796e27487c10323d260b62cd71">annadb::Meta::data</a></div><div class="ttdeci">tyson::TySonObject data()</div><div class="ttdef"><b>Definition:</b> connection.hpp:223</div></div>
-<div class="ttc" id="aclassannadb_1_1Meta_html_afee8a7f3068e632384af70d92db2f2a4"><div class="ttname"><a href="classannadb_1_1Meta.html#afee8a7f3068e632384af70d92db2f2a4">annadb::Meta::type</a></div><div class="ttdeci">MetaType type()</div><div class="ttdef"><b>Definition:</b> connection.hpp:245</div></div>
-<div class="ttc" id="aclassannadb_1_1Query_1_1Query_html"><div class="ttname"><a href="classannadb_1_1Query_1_1Query.html">annadb::Query::Query</a></div><div class="ttdef"><b>Definition:</b> query.hpp:740</div></div>
+<div class="ttc" id="aclassannadb_1_1Meta_html_a79702689f7cfb2594794f4731f179498"><div class="ttname"><a href="classannadb_1_1Meta.html#a79702689f7cfb2594794f4731f179498">annadb::Meta::type</a></div><div class="ttdeci">MetaType type() noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:245</div></div>
+<div class="ttc" id="aclassannadb_1_1Meta_html_ad614fdf8397f2f1508e48efd89221d71"><div class="ttname"><a href="classannadb_1_1Meta.html#ad614fdf8397f2f1508e48efd89221d71">annadb::Meta::data</a></div><div class="ttdeci">tyson::TySonObject data() noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:223</div></div>
+<div class="ttc" id="aclassannadb_1_1Meta_html_ae6292ae5ecff1a8bdd32f7aa761b4311"><div class="ttname"><a href="classannadb_1_1Meta.html#ae6292ae5ecff1a8bdd32f7aa761b4311">annadb::Meta::Meta</a></div><div class="ttdeci">Meta(std::string_view meta_txt) noexcept</div><div class="ttdef"><b>Definition:</b> connection.hpp:210</div></div>
+<div class="ttc" id="aclassannadb_1_1Query_1_1Query_html"><div class="ttname"><a href="classannadb_1_1Query_1_1Query.html">annadb::Query::Query</a></div><div class="ttdef"><b>Definition:</b> query.hpp:738</div></div>
 <div class="ttc" id="aclasstyson_1_1TySonCollectionObject_html"><div class="ttname"><a href="classtyson_1_1TySonCollectionObject.html">tyson::TySonCollectionObject</a></div><div class="ttdef"><b>Definition:</b> TySON.hpp:614</div></div>
+<div class="ttc" id="aclasstyson_1_1TySonCollectionObject_html_ae527cc2dd89cd973dc99ce46b016c08a"><div class="ttname"><a href="classtyson_1_1TySonCollectionObject.html#ae527cc2dd89cd973dc99ce46b016c08a">tyson::TySonCollectionObject::add</a></div><div class="ttdeci">void add(const std::string &amp;object)</div><div class="ttdef"><b>Definition:</b> TySON.hpp:632</div></div>
 <div class="ttc" id="aclasstyson_1_1TySonObject_html"><div class="ttname"><a href="classtyson_1_1TySonObject.html">tyson::TySonObject</a></div><div class="ttdef"><b>Definition:</b> TySON.hpp:80</div></div>
-<div class="ttc" id="aclasstyson_1_1TySonObject_html_a5379fe5420786879fa7b917eea244361"><div class="ttname"><a href="classtyson_1_1TySonObject.html#a5379fe5420786879fa7b917eea244361">tyson::TySonObject::value</a></div><div class="ttdeci">std::string value() const</div><div class="ttdef"><b>Definition:</b> TySON.hpp:500</div></div>
+<div class="ttc" id="aclasstyson_1_1TySonObject_html_a7069bf8dedb5d304eda03cdc3f1cdbf9"><div class="ttname"><a href="classtyson_1_1TySonObject.html#a7069bf8dedb5d304eda03cdc3f1cdbf9">tyson::TySonObject::value</a></div><div class="ttdeci">std::string value() const noexcept</div><div class="ttdef"><b>Definition:</b> TySON.hpp:500</div></div>
 <div class="ttc" id="astructannadb_1_1KeyVal_html"><div class="ttname"><a href="structannadb_1_1KeyVal.html">annadb::KeyVal</a></div><div class="ttdef"><b>Definition:</b> connection.hpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
