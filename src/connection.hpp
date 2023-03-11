@@ -40,7 +40,7 @@ namespace annadb
         update_meta = 'u'
     };
 
-    std::ostream& operator<< (std::ostream& os, MetaType metaType) noexcept
+    inline std::ostream& operator<< (std::ostream& os, MetaType metaType) noexcept
     {
         switch (metaType)
         {
