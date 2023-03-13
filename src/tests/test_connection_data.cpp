@@ -89,3 +89,32 @@ TEST(tyson_parsing_connection_data, get_objects_by_collection_name)
 
     ASSERT_EQ(obj_links.size(), 3);
 }
+
+TEST(tyson_parsing_connection_data, get_meta_data_type)
+{
+    annadb::Meta meta {"s|meta|:insert_meta{s|count|:n|1|,}"};
+    ASSERT_EQ(meta.type(), annadb::MetaType::insert_meta);
+}
+
+TEST(tyson_parsing_connection_data, get_meta_data_value)
+{
+    {
+        annadb::Meta meta {"s|meta|:insert_meta{s|count|:n|6|,}"};
+        ASSERT_EQ(meta.data().type(), tyson::TySonType::Map);
+    }
+    
+    {
+        annadb::Meta meta {"s|meta|:insert_meta{s|count|:n|6|,}"};
+        
+        std::map<std::string, tyson::TySonObject> map_ {std::make_pair("count", tyson::TySonObject::Number(6))};
+        auto expected = tyson::TySonObject::Map(map_);
+        
+        ASSERT_EQ(meta.data(), expected);
+    }
+
+    {
+        annadb::Meta meta {"s|meta|:insert_meta{s|count|:n|6|,}"};
+        short expected = 6;
+        ASSERT_EQ(meta.rows<short>(), expected);
+    }
+}

@@ -356,11 +356,7 @@ function SearchBox(name, resultsPath, extension)
         document.getElementById("NoMatches").style.display="none";
       }
  
-      if (idx!=-1) {
-        searchResults.Search(searchValue);
-      } else { // no file with search results => force empty search results
-        searchResults.Search('====');
-      }
+      searchResults.Search(searchValue);
 
       if (domPopupSearchResultsWindow.style.display!='block')
       {

@@ -25,8 +25,7 @@ if ("$ENV{TESTING}")
     gtest_discover_tests(annadb_driver)
 
 else ()
-    find_package(cppzmq)
-
+    find_package(cppzmq REQUIRED)
     add_executable(annadb_driver main.cpp connection.hpp TySON.hpp utils.hpp query.hpp query_comparision.hpp)
     target_link_libraries(annadb_driver cppzmq)
 endif ()

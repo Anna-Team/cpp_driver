@@ -43,7 +43,7 @@ namespace annadb::Query
          *
          * @param field
          */
-        explicit Asc(std::string_view field) : field_(field) {}
+        explicit Asc(std::string_view field) noexcept : field_(field) {}
 
         [[nodiscard]] std::string data() const override
         {
@@ -62,7 +62,7 @@ namespace annadb::Query
          *
          * @param field
          */
-        explicit Desc(std::string_view field) : field_(field) {}
+        explicit Desc(std::string_view field) noexcept : field_(field) {}
 
         [[nodiscard]] std::string data() const override
         {
@@ -85,22 +85,22 @@ namespace annadb::Query
         explicit QueryCmd(std::string_view name, bool start_cmd) : name_(name), start_cmd_(start_cmd) {}
         virtual ~QueryCmd() = default;
 
-        [[nodiscard]] std::string name()
+        [[nodiscard]] std::string name() noexcept
         {
             return this->name_;
         }
 
-        [[nodiscard]] bool can_start_pipeline() const
+        [[nodiscard]] bool can_start_pipeline() const noexcept
         {
             return start_cmd_;
         }
 
-        [[nodiscard]] virtual std::string query()
+        [[nodiscard]] virtual std::string query() noexcept
         {
             return this->annadb_query();
         }
 
-        [[nodiscard]] bool next_step_allowed(const std::string &cmdName)
+        [[nodiscard]] bool next_step_allowed(const std::string &cmdName) noexcept
         {
             if (next_steps_().empty())
             {
@@ -111,7 +111,7 @@ namespace annadb::Query
             return res != next_steps_().end();
         }
 
-        [[nodiscard]] bool previous_step_allowed(const std::string &cmdName)
+        [[nodiscard]] bool previous_step_allowed(const std::string &cmdName) noexcept
         {
             if (previous_steps_().empty())
             {
@@ -121,8 +121,6 @@ namespace annadb::Query
             auto res = std::find(previous_steps_().begin(), previous_steps_().end(), cmdName);
             return res != next_steps_().end();
         }
-
-
     };
 
 
@@ -140,11 +138,11 @@ namespace annadb::Query
             return sstream.str();
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return {};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {};
         }
@@ -157,13 +155,13 @@ namespace annadb::Query
          * @param obj the TySonObject you want to insert into your DB collection
          * @see TySON::tyson::TySonObject
          */
-        explicit Insert(tyson::TySonObject &obj) : QueryCmd("insert", true)
+        explicit Insert(tyson::TySonObject &obj) noexcept : QueryCmd("insert", true)
         {
             values_.emplace_back(std::move(obj));
         }
     
         template<typename ...T>
-        explicit Insert(T&& ...values) : QueryCmd("insert", true)
+        explicit Insert(T&& ...values) noexcept : QueryCmd("insert", true)
         {
             std::vector<tyson::TySonObject> objs {};
             objs.reserve(sizeof...(values));
@@ -178,7 +176,7 @@ namespace annadb::Query
          * @param objs the vector of TySonObjects you want to insert into your DB collection
          * @see TySON::tyson::TySonObject
          */
-        explicit Insert(std::vector<tyson::TySonObject> &objs) : QueryCmd("insert", true), values_(std::move(objs)) {}
+        explicit Insert(std::vector<tyson::TySonObject> &objs) noexcept : QueryCmd("insert", true), values_(std::move(objs)) {}
 
     };
 
@@ -197,11 +195,11 @@ namespace annadb::Query
             return sstream.str();
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {"find", "get", "sort", "limit", "offset", "update", "delete"};
         }
@@ -286,26 +284,26 @@ namespace annadb::Query
             return sstream.str();
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {"find", "get", "sort", "limit", "offset", "update", "delete"};
         }
 
     public:
-        Find() : QueryCmd("find", true) {};
+        Find() noexcept : QueryCmd("find", true) {};
         Find(Find &&rhs) = default;
 
-        Find& eq(tyson::TySonObject &value)
+        Find& eq(tyson::TySonObject &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Eq>(value));
             return *this;
         }
     
-        Find& eq(std::string_view path_to_field, tyson::TySonObject &value)
+        Find& eq(std::string_view path_to_field, tyson::TySonObject &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Eq>(path_to_field, value));
             return *this;
@@ -317,20 +315,20 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find EQ(tyson::TySonObject &value)
+        static Find EQ(tyson::TySonObject &value) noexcept
         {
             Find find {};
             find.eq(value);
             return find;
         }
-
-        Find& neq(tyson::TySonObject &value)
+        
+        Find& neq(tyson::TySonObject &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Neq>(value));
             return *this;
         }
     
-        Find& neq(std::string_view path_to_field, tyson::TySonObject &value)
+        Find& neq(std::string_view path_to_field, tyson::TySonObject &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Neq>(path_to_field, value));
             return *this;
@@ -342,22 +340,36 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find NEQ(tyson::TySonObject &value)
+        static Find NEQ(tyson::TySonObject &value) noexcept
         {
             Find find {};
             find.neq(value);
             return find;
         }
-
-        Find& gt(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gt(T &&value) noexcept
+        {
+            comparators_.emplace_back(std::make_unique<Gt>(std::forward<tyson::TySonObject>(value)));
+            return *this;
+        }
+        
+        Find& gt(tyson::TySonObject &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Gt>(value));
             return *this;
         }
     
-        Find& gt(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gt(std::string_view path_to_field, T &&value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Gt>(path_to_field,value));
+            comparators_.emplace_back(std::make_unique<Gt>(path_to_field, std::forward<tyson::TySonObject>(value)));
+            return *this;
+        }
+    
+        Find& gt(std::string_view path_to_field, tyson::TySonObject &value) noexcept
+        {
+            comparators_.emplace_back(std::make_unique<Gt>(path_to_field, value));
             return *this;
         }
 
@@ -367,22 +379,25 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find GT(tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        static Find GT(T &&value) noexcept
         {
             Find find {};
             find.gt(value);
             return find;
         }
-
-        Find& gte(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gte(T &&value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Gte>(value));
+            comparators_.emplace_back(std::make_unique<Gte>(std::forward<tyson::TySonObject>(value)));
             return *this;
         }
     
-        Find& gte(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& gte(std::string_view path_to_field, T &&value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Gte>(path_to_field, value));
+            comparators_.emplace_back(std::make_unique<Gte>(path_to_field, std::forward<tyson::TySonObject>(value)));
             return *this;
         }
 
@@ -392,22 +407,25 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find GTE(tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        static Find GTE(T value) noexcept
         {
             Find find {};
-            find.gte(value);
+            find.gte(std::forward<tyson::TySonObject>(value));
             return find;
         }
-
-        Find& lt(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lt(T value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Lt>(value));
+            comparators_.emplace_back(std::make_unique<Lt>(std::forward<tyson::TySonObject>(value)));
             return *this;
         }
     
-        Find& lt(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lt(std::string_view path_to_field, T value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Lt>(path_to_field, value));
+            comparators_.emplace_back(std::make_unique<Lt>(path_to_field, std::forward<tyson::TySonObject>(value)));
             return *this;
         }
 
@@ -417,22 +435,25 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find LT(tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        static Find LT(T value) noexcept
         {
             Find find {};
-            find.lt(value);
+            find.lt(std::forward<tyson::TySonObject>(value));
             return find;
         }
-
-        Find& lte(tyson::TySonObject &value)
+    
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lte(T value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Lte>(value));
+            comparators_.emplace_back(std::make_unique<Lte>(std::forward<tyson::TySonObject>(value)));
             return *this;
         }
     
-        Find& lte(std::string_view path_to_field, tyson::TySonObject &value)
+        template<std::convertible_to<tyson::TySonObject> T>
+        Find& lte(std::string_view path_to_field, T value) noexcept
         {
-            comparators_.emplace_back(std::make_unique<Lte>(path_to_field, value));
+            comparators_.emplace_back(std::make_unique<Lte>(path_to_field, std::forward<tyson::TySonObject>(value)));
             return *this;
         }
 
@@ -442,14 +463,14 @@ namespace annadb::Query
          * @param value @see TySON.tyson::TySonObject
          * @return the Find class to add additional filter
          */
-        static Find LTE(tyson::TySonObject &value)
+        static Find LTE(tyson::TySonObject &value) noexcept
         {
             Find find {};
             find.lte(value);
             return find;
         }
 
-        Find& q(And &value)
+        Find& q(And &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<And>(value));
             return *this;
@@ -462,15 +483,16 @@ namespace annadb::Query
          * @param comp_2  @see query_comparison.annadb::Query::Comparison
          * @return the Find class to add additional filter
          */
-        static Find AND(Comparison &comp_1, Comparison &comp_2)
+        template<std::convertible_to<Comparison> ...Comps>
+        static Find AND(Comps ...comps) noexcept
         {
-            And and_ {comp_1, comp_2};
+            And and_ {comps ...};
             Find find {};
             find.q(and_);
             return find;
         }
 
-        Find& q(Or &value)
+        Find& q(Or &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Or>(value));
             return *this;
@@ -482,15 +504,16 @@ namespace annadb::Query
          * @param comp @see query_comparison.annadb::Query::Comparison
          * @return the Find class to add additional filter
          */
-        static Find OR(std::vector<Comparison> &comp)
+        template<std::convertible_to<Comparison> ...Comps>
+        static Find OR(Comps ...comps) noexcept
         {
-            Or or_ {comp};
+            Or or_ {comps ...};
             Find find {};
             find.q(or_);
             return find;
         }
 
-        Find& q(Not &value)
+        Find& q(Not &value) noexcept
         {
             comparators_.emplace_back(std::make_unique<Not>(value));
             return *this;
@@ -502,7 +525,7 @@ namespace annadb::Query
          * @param field
          * @return the Find class to add additional filter
          */
-        static Find NOT(std::string_view field)
+        static Find NOT(std::string_view field) noexcept
         {
             Not not_ {field};
             Find find {};
@@ -529,20 +552,20 @@ namespace annadb::Query
             return query;
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {"find", "get", "sort", "limit", "offset", "update", "delete"};
         }
 
     public:
-        explicit Sort(std::vector<std::unique_ptr<annadb::Query::SortCmd>> &&cmds) : QueryCmd("sort", false), cmds_(std::move(cmds)) {}
+        explicit Sort(std::vector<std::unique_ptr<annadb::Query::SortCmd>> &&cmds) noexcept : QueryCmd("sort", false), cmds_(std::move(cmds)) {}
     
         template<std::convertible_to<std::string> ...T>
-        static Sort ASC(T&& ...fields)
+        static Sort ASC(T&& ...fields) noexcept
         {
             std::vector<std::unique_ptr<annadb::Query::SortCmd>> cmds {};
             cmds.reserve(sizeof...(fields));
@@ -555,7 +578,7 @@ namespace annadb::Query
         }
     
         template<std::convertible_to<std::string> ...T>
-        static Sort DESC(T&& ...fields)
+        static Sort DESC(T&& ...fields) noexcept
         {
             std::vector<std::unique_ptr<annadb::Query::SortCmd>> cmds = {};
             (
@@ -577,17 +600,17 @@ namespace annadb::Query
             return "limit(n|" + data_ + "|)";
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {"find", "get", "sort", "limit", "offset", "update", "delete"};
         }
 
     public:
-        Limit(const Limit &rhs) : QueryCmd("delete", true), data_(rhs.data_) {};
+        Limit(const Limit &rhs) noexcept : QueryCmd("delete", true), data_(rhs.data_) {};
 
         explicit Limit(short data) : QueryCmd("limit", false), data_(std::to_string(data)) {}
         explicit Limit(unsigned short data) : QueryCmd("limit", false), data_(std::to_string(data)) {}
@@ -610,11 +633,11 @@ namespace annadb::Query
             return "offset(n|" + data_ + "|)";
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {"find", "get", "sort", "limit", "offset", "update", "delete"};
         }
@@ -662,22 +685,22 @@ namespace annadb::Query
             return sstream.str();
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {};
         }
 
     public:
 
-        Update(tyson::TySonObject &val, UpdateType &type) : QueryCmd("update", false)
+        Update(tyson::TySonObject &val, UpdateType &type) noexcept : QueryCmd("update", false)
         {
             values_.emplace_back(type, val);
         }
-        Update(std::vector<tyson::TySonObject> &values, UpdateType &type) : QueryCmd("update", false)
+        Update(std::vector<tyson::TySonObject> &values, UpdateType &type) noexcept : QueryCmd("update", false)
         {
             std::for_each(values.begin(), values.end(),
                           [this, &type](auto val)
@@ -685,7 +708,7 @@ namespace annadb::Query
                             this->values_.emplace_back(type, val);
                           });
         }
-        Update(std::vector<std::tuple<UpdateType, tyson::TySonObject>> &&values) : QueryCmd("update", false), values_(values) {}
+        Update(std::vector<std::tuple<UpdateType, tyson::TySonObject>> &&values) noexcept : QueryCmd("update", false), values_(values) {}
     };
 
 
@@ -696,11 +719,11 @@ namespace annadb::Query
             return "delete";
         }
 
-        [[nodiscard]] std::vector<std::string> previous_steps_() override
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
             return { "find", "get", "sort", "limit", "offset"};
         };
-        [[nodiscard]] std::vector<std::string> next_steps_() override
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
             return {};
         }
@@ -741,7 +764,7 @@ namespace annadb::Query
             }
         }
 
-        friend std::ostream& operator<<(std::ostream &out, Query &query)
+        friend std::ostream& operator<<(std::ostream &out, Query &query) noexcept
         {
             std::stringstream sstream;
             sstream << "collection|" << query.collection_name_ << "|";
@@ -776,7 +799,7 @@ namespace annadb::Query
          *
          * @param insert @see query.annadb::Query::Insert
          */
-        void insert(Insert &insert)
+        void insert(Insert &insert) noexcept
         {
             this->add_to_cmds(std::make_unique<Insert>(std::move(insert)));
         }
@@ -786,7 +809,7 @@ namespace annadb::Query
          *
          * @param insert @see TySON.tyson::TySonObject
          */
-        void insert(tyson::TySonObject &insert)
+        void insert(tyson::TySonObject &insert) noexcept
         {
             this->add_to_cmds(std::make_unique<Insert>(insert));
         }
@@ -796,7 +819,7 @@ namespace annadb::Query
          *
          * @param insert
          */
-        void insert(std::vector<tyson::TySonObject> &insert)
+        void insert(std::vector<tyson::TySonObject> &insert) noexcept
         {
             this->add_to_cmds(std::make_unique<Insert>(insert));
         }
@@ -807,7 +830,7 @@ namespace annadb::Query
          * @param insert
          */
         template<typename ...T>
-        void insert(T&& ...insert)
+        void insert(T&& ...insert) noexcept
         {
             this->add_to_cmds(std::make_unique<Insert>(insert...));
         }
@@ -818,7 +841,7 @@ namespace annadb::Query
          * @param get @see query.annadb::Query::Get
          * @return the query class to add additional statements
          */
-        Query& get(Get &get)
+        Query& get(Get &get) noexcept
         {
             this->add_to_cmds(std::make_unique<Get>(std::move(get)));
             return *this;
@@ -830,7 +853,7 @@ namespace annadb::Query
          * @param get @see TySON.tyson::TySonObject
          * @return the query class to add additional statements
          */
-        Query& get(tyson::TySonObject &get)
+        Query& get(tyson::TySonObject &get) noexcept
         {
             this->add_to_cmds(std::make_unique<Get>(get));
             return *this;
@@ -842,7 +865,7 @@ namespace annadb::Query
         * @param get
         * @return the query class to add additional statements
         */
-        Query& get(std::vector<tyson::TySonObject> &get)
+        Query& get(std::vector<tyson::TySonObject> &get) noexcept
         {
             this->add_to_cmds(std::make_unique<Get>(get));
             return *this;
@@ -855,7 +878,7 @@ namespace annadb::Query
          * @return the query class to add additional statements
          */
         template<std::convertible_to<tyson::TySonObject> ...T>
-        Query& get(T &&...values)
+        Query& get(T &&...values) noexcept
         {
             this->add_to_cmds(std::make_unique<Get>(values...));
             return *this;
@@ -867,7 +890,7 @@ namespace annadb::Query
          * @param find @see query.annadb::Query::Find
          * @return the query class to add additional statements
          */
-        Query& find(Find &&find)
+        Query& find(Find &&find) noexcept
         {
             this->add_to_cmds(std::make_unique<Find>(std::move(find)));
             return *this;
@@ -879,7 +902,7 @@ namespace annadb::Query
          * @param find @see query.annadb::Query::Find
          * @return the query class to add additional statements
          */
-        Query& sort(Sort &&sort)
+        Query& sort(Sort &&sort) noexcept
         {
             this->add_to_cmds(std::make_unique<Sort>(std::move(sort)));
             return *this;
@@ -891,7 +914,7 @@ namespace annadb::Query
          * @param limit @see query.annadb::Query::Limit
          * @return the query class to add additional statements
          */
-        Query& limit(Limit &limit)
+        Query& limit(Limit &limit) noexcept
         {
             this->add_to_cmds(std::make_unique<Limit>(std::move(limit)));
             return *this;
@@ -906,7 +929,7 @@ namespace annadb::Query
          */
         template<typename T>
         requires std::is_integral_v<T>
-        Query& limit(T &&limit)
+        Query& limit(T &&limit) noexcept
         {
             this->add_to_cmds(std::make_unique<Limit>(limit));
             return *this;
@@ -918,7 +941,7 @@ namespace annadb::Query
          * @param offset @see query.annadb::Query::Offset
          * @return the query class to add additional statements
          */
-        Query& offset(Offset &offset)
+        Query& offset(Offset &offset) noexcept
         {
             this->add_to_cmds(std::make_unique<Offset>(offset));
             return *this;
@@ -933,7 +956,7 @@ namespace annadb::Query
          */
         template<typename T>
         requires std::is_integral_v<T>
-        Query& offset(T &&offset)
+        Query& offset(T &&offset) noexcept
         {
             this->add_to_cmds(std::make_unique<Offset>(offset));
             return *this;
@@ -1018,7 +1041,7 @@ namespace annadb::Query
          * Create Delete statement
          *
          */
-        void delete_q()
+        void delete_q() noexcept
         {
             this->add_to_cmds(std::make_unique<Delete>(Delete()));
         }
