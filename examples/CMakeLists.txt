@@ -10,7 +10,7 @@ add_executable(annadb_driver_example main.cpp
         ../src/query.hpp
         ../src/query_comparision.hpp
         includes/insert_example.hpp
-        src/insert_example.cpp )
+        src/insert_example.cpp src/find_example.cpp includes/find_example.hpp)
 target_link_libraries(annadb_driver_example cppzmq)
 
 target_compile_options(annadb_driver_example PRIVATE
