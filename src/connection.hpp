@@ -107,14 +107,15 @@ namespace annadb
         {
             if (data_.starts_with(std::string("s|data|:objects")) && T == tyson::TySonType::Objects)
             {
-                tyson::TySonCollectionObject object {};
                 auto start_val = data_.find_first_of('{') + 1;
                 auto end_val = data_.find_last_of('}');
 
                 auto tyson_str_data = split_data(data_.substr(start_val, end_val - start_val));
+                tyson::TySonCollectionObject object {tyson_str_data.size(), true};
+                
                 for (auto &key_val: tyson_str_data)
                 {
-                    object.add(std::make_pair(key_val.link, key_val.value));
+                    object.add(key_val.link, key_val.value);
                 }
 
                 tyson_str_data.clear();

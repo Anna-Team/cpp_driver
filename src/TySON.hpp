@@ -239,18 +239,18 @@ namespace tyson
                 type_ = TySonType::Timestamp;
                 value_ = object.substr(end_type_sep + 1, end_value_sep);
             }
-            else if (object.starts_with('v'))
+            else if (object.substr(0, 2) == "v[")
             {
                 type_ = TySonType::Vector;
 
                 parse_vector_elements(object);
             }
-            else if (object.starts_with('m'))
+            else if (object.substr(0, 2) == "m{")
             {
                 type_ = TySonType::Map;
                 parse_map_elements(object);
             }
-            else if (type.size() > 1)
+            else if (end_type_sep > 1)
             {
                 type_ = TySonType::Link;
                 auto val = object.substr(end_type_sep + 1, end_value_sep);
@@ -617,9 +617,16 @@ namespace tyson
 
     public:
         TySonCollectionObject() = default;
-        explicit TySonCollectionObject(size_t size)
+        explicit TySonCollectionObject(size_t size, bool objects = false)
         {
-            collection_ids_.reserve(size);
+            if (objects)
+            {
+                collection_objects_.reserve(size);
+            }
+            else
+            {
+                collection_ids_.reserve(size);
+            }
         }
         ~TySonCollectionObject() = default;
 
@@ -641,9 +648,10 @@ namespace tyson
          *
          * @param object
          */
-        void add(const std::pair<std::string_view, std::string_view> &object)
+        void add(const std::string &link, const std::string &value)
         {
-            collection_objects_.emplace_back(TySonObject(object.first), TySonObject(object.second));
+            const auto new_val = std::make_pair(TySonObject(link), TySonObject(value));
+            collection_objects_.emplace_back(new_val);
         };
 
         /**
