@@ -23,6 +23,10 @@ AnnaDB uses a custom query language called [TySON](https://github.com/roman-righ
 ## local development
 - create a AnnaDB instance via `docker-compose up` access the DB via port `10001` on `localhost`
 
+## Which Version should I use
+- the __major__ and __minor__ version will match with these from [AnnaDB](https://github.com/Anna-Team/AnnaDB/releases)
+- if AnnaDB has a Version like 1.3 then you should use the latest driver version between >= 1.3.0 and < 1.4.0 as patch versions will not match
+
 ## How to use
 
 ### 1. Create a connection to AnnaDB
