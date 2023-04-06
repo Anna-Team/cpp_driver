@@ -341,7 +341,7 @@ TEST(annadb_query, create_project_query)
         auto query = annadb::Query::Query("users");
         query.find(annadb::Query::Find())
              .sort(annadb::Query::Sort::ASC("name"))
-             .project(std::make_pair(tyson::TySonObject::String("username"),
+             .project(std::make_pair("username",
                                      tyson::TySonObject::Keep()
                                      ));
     
@@ -355,7 +355,7 @@ TEST(annadb_query, create_project_query)
         auto query = annadb::Query::Query("users");
         query.find(annadb::Query::Find())
              .sort(annadb::Query::Sort::ASC("name"))
-             .project(std::make_pair(tyson::TySonObject::String("username"),
+             .project(std::make_pair("username",
                                      tyson::TySonObject::ProjectValue("name")
                                      ));
     
@@ -369,7 +369,7 @@ TEST(annadb_query, create_project_query)
         auto query = annadb::Query::Query("users");
         query.find(annadb::Query::Find())
              .sort(annadb::Query::Sort::ASC("name"))
-             .project(std::make_pair(tyson::TySonObject::String("title"),
+             .project(std::make_pair("title",
                                      tyson::TySonObject::String("Dr. ")
              ));
         
@@ -384,10 +384,10 @@ TEST(annadb_query, create_project_query)
         auto query = annadb::Query::Query("users");
         query.find(annadb::Query::Find())
              .sort(annadb::Query::Sort::ASC("name"))
-             .project(std::make_pair(tyson::TySonObject::String("passport"),
+             .project(std::make_pair("passport",
                                      tyson::TySonObject::Map("name", tyson::TySonObject::ProjectValue("name"))
                                      ),
-                      std::make_pair(tyson::TySonObject::String("address"),
+                      std::make_pair("address",
                                      tyson::TySonObject::Map("street", tyson::TySonObject::Keep())));
         
         sstream << query;
@@ -402,10 +402,10 @@ TEST(annadb_query, create_project_query)
         auto query = annadb::Query::Query("users");
         query.find(annadb::Query::Find())
              .sort(annadb::Query::Sort::ASC("name"))
-             .project(std::make_pair(tyson::TySonObject::String("name"),
+             .project(std::make_pair("name",
                                      tyson::TySonObject::Vector(tyson::TySonObject::ProjectValue("name"))
                       ),
-                      std::make_pair(tyson::TySonObject::String("emails"),
+                      std::make_pair("emails",
                                      tyson::TySonObject::Vector(tyson::TySonObject::String("TEST"), tyson::TySonObject::Keep())));
         
         sstream << query;

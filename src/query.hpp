@@ -735,7 +735,7 @@ namespace annadb::Query
     
     class Project : public QueryCmd
     {
-        std::vector<std::pair<tyson::TySonObject, tyson::TySonObject>> values_;
+        std::vector<std::pair<std::string, tyson::TySonObject>> values_;
     
         std::string annadb_query() override
         {
@@ -744,7 +744,7 @@ namespace annadb::Query
             std::for_each(values_.begin(), values_.end(),
                           [&sstream](auto &val)
                           {
-                            sstream << std::get<0>(val) << ":" << std::get<1>(val) << ",";
+                            sstream << "s|" <<std::get<0>(val) << "|:" << std::get<1>(val) << ",";
                           });
             sstream << "}";
             return sstream.str();
@@ -762,7 +762,7 @@ namespace annadb::Query
         
     public:
 
-        template<std::convertible_to<std::pair<tyson::TySonObject, tyson::TySonObject>> ...T>
+        template<std::convertible_to<std::pair<std::string, tyson::TySonObject>> ...T>
         explicit Project(T && ... objs)
         {
             values_.reserve(sizeof...(objs));
@@ -1086,11 +1086,11 @@ namespace annadb::Query
         /**
          * Create Project statement
          *
-         * @param values must be a pair of tyson::TySonObject
+         * @param values must be a pair of std::string, tyson::TySonObject
          * @see TySON.tyson::TySonObject
          * @return the query class to add additional statements
          */
-        template<std::convertible_to<std::pair<tyson::TySonObject, tyson::TySonObject>> ...T>
+        template<std::convertible_to<std::pair<std::string, tyson::TySonObject>> ...T>
         Query& project(T &&...values) noexcept
         {
             this->add_to_cmds(std::make_unique<Project>(values...));

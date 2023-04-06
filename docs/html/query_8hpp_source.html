@@ -714,7 +714,7 @@ $(function() {
 <div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>    </div>
 <div class="line"><a id="l00736" name="l00736"></a><span class="lineno"><a class="line" href="classannadb_1_1Query_1_1Project.html">  736</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classannadb_1_1Query_1_1Project.html">Project</a> : <span class="keyword">public</span> <a class="code hl_class" href="classannadb_1_1Query_1_1QueryCmd.html">QueryCmd</a></div>
 <div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>    {</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>        std::vector&lt;std::pair&lt;tyson::TySonObject, tyson::TySonObject&gt;&gt; values_;</div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>        std::vector&lt;std::pair&lt;std::string, tyson::TySonObject&gt;&gt; values_;</div>
 <div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    </div>
 <div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>        std::string annadb_query()<span class="keyword"> override</span></div>
 <div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span><span class="keyword">        </span>{</div>
@@ -723,7 +723,7 @@ $(function() {
 <div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>            std::for_each(values_.begin(), values_.end(),</div>
 <div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>                          [&amp;sstream](<span class="keyword">auto</span> &amp;val)</div>
 <div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>                          {</div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>                            sstream &lt;&lt; std::get&lt;0&gt;(val) &lt;&lt; <span class="stringliteral">&quot;:&quot;</span> &lt;&lt; std::get&lt;1&gt;(val) &lt;&lt; <span class="stringliteral">&quot;,&quot;</span>;</div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>                            sstream &lt;&lt; <span class="stringliteral">&quot;s|&quot;</span> &lt;&lt;std::get&lt;0&gt;(val) &lt;&lt; <span class="stringliteral">&quot;|:&quot;</span> &lt;&lt; std::get&lt;1&gt;(val) &lt;&lt; <span class="stringliteral">&quot;,&quot;</span>;</div>
 <div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>                          });</div>
 <div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>            sstream &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;</div>
 <div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>            <span class="keywordflow">return</span> sstream.str();</div>
@@ -741,7 +741,7 @@ $(function() {
 <div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>        </div>
 <div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span> </div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>        <span class="keyword">template</span>&lt;std::convertible_to&lt;std::pair&lt;tyson::TySonObject, tyson::TySonObject&gt;&gt; ...T&gt;</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>        <span class="keyword">template</span>&lt;std::convertible_to&lt;std::pair&lt;std::<span class="keywordtype">string</span>, tyson::TySonObject&gt;&gt; ...T&gt;</div>
 <div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>        <span class="keyword">explicit</span> <a class="code hl_class" href="classannadb_1_1Query_1_1Project.html">Project</a>(T &amp;&amp; ... objs)</div>
 <div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>        {</div>
 <div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>            values_.reserve(<span class="keyword">sizeof</span>...(objs));</div>
@@ -952,7 +952,7 @@ $(function() {
 <div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>            this-&gt;add_to_cmds(std::make_unique&lt;Delete&gt;(<a class="code hl_class" href="classannadb_1_1Query_1_1Delete.html">Delete</a>()));</div>
 <div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>        }</div>
 <div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    </div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>        <span class="keyword">template</span>&lt;std::convertible_to&lt;std::pair&lt;tyson::TySonObject, tyson::TySonObject&gt;&gt; ...T&gt;</div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>        <span class="keyword">template</span>&lt;std::convertible_to&lt;std::pair&lt;std::<span class="keywordtype">string</span>, tyson::TySonObject&gt;&gt; ...T&gt;</div>
 <div class="line"><a id="l01094" name="l01094"></a><span class="lineno"><a class="line" href="classannadb_1_1Query_1_1Query.html#a834662a5aefa67639b77e14e5e7a59de"> 1094</a></span>        <a class="code hl_class" href="classannadb_1_1Query_1_1Query.html">Query</a>&amp; <a class="code hl_function" href="classannadb_1_1Query_1_1Query.html#a834662a5aefa67639b77e14e5e7a59de">project</a>(T &amp;&amp;...values) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>        {</div>
 <div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>            this-&gt;add_to_cmds(std::make_unique&lt;Project&gt;(values...));</div>

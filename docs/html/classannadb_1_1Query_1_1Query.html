@@ -131,7 +131,7 @@ template&lt;std::convertible_to&lt; <a class="el" href="classtyson_1_1TySonObjec
 <tr class="separator:a4f811ad550ebf4216512f1512c7d1933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29add1eb022e1f71d9d953b4447f14e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classannadb_1_1Query_1_1Query.html#a29add1eb022e1f71d9d953b4447f14e5">delete_q</a> () noexcept</td></tr>
 <tr class="separator:a29add1eb022e1f71d9d953b4447f14e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a834662a5aefa67639b77e14e5e7a59de"><td class="memTemplParams" colspan="2">template&lt;std::convertible_to&lt; std::pair&lt; <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a>, <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> &gt; &gt; ... T&gt; </td></tr>
+<tr class="memitem:a834662a5aefa67639b77e14e5e7a59de"><td class="memTemplParams" colspan="2">template&lt;std::convertible_to&lt; std::pair&lt; std::string, <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> &gt; &gt; ... T&gt; </td></tr>
 <tr class="memitem:a834662a5aefa67639b77e14e5e7a59de"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classannadb_1_1Query_1_1Query.html">Query</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classannadb_1_1Query_1_1Query.html#a834662a5aefa67639b77e14e5e7a59de">project</a> (T &amp;&amp;...values) noexcept</td></tr>
 <tr class="separator:a834662a5aefa67639b77e14e5e7a59de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -675,7 +675,7 @@ requires std::is_integral_v&lt;T&gt;</div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;std::convertible_to&lt; std::pair&lt; <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a>, <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> &gt; &gt; ... T&gt; </div>
+template&lt;std::convertible_to&lt; std::pair&lt; std::string, <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> &gt; &gt; ... T&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -697,7 +697,7 @@ template&lt;std::convertible_to&lt; std::pair&lt; <a class="el" href="classtyson
 <p>Create <a class="el" href="classannadb_1_1Query_1_1Project.html">Project</a> statement</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">values</td><td>must be a pair of <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> </td></tr>
+    <tr><td class="paramname">values</td><td>must be a pair of std::string, <a class="el" href="classtyson_1_1TySonObject.html">tyson::TySonObject</a> </td></tr>
   </table>
   </dd>
 </dl>
