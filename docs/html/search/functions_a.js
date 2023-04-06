@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['map_0',['Map',['../classtyson_1_1TySonObject.html#a29876494f1e9288e1ea98852c4c8a1ca',1,'tyson::TySonObject::Map(std::map&lt; std::string, TySonObject &gt; &amp;objs) noexcept'],['../classtyson_1_1TySonObject.html#a7241e7e6e5dc5dff857525dd3dee112b',1,'tyson::TySonObject::Map() noexcept']]],
-  ['meta_1',['Meta',['../classannadb_1_1Meta.html#ae6292ae5ecff1a8bdd32f7aa761b4311',1,'annadb::Meta']]],
-  ['meta_2',['meta',['../classannadb_1_1Journal.html#ae8d47751052c1ffa311b98dc2d776cc7',1,'annadb::Journal']]]
+  ['limit_0',['limit',['../classannadb_1_1Query_1_1Query.html#a9ab662025decc305b149a3174fcc93a9',1,'annadb::Query::Query::limit(Limit &amp;limit) noexcept'],['../classannadb_1_1Query_1_1Query.html#ae0951373fb588f2ec6e14b9632f4670b',1,'annadb::Query::Query::limit(T &amp;&amp;limit) noexcept']]],
+  ['link_1',['Link',['../classtyson_1_1TySonObject.html#a77f5bafdde1cfbd35d24107b9c352dfd',1,'tyson::TySonObject']]],
+  ['lt_2',['LT',['../classannadb_1_1Query_1_1Find.html#ab06c15cee1a96b1fe0fccfd65d65bdcf',1,'annadb::Query::Find']]],
+  ['lte_3',['LTE',['../classannadb_1_1Query_1_1Find.html#a4934a080b512e5dac94db93a758da93c',1,'annadb::Query::Find']]]
 ];

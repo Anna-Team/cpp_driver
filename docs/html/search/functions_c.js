@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['offset_0',['offset',['../classannadb_1_1Query_1_1Query.html#a7e37d485678c69d27f50d2fb7d22ba17',1,'annadb::Query::Query::offset(Offset &amp;offset) noexcept'],['../classannadb_1_1Query_1_1Query.html#a4412620f4480d40802106866167b6340',1,'annadb::Query::Query::offset(T &amp;&amp;offset) noexcept']]],
-  ['ok_1',['ok',['../classannadb_1_1Journal.html#a94fb796a77930de2fbef5c4c4feb0564',1,'annadb::Journal']]],
-  ['operator_3c_2',['operator&lt;',['../classtyson_1_1TySonObject.html#a4ee04851dca0d43edc6a3b6a6bbd00dc',1,'tyson::TySonObject']]],
-  ['operator_3d_3d_3',['operator==',['../classtyson_1_1TySonObject.html#a70798f98a8ad832bc5d5a73a27951cef',1,'tyson::TySonObject']]],
-  ['operator_5b_5d_4',['operator[]',['../classtyson_1_1TySonObject.html#a575a3a278a8ed6655af1d6853276b488',1,'tyson::TySonObject']]],
-  ['or_5',['Or',['../classannadb_1_1Query_1_1Or.html#a7f0460cda6979317c786cfd1c2b75db4',1,'annadb::Query::Or']]],
-  ['or_6',['OR',['../classannadb_1_1Query_1_1Find.html#a36cdc11c8b18b9c819e0e837bb70217c',1,'annadb::Query::Find']]]
+  ['neq_0',['NEQ',['../classannadb_1_1Query_1_1Find.html#a70b06e33abf3812ee9b0665db133d28d',1,'annadb::Query::Find']]],
+  ['not_1',['NOT',['../classannadb_1_1Query_1_1Find.html#af70ff58e2e37fcfe5b1b83279a160bf3',1,'annadb::Query::Find']]],
+  ['null_2',['Null',['../classtyson_1_1TySonObject.html#a493ef964fd64347dd666504fe322963b',1,'tyson::TySonObject']]],
+  ['number_3',['Number',['../classtyson_1_1TySonObject.html#a725a0a54059ca221a6c77f01814537a4',1,'tyson::TySonObject']]]
 ];
