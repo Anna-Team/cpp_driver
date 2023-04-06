@@ -333,3 +333,84 @@ TEST(annadb_query, create_delete_query)
     
     ASSERT_EQ(sstream.str(), "collection|test|:q[find[gt{root: n|5|},],delete,];");
 }
+
+TEST(annadb_query, create_project_query)
+{
+    {
+        std::stringstream sstream;
+        auto query = annadb::Query::Query("users");
+        query.find(annadb::Query::Find())
+             .sort(annadb::Query::Sort::ASC("name"))
+             .project(std::make_pair("username",
+                                     tyson::TySonObject::Keep()
+                                     ));
+    
+        sstream << query;
+    
+        ASSERT_EQ(sstream.str(), "collection|users|:q[find[],sort[asc(value|name|),],project{s|username|:keep,},];");
+    }
+    
+    {
+        std::stringstream sstream;
+        auto query = annadb::Query::Query("users");
+        query.find(annadb::Query::Find())
+             .sort(annadb::Query::Sort::ASC("name"))
+             .project(std::make_pair("username",
+                                     tyson::TySonObject::ProjectValue("name")
+                                     ));
+    
+        sstream << query;
+    
+        ASSERT_EQ(sstream.str(), "collection|users|:q[find[],sort[asc(value|name|),],project{s|username|:value|name|,},];");
+    }
+    
+    {
+        std::stringstream sstream;
+        auto query = annadb::Query::Query("users");
+        query.find(annadb::Query::Find())
+             .sort(annadb::Query::Sort::ASC("name"))
+             .project(std::make_pair("title",
+                                     tyson::TySonObject::String("Dr. ")
+             ));
+        
+        sstream << query;
+        
+        ASSERT_EQ(sstream.str(), "collection|users|:q[find[],sort[asc(value|name|),],project{s|title|:s|Dr. |,},];");
+    }
+    
+    {
+        std::stringstream sstream;
+        
+        auto query = annadb::Query::Query("users");
+        query.find(annadb::Query::Find())
+             .sort(annadb::Query::Sort::ASC("name"))
+             .project(std::make_pair("passport",
+                                     tyson::TySonObject::Map("name", tyson::TySonObject::ProjectValue("name"))
+                                     ),
+                      std::make_pair("address",
+                                     tyson::TySonObject::Map("street", tyson::TySonObject::Keep())));
+        
+        sstream << query;
+        
+        ASSERT_EQ(sstream.str(),
+                  "collection|users|:q[find[],sort[asc(value|name|),],project{s|passport|:m{s|name|:value|name|,},s|address|:m{s|street|:keep,},},];");
+    }
+    
+    {
+        std::stringstream sstream;
+        
+        auto query = annadb::Query::Query("users");
+        query.find(annadb::Query::Find())
+             .sort(annadb::Query::Sort::ASC("name"))
+             .project(std::make_pair("name",
+                                     tyson::TySonObject::Vector(tyson::TySonObject::ProjectValue("name"))
+                      ),
+                      std::make_pair("emails",
+                                     tyson::TySonObject::Vector(tyson::TySonObject::String("TEST"), tyson::TySonObject::Keep())));
+        
+        sstream << query;
+        
+        ASSERT_EQ(sstream.str(),
+                  "collection|users|:q[find[],sort[asc(value|name|),],project{s|name|:v[value|name|,],s|emails|:v[s|TEST|,keep,],},];");
+    }
+}
