@@ -258,6 +258,62 @@ query.find(
 
 ```
 
+## The project query
+- can __not__ be used alone and must be the last if you combine multiple statements
+- used to __modify__ the __output__ data
+- you can keep only the fields you need with `tyson::TySonObject::Keep()`.
+```c++
+#include "query.hpp"
+...
+
+auto query = annadb::Query::Query("users");
+
+query.find(annadb::Query::Find())
+     .sort(annadb::Query::Sort::ASC("name"))
+     .project(std::make_pair("username",
+                             tyson::TySonObject::Keep()  // this
+                             ));
+```
+- you can set a new field using `tyson::TySonObject::ProjectValue("foo")` from others:
+```c++
+#include "query.hpp"
+...
+
+auto query = annadb::Query::Query("users");
+
+query.find(annadb::Query::Find())
+     .sort(annadb::Query::Sort::ASC("name"))
+     .project(std::make_pair("username",
+                             tyson::TySonObject::ProjectValue("name")
+                             ));
+```
+- you can set a __primitive__ value for the field:
+```c++
+#include "query.hpp"
+...
+
+auto query = annadb::Query::Query("users");
+
+query.find(annadb::Query::Find())
+     .sort(annadb::Query::Sort::ASC("name"))
+     .project(std::make_pair("title", 
+                             tyson::TySonObject::String("Dr.")));
+```
+- or you can set a map or vector as a field value using previously mentioned tools like `tyson::TySonObject::Keep()` or `tyson::TySonObject::ProjectValue("foo")`
+```c++
+#include "query.hpp"
+...
+
+auto query = annadb::Query::Query("users");
+query.find(annadb::Query::Find())
+     .sort(annadb::Query::Sort::ASC("name"))
+     .project(std::make_pair("name",
+                             tyson::TySonObject::Map("street", tyson::TySonObject::Keep()))
+              ),
+              std::make_pair("emails",
+                             tyson::TySonObject::Vector(tyson::TySonObject::String("TEST"), tyson::TySonObject::Keep())));
+```
+
 ## The update query
 - can __not__ be used alone and must be the last if you combine multiple statements
 - you can either use `annadb::Query::UpdateType::Set` to set a field to a specific value or 

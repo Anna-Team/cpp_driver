@@ -315,6 +315,60 @@ The offset query</h1>
 </div><!-- fragment --></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md13"></a>
+The project query</h1>
+<ul>
+<li>can <b>not</b> be used alone and must be the last if you combine multiple statements</li>
+<li>used to <b>modify</b> the <b>output</b> data</li>
+<li>you can keep only the fields you need with <code><a class="el" href="classtyson_1_1TySonObject.html#a7b1c61eeab798700d1937718e1109f82">tyson::TySonObject::Keep()</a></code>. <div class="fragment"><div class="line"> {c++}</div>
+<div class="line">#include &quot;query.hpp&quot;</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">auto query = annadb::Query::Query(&quot;users&quot;);</div>
+<div class="line"> </div>
+<div class="line">query.find(annadb::Query::Find())</div>
+<div class="line">     .sort(annadb::Query::Sort::ASC(&quot;name&quot;))</div>
+<div class="line">     .project(std::make_pair(&quot;username&quot;,</div>
+<div class="line">                             tyson::TySonObject::Keep()  // this</div>
+<div class="line">                             ));</div>
+</div><!-- fragment --></li>
+<li>you can set a new field using <code><a class="el" href="classtyson_1_1TySonObject.html#a1bb940d605d73772dd2631bd88eba0fc">tyson::TySonObject::ProjectValue</a>("foo")</code> from others: <div class="fragment"><div class="line"> {c++}</div>
+<div class="line">#include &quot;query.hpp&quot;</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">auto query = annadb::Query::Query(&quot;users&quot;);</div>
+<div class="line"> </div>
+<div class="line">query.find(annadb::Query::Find())</div>
+<div class="line">     .sort(annadb::Query::Sort::ASC(&quot;name&quot;))</div>
+<div class="line">     .project(std::make_pair(&quot;username&quot;,</div>
+<div class="line">                             tyson::TySonObject::ProjectValue(&quot;name&quot;)</div>
+<div class="line">                             ));</div>
+</div><!-- fragment --></li>
+<li>you can set a <b>primitive</b> value for the field: <div class="fragment"><div class="line"> {c++}</div>
+<div class="line">#include &quot;query.hpp&quot;</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">auto query = annadb::Query::Query(&quot;users&quot;);</div>
+<div class="line"> </div>
+<div class="line">query.find(annadb::Query::Find())</div>
+<div class="line">     .sort(annadb::Query::Sort::ASC(&quot;name&quot;))</div>
+<div class="line">     .project(std::make_pair(&quot;title&quot;, </div>
+<div class="line">                             tyson::TySonObject::String(&quot;Dr.&quot;)));</div>
+</div><!-- fragment --></li>
+<li>or you can set a map or vector as a field value using previously mentioned tools like <code><a class="el" href="classtyson_1_1TySonObject.html#a7b1c61eeab798700d1937718e1109f82">tyson::TySonObject::Keep()</a></code> or <code><a class="el" href="classtyson_1_1TySonObject.html#a1bb940d605d73772dd2631bd88eba0fc">tyson::TySonObject::ProjectValue</a>("foo")</code> <div class="fragment"><div class="line"> {c++}</div>
+<div class="line">#include &quot;query.hpp&quot;</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">auto query = annadb::Query::Query(&quot;users&quot;);</div>
+<div class="line">query.find(annadb::Query::Find())</div>
+<div class="line">     .sort(annadb::Query::Sort::ASC(&quot;name&quot;))</div>
+<div class="line">     .project(std::make_pair(&quot;name&quot;,</div>
+<div class="line">                             tyson::TySonObject::Map(&quot;street&quot;, tyson::TySonObject::Keep()))</div>
+<div class="line">              ),</div>
+<div class="line">              std::make_pair(&quot;emails&quot;,</div>
+<div class="line">                             tyson::TySonObject::Vector(tyson::TySonObject::String(&quot;TEST&quot;), tyson::TySonObject::Keep())));</div>
+</div><!-- fragment --></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md14"></a>
 The update query</h1>
 <ul>
 <li>can <b>not</b> be used alone and must be the last if you combine multiple statements</li>
@@ -341,7 +395,7 @@ The update query</h1>
 <div class="line">...</div>
 </div><!-- fragment --></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 The delete query</h1>
 <ul>
 <li>can <b>not</b> be used alone and must be the last if you combine multiple statements <div class="fragment"><div class="line"> {c++}</div>

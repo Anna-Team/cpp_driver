@@ -82,13 +82,13 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af8341d86f4d32f857ff80c5dd5492324"><td class="memItemLeft" align="right" valign="top"><a id="af8341d86f4d32f857ff80c5dd5492324" name="af8341d86f4d32f857ff80c5dd5492324"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>TySonCollectionObject</b> (size_t size)</td></tr>
-<tr class="separator:af8341d86f4d32f857ff80c5dd5492324"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedab3b11665b5d7004f3857fba076e25"><td class="memItemLeft" align="right" valign="top"><a id="aedab3b11665b5d7004f3857fba076e25" name="aedab3b11665b5d7004f3857fba076e25"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TySonCollectionObject</b> (size_t size, bool objects=false)</td></tr>
+<tr class="separator:aedab3b11665b5d7004f3857fba076e25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae527cc2dd89cd973dc99ce46b016c08a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonCollectionObject.html#ae527cc2dd89cd973dc99ce46b016c08a">add</a> (const std::string &amp;object)</td></tr>
 <tr class="separator:ae527cc2dd89cd973dc99ce46b016c08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afef4a900f99f1a8d2590bb5a1abae4cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonCollectionObject.html#afef4a900f99f1a8d2590bb5a1abae4cd">add</a> (const std::pair&lt; std::string_view, std::string_view &gt; &amp;object)</td></tr>
-<tr class="separator:afef4a900f99f1a8d2590bb5a1abae4cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83cd42752724a07453e216d5fe97f0c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonCollectionObject.html#a83cd42752724a07453e216d5fe97f0c7">add</a> (const std::string &amp;link, const std::string &amp;value)</td></tr>
+<tr class="separator:a83cd42752724a07453e216d5fe97f0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef58f6c16c2feec01ecabb2691727f2c"><td class="memTemplParams" colspan="2">template&lt;TySonType T&gt; <br />
 requires (T == TySonType::Object)</td></tr>
 <tr class="memitem:aef58f6c16c2feec01ecabb2691727f2c"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::pair&lt; <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a>, <a class="el" href="classtyson_1_1TySonObject.html">TySonObject</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtyson_1_1TySonCollectionObject.html#aef58f6c16c2feec01ecabb2691727f2c">get</a> (std::string_view obj_id) noexcept</td></tr>
@@ -115,8 +115,8 @@ requires (T == TySonType::ID)</td></tr>
 <tr class="separator:abf6d619334454595e423d04d8d9682e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="afef4a900f99f1a8d2590bb5a1abae4cd" name="afef4a900f99f1a8d2590bb5a1abae4cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afef4a900f99f1a8d2590bb5a1abae4cd">&#9670;&#160;</a></span>add() <span class="overload">[1/2]</span></h2>
+<a id="a83cd42752724a07453e216d5fe97f0c7" name="a83cd42752724a07453e216d5fe97f0c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83cd42752724a07453e216d5fe97f0c7">&#9670;&#160;</a></span>add() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,9 +127,19 @@ requires (T == TySonType::ID)</td></tr>
         <tr>
           <td class="memname">void tyson::TySonCollectionObject::add </td>
           <td>(</td>
-          <td class="paramtype">const std::pair&lt; std::string_view, std::string_view &gt; &amp;&#160;</td>
-          <td class="paramname"><em>object</em></td><td>)</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>link</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['update_0',['update',['../classannadb_1_1Query_1_1Query.html#a239882521373105a42aa7d3551122de9',1,'annadb::Query::Query::update(UpdateType &amp;&amp;kind, tyson::TySonObject &amp;value)'],['../classannadb_1_1Query_1_1Query.html#aacc732d16a89101c48c36450cd73e0c8',1,'annadb::Query::Query::update(UpdateType &amp;kind, std::vector&lt; tyson::TySonObject &gt; &amp;values)'],['../classannadb_1_1Query_1_1Query.html#a4f811ad550ebf4216512f1512c7d1933',1,'annadb::Query::Query::update(std::vector&lt; std::tuple&lt; UpdateType, tyson::TySonObject &gt; &gt; &amp;values)']]]
+  ['send_0',['send',['../classannadb_1_1AnnaDB.html#a60c0dc2b4752ba3cbedfea516af35195',1,'annadb::AnnaDB::send(std::string_view query) noexcept'],['../classannadb_1_1AnnaDB.html#ac0177243016487f7e2bbf1d28c4295a7',1,'annadb::AnnaDB::send(annadb::Query::Query &amp;query) noexcept']]],
+  ['sort_1',['sort',['../classannadb_1_1Query_1_1Query.html#af0be5933ad1f9902ad459bb63b51aa43',1,'annadb::Query::Query']]],
+  ['string_2',['String',['../classtyson_1_1TySonObject.html#aabf8817f68492bae41223b1aacf95a4f',1,'tyson::TySonObject']]]
 ];

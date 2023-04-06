@@ -732,6 +732,43 @@ namespace annadb::Query
         Delete() = default;
         Delete(const Delete &) : QueryCmd("delete", false) {};
     };
+    
+    class Project : public QueryCmd
+    {
+        std::vector<std::pair<std::string, tyson::TySonObject>> values_;
+    
+        std::string annadb_query() override
+        {
+            std::stringstream sstream;
+            sstream << "project{";
+            std::for_each(values_.begin(), values_.end(),
+                          [&sstream](auto &val)
+                          {
+                            sstream << "s|" <<std::get<0>(val) << "|:" << std::get<1>(val) << ",";
+                          });
+            sstream << "}";
+            return sstream.str();
+        }
+        
+        [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
+        {
+            return { "get", "find", "sort", "limit", "offset"};
+        };
+        
+        [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
+        {
+            return {};
+        }
+        
+    public:
+
+        template<std::convertible_to<std::pair<std::string, tyson::TySonObject>> ...T>
+        explicit Project(T && ... objs)
+        {
+            values_.reserve(sizeof...(objs));
+            (values_.emplace_back(objs), ...);
+        }
+    };
 
 
     class Query
@@ -1044,6 +1081,20 @@ namespace annadb::Query
         void delete_q() noexcept
         {
             this->add_to_cmds(std::make_unique<Delete>(Delete()));
+        }
+    
+        /**
+         * Create Project statement
+         *
+         * @param values must be a pair of std::string, tyson::TySonObject
+         * @see TySON.tyson::TySonObject
+         * @return the query class to add additional statements
+         */
+        template<std::convertible_to<std::pair<std::string, tyson::TySonObject>> ...T>
+        Query& project(T &&...values) noexcept
+        {
+            this->add_to_cmds(std::make_unique<Project>(values...));
+            return *this;
         }
     };
 }

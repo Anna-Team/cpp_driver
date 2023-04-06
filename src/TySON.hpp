@@ -17,19 +17,21 @@ namespace tyson
      */
     enum class TySonType
     {
-        Number = 'n',
-        String = 's',
-        Bool = 'b',
-        Null = 'x',
-        Timestamp = 'u',
-        Link = 'l',
-        Vector = 'v',
-        Map = 'm',
-        Object = 'o',
-        ID = 'i',
-        Objects = 'y',
-        IDs = 'z',
-        Value = 'e'
+        Number,
+        String,
+        Bool,
+        Null,
+        Timestamp,
+        Link,
+        Vector,
+        Map,
+        Object,
+        ID,
+        Objects,
+        IDs,
+        Value,
+        ProjectValue,
+        Keep,
     };
     
     /**
@@ -68,6 +70,10 @@ namespace tyson
                 return "TySON-IDs";
             case TySonType::Value:
                 return "TySON-Value";
+            case TySonType::ProjectValue:
+                return "TySON-ProjectValue";
+            case TySonType::Keep:
+                return "TySON-Keep";
         }
         return "";
     }
@@ -205,8 +211,47 @@ namespace tyson
 
                     return out << "m{" << sstream.str() << "}";
                 }
+                case TySonType::ProjectValue:
+                {
+                    return out << "value|" << obj.map_.begin()->first.value_ << "|";
+                }
+                case TySonType::Keep:
+                {
+                    return out << "keep";
+                }
                 default:
                     return out << "";
+            }
+        }
+        
+        /**
+         * Helper method to cast char to TySonType if necessary.
+         * Mostly used for the standard tyson Types.
+         *
+         * @param _type
+         * @see <a href="https://annadb.dev/documentation/data_types/">AnnaDB data types</a>
+         * @return TySonType
+         */
+        TySonType cast_type_string(char &_type)
+        {
+            switch (_type)
+            {
+                case 'n':
+                    return tyson::TySonType::Number;
+                case 's':
+                    return tyson::TySonType::String;
+                case 'b':
+                    return tyson::TySonType::Bool;
+                case 'u':
+                    return tyson::TySonType::Timestamp;
+                case 'l':
+                    return tyson::TySonType::Link;
+                case 'v':
+                    return tyson::TySonType::Vector;
+                case 'm':
+                    return tyson::TySonType::Map;
+                default:
+                    return tyson::TySonType::Object;
             }
         }
 
@@ -258,7 +303,7 @@ namespace tyson
             }
             else
             {
-                type_ = static_cast<TySonType>(type.at(0));
+                type_ = cast_type_string(const_cast<char &>(type.at(0)));
                 value_ = object.substr(end_type_sep + 1, end_value_sep);
             }
         }
@@ -361,7 +406,21 @@ namespace tyson
             tySonObject.type_ = TySonType::Null;
             return tySonObject;
         }
-
+    
+        /**
+         * Create a new TySonObject Keep used for project queries
+         *
+         * @return new TySonObject
+         */
+        [[ nodiscard ]] static TySonObject Keep() noexcept
+        {
+            TySonObject tySonObject {};
+            tySonObject.value_ = "keep";
+            tySonObject.type_ = TySonType::Keep;
+            return tySonObject;
+        }
+    
+    
         /**
          * Create a new TySonObject Timestamp
          *
@@ -421,6 +480,20 @@ namespace tyson
             tySonObject.type_ = TySonType::Value;
             return tySonObject;
         }
+    
+        /**
+         * Create a new TySonObject required for query project statements
+         * @see query.annadb::Query::UpdateType
+         * @param val the value which should be used instead
+         * @return new TySonObject
+         */
+        [[ nodiscard ]] static TySonObject ProjectValue(const std::string &value) noexcept
+        {
+            TySonObject tySonObject {};
+            tySonObject.map_.try_emplace(TySonObject::String(value), value);
+            tySonObject.type_ = TySonType::ProjectValue;
+            return tySonObject;
+        }
 
         /**
          * Create a new TySonObject Map
@@ -436,6 +509,21 @@ namespace tyson
                           {
                                 tySonObject.map_.try_emplace(TySonObject::String(val.first), std::move(val.second));
                           });
+            tySonObject.type_ = TySonType::Map;
+            return tySonObject;
+        }
+    
+        /**
+         * Create a new TySonObject Map instantiated with a single value
+         *
+         * @param key as string
+         * @param obj must be a TySonObject
+         * @return
+         */
+        [[ nodiscard ]] static TySonObject Map(const std::string &key, TySonObject &&obj) noexcept
+        {
+            TySonObject tySonObject {};
+            tySonObject.map_.try_emplace(TySonObject::String(key), std::move(obj));
             tySonObject.type_ = TySonType::Map;
             return tySonObject;
         }

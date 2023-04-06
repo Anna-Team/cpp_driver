@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['timestamp_0',['Timestamp',['../classtyson_1_1TySonObject.html#a4fb7b822823440ba4e0ee0bf57d56f6f',1,'tyson::TySonObject']]],
-  ['type_1',['type',['../classannadb_1_1Meta.html#a79702689f7cfb2594794f4731f179498',1,'annadb::Meta::type()'],['../classtyson_1_1TySonObject.html#a8fde5c6e389ebd827e7c1bc18951f4b8',1,'tyson::TySonObject::type()']]],
-  ['tysoncollectionobject_2',['TySonCollectionObject',['../classtyson_1_1TySonCollectionObject.html',1,'tyson']]],
-  ['tysonobject_3',['TySonObject',['../classtyson_1_1TySonObject.html',1,'tyson::TySonObject'],['../classtyson_1_1TySonObject.html#a4932544e577a690183399cdd1fa3657c',1,'tyson::TySonObject::TySonObject()']]]
+  ['send_0',['send',['../classannadb_1_1AnnaDB.html#a60c0dc2b4752ba3cbedfea516af35195',1,'annadb::AnnaDB::send(std::string_view query) noexcept'],['../classannadb_1_1AnnaDB.html#ac0177243016487f7e2bbf1d28c4295a7',1,'annadb::AnnaDB::send(annadb::Query::Query &amp;query) noexcept']]],
+  ['sort_1',['Sort',['../classannadb_1_1Query_1_1Sort.html',1,'annadb::Query']]],
+  ['sort_2',['sort',['../classannadb_1_1Query_1_1Query.html#af0be5933ad1f9902ad459bb63b51aa43',1,'annadb::Query::Query']]],
+  ['sortcmd_3',['SortCmd',['../structannadb_1_1Query_1_1SortCmd.html',1,'annadb::Query']]],
+  ['string_4',['String',['../classtyson_1_1TySonObject.html#aabf8817f68492bae41223b1aacf95a4f',1,'tyson::TySonObject']]]
 ];

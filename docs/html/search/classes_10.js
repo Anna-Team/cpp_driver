@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['update_0',['Update',['../classannadb_1_1Query_1_1Update.html',1,'annadb::Query']]]
+  ['tysoncollectionobject_0',['TySonCollectionObject',['../classtyson_1_1TySonCollectionObject.html',1,'tyson']]],
+  ['tysonobject_1',['TySonObject',['../classtyson_1_1TySonObject.html',1,'tyson']]]
 ];
