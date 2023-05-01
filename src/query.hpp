@@ -102,13 +102,16 @@ namespace annadb::Query
 
         [[nodiscard]] bool next_step_allowed(const std::string &cmdName) noexcept
         {
-            if (next_steps_().empty())
+            const auto next_steps = next_steps_();
+            if (next_steps.empty())
             {
                 return false;
             }
-
-            auto res = std::find(next_steps_().begin(), next_steps_().end(), cmdName);
-            return res != next_steps_().end();
+    
+            auto res = std::find(next_steps.begin(), next_steps.end(), cmdName);
+            auto allowed = res != std::end(next_steps);
+            
+            return allowed;
         }
 
         [[nodiscard]] bool previous_step_allowed(const std::string &cmdName) noexcept
@@ -286,11 +289,11 @@ namespace annadb::Query
 
         [[nodiscard]] std::vector<std::string> previous_steps_() noexcept override
         {
-            return { "find", "get", "sort", "limit", "offset"};
+            return {"find", "get", "sort", "limit", "offset"};
         };
         [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
-            return {"find", "get", "sort", "limit", "offset", "update", "delete"};
+            return {"find", "get", "sort", "limit", "offset", "update", "delete", "project"};
         }
 
     public:
@@ -558,7 +561,7 @@ namespace annadb::Query
         };
         [[nodiscard]] std::vector<std::string> next_steps_() noexcept override
         {
-            return {"find", "get", "sort", "limit", "offset", "update", "delete"};
+            return {"find", "get", "sort", "limit", "offset", "update", "delete", "project"};
         }
 
     public:
@@ -763,7 +766,7 @@ namespace annadb::Query
     public:
 
         template<std::convertible_to<std::pair<std::string, tyson::TySonObject>> ...T>
-        explicit Project(T && ... objs)
+        explicit Project(T && ... objs)  : QueryCmd("project", true)
         {
             values_.reserve(sizeof...(objs));
             (values_.emplace_back(objs), ...);
@@ -775,6 +778,7 @@ namespace annadb::Query
     {
         std::string collection_name_;
         std::vector<std::unique_ptr<annadb::Query::QueryCmd>> cmds_ {};
+        
         void add_to_cmds(std::unique_ptr<QueryCmd> queryCmd)
         {
             if (cmds_.empty() && !queryCmd->can_start_pipeline())
@@ -789,8 +793,10 @@ namespace annadb::Query
             else
             {
                 auto latest_cmd = cmds_.size() - 1;
-                if (cmds_.at(latest_cmd)->next_step_allowed(queryCmd->name()) &&
-                    queryCmd->previous_step_allowed(cmds_.at(latest_cmd)->name()))
+                auto next_step_allowed = cmds_.at(latest_cmd)->next_step_allowed(queryCmd->name());
+                auto previous_step_allowed = queryCmd->previous_step_allowed(cmds_.at(latest_cmd)->name());
+                
+                if (next_step_allowed && previous_step_allowed)
                 {
                     this->cmds_.emplace_back(std::move(queryCmd));
                 }
