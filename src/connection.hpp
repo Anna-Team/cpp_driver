@@ -351,6 +351,8 @@ namespace annadb
     
         zmq::context_t context {1};
         zmq::socket_t requester {context, ZMQ_REQ};
+        
+        bool is_connected_ {};
 
         bool zmq_send(std::string_view query) noexcept
         {
@@ -402,14 +404,33 @@ namespace annadb
         {
         };
 
-        ~AnnaDB() = default;
+        ~AnnaDB()
+        {
+            context.close();
+            requester.close();
+            
+            username_.clear();
+            password_.clear();
+            host_.clear();
+            port_.clear();
+            is_connected_ = false;
+        };
 
         /**
          * open a connection with the AnnaDB
          */
         void connect() noexcept
         {
-            requester.connect("tcp://" + host_ + ":" + port_);
+            try
+            {
+                requester.connect("tcp://" + host_ + ":" + port_);
+                is_connected_ = true;
+            }
+            catch (error_t err_)
+            {
+                is_connected_ = false;
+            }
+            
         }
 
         /**
@@ -418,6 +439,17 @@ namespace annadb
         void close() noexcept
         {
             requester.close();
+            is_connected_ = false;
+        }
+        
+        /**
+         * Get information if a connection to AnnaDB could be established
+         *
+         * @return true if a connection to AnnaDB could be established
+         */
+        bool is_connected() noexcept
+        {
+            return is_connected_;
         }
 
         /**
@@ -439,6 +471,12 @@ namespace annadb
                 }
             }
             return {};
+        }
+    
+        [[nodiscard]] std::optional<std::string> send_raw(std::string_view query) noexcept
+        {
+            zmq_send(query);
+            return zmq_receive();
         }
 
         /**
