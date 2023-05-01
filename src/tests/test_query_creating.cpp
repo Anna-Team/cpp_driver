@@ -228,12 +228,12 @@ TEST(annadb_query, create_update_query)
     auto new_val = tyson::TySonObject::Value("num", tyson::TySonObject::Number(100));
     
     auto query = annadb::Query::Query("test");
-    query.get(link).update(annadb::Query::UpdateType::Set, new_val);
-    
+    query.find(annadb::Query::Find::EQ(link)).update(annadb::Query::UpdateType::Set, new_val);
+
     sstream << query;
-    
+
     ASSERT_EQ(sstream.str(),
-              "collection|test|:q[get[test|b2279b93-00b3-4b44-9670-82a76922c0da|,],update[set{value|num|:n|100|},],];");
+              "collection|test|:q[find[eq{root: test|b2279b93-00b3-4b44-9670-82a76922c0da|},],update[set{value|num|:n|100|},],];");
 }
 
 TEST(annadb_query, create_find_query)
